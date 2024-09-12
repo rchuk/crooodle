@@ -24,6 +24,11 @@ Crooodle is a learning management system
 
 ## Development
 
+### Overview
+Project is going to be developed using Spring Boot on the backend.
+Selected build system is Maven as it's mature and well-established tool in the Java ecosystem.
+It also uses PostgresSQL database and can be deployed using Docker.
+
 ### Local
 Run `./mvnw package` (with required environment variables from the .env.example file set).
 Then run the resulting jar file using `java -jar target/crooodle-{VERSION}.jar`.
