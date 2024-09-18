@@ -15,6 +15,8 @@ public class Hotel {
 
     private double ranking;
 
+    private int totalRanks;
+
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Room> rooms;
 
@@ -70,5 +72,21 @@ public class Hotel {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public double getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(double ranking) {
+        this.ranking = ranking;
+    }
+
+    public int getTotalRanks() {
+        return totalRanks;
+    }
+
+    public void setTotalRanks(int totalRanks) {
+        this.totalRanks = totalRanks;
     }
 }
