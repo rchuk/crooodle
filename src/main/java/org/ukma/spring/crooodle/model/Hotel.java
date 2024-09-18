@@ -13,6 +13,8 @@ public class Hotel {
     private String name;
     private String address;
 
+
+
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Room> rooms;
 
