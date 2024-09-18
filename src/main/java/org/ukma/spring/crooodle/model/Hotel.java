@@ -13,10 +13,13 @@ public class Hotel {
     private String name;
     private String address;
 
-
+    private double ranking;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Room> rooms;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     // Constructors
     public Hotel() {}
@@ -57,5 +60,15 @@ public class Hotel {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }
