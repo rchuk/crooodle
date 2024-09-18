@@ -20,17 +20,19 @@ public class Booking {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private double totalPrice;
+    private String status;
 
-    private String status; // e.g., "Confirmed", "Cancelled"
-
-    // Constructors
+    // Конструктор без параметрів
     public Booking() {}
 
-    public Booking(User user, Room room, LocalDate startDate, LocalDate endDate, String status) {
+    // Конструктор з параметрами
+    public Booking(User user, Room room, LocalDate startDate, LocalDate endDate, double totalPrice, String status) {
         this.user = user;
         this.room = room;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.totalPrice = totalPrice;
         this.status = status;
     }
 
@@ -73,6 +75,14 @@ public class Booking {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public String getStatus() {

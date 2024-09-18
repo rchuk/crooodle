@@ -10,6 +10,7 @@ public class Room {
     private Long id;
 
     private String number;
+    private double pricePerNight;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
@@ -22,8 +23,9 @@ public class Room {
     // Constructors
     public Room() {}
 
-    public Room(String number, Hotel hotel, RoomType roomType) {
+    public Room(String number, double pricePerNight, Hotel hotel, RoomType roomType) {
         this.number = number;
+        this.pricePerNight = pricePerNight;
         this.hotel = hotel;
         this.roomType = roomType;
     }
@@ -43,6 +45,14 @@ public class Room {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public double getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public void setPricePerNight(double pricePerNight) {
+        this.pricePerNight = pricePerNight;
     }
 
     public Hotel getHotel() {
