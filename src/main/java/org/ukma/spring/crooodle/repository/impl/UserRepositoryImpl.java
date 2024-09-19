@@ -1,8 +1,8 @@
 package org.ukma.spring.crooodle.repository.impl;
 
+import org.springframework.stereotype.Repository;
 import org.ukma.spring.crooodle.model.User;
 import org.ukma.spring.crooodle.repository.UserRepository;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
