@@ -8,9 +8,9 @@ import java.util.List;
 public interface UserExpService {
     List<Review> getReviews(long hotelId);
 
-    void addReview(User user, long hotelId, String content);
+    void addReview(long hotelId, String content);
 
-    void deleteReview(User user, long reviewId);
+    void deleteReview(long reviewId);
 
     void addRanking(long hotelId, int rank);
 

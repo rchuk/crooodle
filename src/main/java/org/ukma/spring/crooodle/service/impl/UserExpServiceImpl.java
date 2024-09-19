@@ -6,16 +6,19 @@ import org.ukma.spring.crooodle.model.User;
 import org.ukma.spring.crooodle.repository.ReviewRepository;
 import org.ukma.spring.crooodle.service.HotelService;
 import org.ukma.spring.crooodle.service.UserExpService;
+import org.ukma.spring.crooodle.service.UserService;
 
 import java.util.List;
 
 @Service
 public class UserExpServiceImpl implements UserExpService {
     private final HotelService hotelService;
+    private final UserService userService;
     private final ReviewRepository reviewRepository;
 
-    public UserExpServiceImpl(HotelService hotelService, ReviewRepository reviewRepository) {
+    public UserExpServiceImpl(HotelService hotelService, UserService userService, ReviewRepository reviewRepository) {
         this.hotelService = hotelService;
+        this.userService = userService;
         this.reviewRepository = reviewRepository;
     }
 
@@ -29,7 +32,8 @@ public class UserExpServiceImpl implements UserExpService {
     }
 
     @Override
-    public void addReview(User user, long hotelId, String content) {
+    public void addReview(long hotelId, String content) {
+        var user = userService.getCurrentUser();
         var hotel = hotelService.getHotel(hotelId);
 
         Review review = Review.builder()
@@ -42,7 +46,8 @@ public class UserExpServiceImpl implements UserExpService {
     }
 
     @Override
-    public void deleteReview(User user, long reviewId) {
+    public void deleteReview(long reviewId) {
+        var user = userService.getCurrentUser();
         var review = reviewRepository.getById(reviewId);
         if (review.getAuthor().getId().equals(user.getId()))
             return;
