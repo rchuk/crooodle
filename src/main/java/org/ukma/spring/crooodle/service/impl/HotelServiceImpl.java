@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.service.impl;
 
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.model.Room;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@NoA
+@NoArgsConstructor
 @Service
 public class HotelServiceImpl implements HotelService {
     private HotelRepository hotelRepository;
