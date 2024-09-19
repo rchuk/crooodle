@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @NoArgsConstructor
@@ -10,7 +11,6 @@ import lombok.*;
 @Setter
 @Entity
 public class Review {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

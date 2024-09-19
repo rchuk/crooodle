@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,7 +13,6 @@ import java.time.LocalDate;
 @Setter
 @Entity
 public class Booking {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,5 +28,6 @@ public class Booking {
     private LocalDate startDate;
     private LocalDate endDate;
     private int totalPrice;
+    @NotNull
     private String status;
 }
