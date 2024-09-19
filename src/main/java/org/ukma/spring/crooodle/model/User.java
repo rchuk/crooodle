@@ -19,7 +19,7 @@ public class User {
 
     private String name;
     private String email;
-    private String password;
+    private String passwordHash;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Booking> bookings;

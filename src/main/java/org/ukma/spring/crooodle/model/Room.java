@@ -16,7 +16,7 @@ public class Room {
     private Long id;
 
     private String number;
-    private double pricePerNight;
+    private int pricePerNight;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")

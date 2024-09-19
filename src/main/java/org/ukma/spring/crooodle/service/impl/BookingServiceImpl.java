@@ -46,8 +46,9 @@ public class BookingServiceImpl implements BookingService {
         return true; // Якщо жодних конфліктів, номер доступний
     }
 
-    private double calculateTotalPrice(Room room, LocalDate startDate, LocalDate endDate) {
-        long days = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+    private int calculateTotalPrice(Room room, LocalDate startDate, LocalDate endDate) {
+        var days = (int)java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+
         return days * room.getPricePerNight(); // Загальна ціна залежить від кількості днів та ціни за ніч
     }
 }
