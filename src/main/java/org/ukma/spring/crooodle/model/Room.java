@@ -1,7 +1,7 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -18,6 +18,7 @@ public class Room {
 
     @Length(min = 1, max = 100)
     private String number;
+    @Positive
     private int pricePerNight;
 
     @ManyToOne

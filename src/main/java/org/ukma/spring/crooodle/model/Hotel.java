@@ -1,7 +1,7 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -23,8 +23,10 @@ public class Hotel {
     @Length(min = 3, max = 500)
     private String address;
 
+    @PositiveOrZero
     private double ranking;
 
+    // TODO: Remove
     private int totalRanks;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)

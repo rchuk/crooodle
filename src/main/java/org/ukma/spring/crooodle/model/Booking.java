@@ -27,6 +27,8 @@ public class Booking {
 
     private LocalDate startDate;
     private LocalDate endDate;
+
+    @Positive
     private int totalPrice;
     @NotNull
     private String status;

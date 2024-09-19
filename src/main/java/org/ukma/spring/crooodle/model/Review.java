@@ -1,7 +1,6 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 
 @NoArgsConstructor
