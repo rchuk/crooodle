@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.impl;
+package org.ukma.spring.crooodle.service.impl;
 
 import org.ukma.spring.crooodle.model.Booking;
 import org.ukma.spring.crooodle.model.User;
