@@ -1,27 +1,36 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import org.springframework.stereotype.Service;
-import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.model.Review;
 import org.ukma.spring.crooodle.model.User;
+import org.ukma.spring.crooodle.repository.ReviewRepository;
+import org.ukma.spring.crooodle.service.HotelService;
 import org.ukma.spring.crooodle.service.UserExpService;
 
 import java.util.List;
 
 @Service
 public class UserExpServiceImpl implements UserExpService {
+    private final HotelService hotelService;
+    private final ReviewRepository reviewRepository;
+
+    public UserExpServiceImpl(HotelService hotelService, ReviewRepository reviewRepository) {
+        this.hotelService = hotelService;
+        this.reviewRepository = reviewRepository;
+    }
 
     @Override
-    public List<Review> getReviews(Hotel hotel) {
+    public List<Review> getReviews(long hotelId) {
 
         // later we plan to implement classification positive/negative review,
         // so there will be a need to structurally obtain reviews from this service
 
-        return hotel.getReviews();
+        return hotelService.getHotel(hotelId).getReviews();
     }
 
     @Override
-    public void addReview(User user, Hotel hotel, String content) {
+    public void addReview(User user, long hotelId, String content) {
+        var hotel = hotelService.getHotel(hotelId);
 
         Review review = Review.builder()
             .author(user)
@@ -29,29 +38,21 @@ public class UserExpServiceImpl implements UserExpService {
             .content(content)
             .build();
 
-        List<Review> oldHotelReviews = hotel.getReviews();
-        oldHotelReviews.add(review);
-        hotel.setReviews(oldHotelReviews);
-
-        List<Review> oldUserReviews = user.getReviews();
-        oldUserReviews.add(review);
-        user.setReviews(oldUserReviews);
+        reviewRepository.create(review);
     }
 
     @Override
-    public void deleteReview(User user, Hotel hotel, Review review) {
+    public void deleteReview(User user, long reviewId) {
+        var review = reviewRepository.getById(reviewId);
+        if (review.getAuthor().getId().equals(user.getId()))
+            return;
 
-        List<Review> oldHotelReviews = hotel.getReviews();
-        oldHotelReviews.remove(review);
-        hotel.setReviews(oldHotelReviews);
-
-        List<Review> oldUserReviews = user.getReviews();
-        oldUserReviews.remove(review);
-        user.setReviews(oldUserReviews);
+        reviewRepository.delete(reviewId);
     }
 
     @Override
-    public void addRanking(Hotel hotel, int rank) {
+    public void addRanking(long hotelId, int rank) {
+        var hotel = hotelService.getHotel(hotelId);
 
         double totalRank = hotel.getRanking() * hotel.getTotalRanks();
 
@@ -62,7 +63,8 @@ public class UserExpServiceImpl implements UserExpService {
     }
 
     @Override
-    public void deleteRanking(Hotel hotel, int rank) {
+    public void deleteRanking(long hotelId, int rank) {
+        var hotel = hotelService.getHotel(hotelId);
 
         double totalRank = hotel.getRanking() * hotel.getTotalRanks();
 

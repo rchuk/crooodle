@@ -4,15 +4,15 @@ import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.model.Room;
 import org.ukma.spring.crooodle.model.RoomType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public interface HotelService {
+    Hotel getHotel(long hotelId);
 
-    Map<RoomType, Integer> getAvailableRoomTypes(Hotel hotel);
+    Map<RoomType, Integer> getAvailableRoomTypes(long hotelId);
 
-    List<Room> getRooms(Hotel hotel);
+    List<Room> listRooms(long hotelId);
 
-    List<Hotel> filterHotels(List<Hotel> hotels, Map<String, Object> filters);
+    List<Hotel> listHotels(Map<String, Object> filters);
 }
