@@ -18,7 +18,14 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking bookRoom(User user, Room room, LocalDate startDate, LocalDate endDate) {
         if (checkAvailability(room, startDate, endDate)) {
-            Booking booking = new Booking(user, room, startDate, endDate, calculateTotalPrice(room, startDate, endDate), "Confirmed");
+            Booking booking = Booking.builder()
+                .user(user)
+                .room(room)
+                .startDate(startDate)
+                .endDate(endDate)
+                .totalPrice(calculateTotalPrice(room, startDate, endDate))
+                .status("Confirmed")
+                .build();
             existingBookings.add(booking); // Додаємо нове бронювання до списку
             return booking;
         } else {

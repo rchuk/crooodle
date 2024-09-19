@@ -23,7 +23,11 @@ public class UserExpServiceImpl implements UserExpService {
     @Override
     public void addReview(User user, Hotel hotel, String content) {
 
-        Review review = new Review(user, hotel, content);
+        Review review = Review.builder()
+            .author(user)
+            .hotel(hotel)
+            .content(content)
+            .build();
 
         List<Review> oldHotelReviews = hotel.getReviews();
         oldHotelReviews.add(review);

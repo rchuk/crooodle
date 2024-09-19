@@ -1,8 +1,15 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 @Entity
 public class Hotel {
 
@@ -22,71 +29,4 @@ public class Hotel {
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Review> reviews;
-
-    // Constructors
-    public Hotel() {}
-
-    public Hotel(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public List<Room> getRooms() {
-        return rooms;
-    }
-
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
-    }
-
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public double getRanking() {
-        return ranking;
-    }
-
-    public void setRanking(double ranking) {
-        this.ranking = ranking;
-    }
-
-    public int getTotalRanks() {
-        return totalRanks;
-    }
-
-    public void setTotalRanks(int totalRanks) {
-        this.totalRanks = totalRanks;
-    }
 }
