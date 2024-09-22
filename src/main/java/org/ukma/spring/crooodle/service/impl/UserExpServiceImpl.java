@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.model.Review;
 import org.ukma.spring.crooodle.repository.ReviewRepository;
@@ -9,17 +10,12 @@ import org.ukma.spring.crooodle.service.UserService;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class UserExpServiceImpl implements UserExpService {
     private final HotelService hotelService;
     private final UserService userService;
     private final ReviewRepository reviewRepository;
-
-    public UserExpServiceImpl(HotelService hotelService, UserService userService, ReviewRepository reviewRepository) {
-        this.hotelService = hotelService;
-        this.userService = userService;
-        this.reviewRepository = reviewRepository;
-    }
 
     @Override
     public List<Review> getReviews(long hotelId) {

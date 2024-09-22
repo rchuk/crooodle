@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
-    @Autowired
     private final RoomService roomService;
 
     private List<Booking> existingBookings = new ArrayList<>(); // Список для фіктивних бронювань

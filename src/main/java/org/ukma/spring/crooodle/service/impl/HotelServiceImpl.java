@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.ukma.spring.crooodle.service.HotelService;
 
 import java.util.List;
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class HotelServiceImpl implements HotelService {
     private HotelRepository hotelRepository;

@@ -1,7 +1,6 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import org.ukma.spring.crooodle.service.UserService;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
     private final UserRepository userRepository;
 
     @Override
