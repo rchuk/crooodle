@@ -1,18 +1,20 @@
 package org.ukma.spring.crooodle.service;
 
+import org.springframework.data.domain.Page;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.model.Room;
-import org.ukma.spring.crooodle.model.RoomType;
+import org.ukma.spring.crooodle.model.grouped.RoomTypeWithCount;
 
 import java.util.List;
-import java.util.Map;
 
 public interface HotelService {
     Hotel getHotel(long hotelId);
 
-    Map<RoomType, Integer> getAvailableRoomTypes(long hotelId);
+    List<RoomTypeWithCount> getAvailableRoomTypes(long hotelId);
 
-    List<Room> listRooms(long hotelId);
+    Page<Room> listRooms(long hotelId, PaginationDto paginationDto);
 
-    List<Hotel> listHotels(Map<String, Object> filters);
+    // TODO: Pass criteria DTO
+    Page<Hotel> listHotels(PaginationDto paginationDto);
 }

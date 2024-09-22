@@ -1,12 +1,9 @@
 package org.ukma.spring.crooodle.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.ukma.spring.crooodle.model.Review;
 
-import java.util.List;
+public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review> {
 
-public interface ReviewRepository {
-    void create(Review review);
-    Review getById(long id);
-    void delete(long id);
-    List<Review> list(Long userId, Long hotelId);
 }

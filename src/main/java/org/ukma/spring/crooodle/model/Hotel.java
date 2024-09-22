@@ -26,7 +26,7 @@ public class Hotel {
     @PositiveOrZero
     private double ranking;
 
-    // TODO: Remove
+    @PositiveOrZero
     private int totalRanks;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)

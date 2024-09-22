@@ -2,7 +2,6 @@ package org.ukma.spring.crooodle.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.model.Review;
-import org.ukma.spring.crooodle.model.User;
 import org.ukma.spring.crooodle.repository.ReviewRepository;
 import org.ukma.spring.crooodle.service.HotelService;
 import org.ukma.spring.crooodle.service.UserExpService;
@@ -42,17 +41,17 @@ public class UserExpServiceImpl implements UserExpService {
             .content(content)
             .build();
 
-        reviewRepository.create(review);
+        reviewRepository.saveAndFlush(review);
     }
 
     @Override
     public void deleteReview(long reviewId) {
         var user = userService.getCurrentUser();
-        var review = reviewRepository.getById(reviewId);
+        var review = reviewRepository.findById(reviewId).orElseThrow();
         if (review.getAuthor().getId().equals(user.getId()))
             return;
 
-        reviewRepository.delete(reviewId);
+        reviewRepository.delete(review);
     }
 
     @Override

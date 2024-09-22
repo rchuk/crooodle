@@ -1,29 +1,33 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.model.Room;
-import org.ukma.spring.crooodle.model.RoomType;
+import org.ukma.spring.crooodle.model.grouped.RoomTypeWithCount;
 import org.ukma.spring.crooodle.repository.HotelRepository;
+import org.ukma.spring.crooodle.repository.RoomRepository;
 import org.ukma.spring.crooodle.service.HotelService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @NoArgsConstructor
 @Service
 public class HotelServiceImpl implements HotelService {
     private HotelRepository hotelRepository;
+    private RoomRepository roomRepository;
 
+    @Autowired
     public void setHotelRepository(HotelRepository hotelRepository) {
         this.hotelRepository = hotelRepository;
     }
 
     @Override
     public Hotel getHotel(long hotelId) {
-        return hotelRepository.getById(hotelId);
+        return hotelRepository.findById(hotelId).orElseThrow();
     }
 
     // GET_HOTEL USE CASE
@@ -32,24 +36,15 @@ public class HotelServiceImpl implements HotelService {
      * the only thing from business logic is to load data about room types and amount
      */
     @Override
-    public Map<RoomType, Integer> getAvailableRoomTypes(long hotelId) {
-        var hotel = hotelRepository.getById(hotelId);
-
-        Map<RoomType, Integer> availableRoomTypes = new HashMap<>();
-
-        for(Room room : hotel.getRooms()){
-            // getOrDefault to write down new room if it doesn't exist, otherwise just add amount of availablerooms
-            availableRoomTypes.put(room.getRoomType(), availableRoomTypes.getOrDefault(room.getRoomType(), 0) + 1);
-        }
-
-        return availableRoomTypes;
+    public List<RoomTypeWithCount> getAvailableRoomTypes(long hotelId) {
+        return hotelRepository.getRoomTypesWithCount(hotelId);
     }
 
 
     // GET_ROOMS USE CASE
     @Override
-    public List<Room> listRooms(long hotelId) {
-        return getHotel(hotelId).getRooms();
+    public Page<Room> listRooms(long hotelId, PaginationDto paginationDto) {
+        return roomRepository.findAllByHotelId(hotelId, paginationDto.toPageable());
     }
 
     // FILTER_HOTELS USE CASE
@@ -62,7 +57,13 @@ public class HotelServiceImpl implements HotelService {
      * (i.e. MaxPrice and MinPrice)
      * */
     @Override
-    public List<Hotel> listHotels(Map<String, Object> filters) {
-        return hotelRepository.list(filters);
+    public Page<Hotel> listHotels(PaginationDto paginationDto) {
+        // TODO: Add specification
+        return hotelRepository.findAll(paginationDto.toPageable());
+    }
+
+    @Autowired
+    public void setRoomRepository(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
     }
 }
