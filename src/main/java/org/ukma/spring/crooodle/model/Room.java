@@ -1,16 +1,25 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 @Entity
 public class Room {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Length(min = 1, max = 100)
     private String number;
-    private double pricePerNight;
+    @Positive
+    private int pricePerNight;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
@@ -19,55 +28,4 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "room_type_id")
     private RoomType roomType;
-
-    // Constructors
-    public Room() {}
-
-    public Room(String number, double pricePerNight, Hotel hotel, RoomType roomType) {
-        this.number = number;
-        this.pricePerNight = pricePerNight;
-        this.hotel = hotel;
-        this.roomType = roomType;
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public double getPricePerNight() {
-        return pricePerNight;
-    }
-
-    public void setPricePerNight(double pricePerNight) {
-        this.pricePerNight = pricePerNight;
-    }
-
-    public Hotel getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
-    }
-
-    public RoomType getRoomType() {
-        return roomType;
-    }
-
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
-    }
 }

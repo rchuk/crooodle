@@ -1,7 +1,6 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @NoArgsConstructor
@@ -10,11 +9,18 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-public class RoomType {
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    private String type; // e.g., "Standard", "Deluxe"
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User author;
+
+    private String content;
 }

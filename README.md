@@ -1,26 +1,38 @@
 # Croodle
 
-## About
-Crooodle is a learning management system
 
-### Basic features
+## About
+Crooodle is a E-vacations system that helps connects users, hotels and transport companies
+
+### Primary features
 - Authentication
 - Role-based authorization
-- Course enrollment
-- Grading system
-- User profiles
-- Course page with files, links, assignments
-- Task calendar or timeline
+- Room Booking
+- Filter Hotels
+- View Hotels
+- View Rooms
+- Leave and remove reviews
+- Give and revert ranking
+
+
+### Secondary features
+- Feature tags
+- Managing hotel info
+- Managing prices
+- Write in/out guests for hotel administrator
+- Approval of booking by hotel administrator
+- Request of hotel rempval
+- Transport Entity
+- Transportation options
+
+
 
 ### Advanced features
-- Educational assessment (multiple choice, etc.)
+- Map integration
+- Reviews classification
+- Route planning
+- Advenced address-based filtering
 
-### Additional features
-- Student randomizer
-- Requests for deadline extension
-- Section with certificate programs and current progress of the user there
-- Automatic card generation from failed assessments
-- Automatic card generation from lecturer's documents
 
 ## Development
 
