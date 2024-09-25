@@ -14,9 +14,9 @@ public interface HotelRepository extends JpaRepository<Hotel, Long>, JpaSpecific
         SELECT
             new org.ukma.spring.crooodle.model.grouped.RoomTypeWithCount(room.roomType, COUNT(room))
         FROM Hotel hotel
-        JOIN Room room on hotel == Room.hotel
-        JOIN RoomType roomType on room == room.roomType
-        WHERE hotel.id == :hotelId
+        JOIN Room room ON hotel = room.hotel
+        JOIN RoomType roomType ON room.roomType = roomType
+        WHERE hotel.id = :hotelId
         GROUP BY roomType
         """
     )
