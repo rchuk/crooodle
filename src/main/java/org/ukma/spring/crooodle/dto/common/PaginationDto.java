@@ -1,15 +1,15 @@
 package org.ukma.spring.crooodle.dto.common;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @AllArgsConstructor
-@Builder
+@Value
 public class PaginationDto {
-    private final int page;
-    private final int limit;
+    int page;
+    int limit;
 
     public PaginationDto() {
         this(0, 10);

@@ -19,6 +19,6 @@ public class UserServiceImpl implements UserService {
 
         var email = auth.getName();
 
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).orElseThrow();
     }
 }
