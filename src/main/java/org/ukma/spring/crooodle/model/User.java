@@ -24,8 +24,9 @@ public class User implements UserDetails {
 
     @Length(min = 3, max = 128)
     private String name;
-    @Length(min = 3)
+    @Length(min = 3, max = 320)
     private String email;
+    @Length(max = 344)
     @NotBlank
     private String passwordHash;
 
