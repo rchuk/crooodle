@@ -1,10 +1,10 @@
 CREATE TABLE user_role(
-                          id SERIAL PRIMARY KEY,  -- Primary key
-                          name VARCHAR(255) NOT NULL  -- Role name
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );
 
--- Insert predefined roles
-INSERT INTO user_role (name)
+INSERT INTO
+    user_role (name)
 VALUES
     ('ROLE_CLIENT'),
     ('ROLE_HOTEL_STAFF'),

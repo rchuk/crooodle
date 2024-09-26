@@ -8,8 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 public class CrooodleApplication {
-	@Autowired
-	private ApplicationContext applicationContext;
 	public static void main(String[] args) {
 		SpringApplication.run(CrooodleApplication.class, args);
 	}
