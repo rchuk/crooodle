@@ -22,6 +22,6 @@ public class UserRole {
     @NotNull
     private UserRoleKind name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 }
