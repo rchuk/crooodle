@@ -11,6 +11,12 @@ import java.util.List;
 public interface HotelService {
     Hotel getHotel(long hotelId);
 
+    void updateHotel(Hotel hotel);
+
+    void deleteHotel(long hotelId);
+
+    void createHotel(Hotel hotel);
+
     List<RoomTypeWithCount> getAvailableRoomTypes(long hotelId);
 
     Page<Room> listRooms(long hotelId, PaginationDto paginationDto);

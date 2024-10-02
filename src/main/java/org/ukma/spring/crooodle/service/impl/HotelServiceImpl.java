@@ -67,4 +67,19 @@ public class HotelServiceImpl implements HotelService {
     public void setRoomRepository(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
     }
+
+    @Override
+    public void updateHotel(Hotel hotel) {
+        hotelRepository.save(hotel);
+    }
+
+    @Override
+    public void deleteHotel(long hotelId) {
+        hotelRepository.deleteById(hotelId);
+    }
+
+    @Override
+    public void createHotel(Hotel hotel) {
+        hotelRepository.save(hotel);
+    }
 }
