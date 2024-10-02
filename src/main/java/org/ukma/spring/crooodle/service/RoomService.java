@@ -4,4 +4,8 @@ import org.ukma.spring.crooodle.model.Room;
 
 public interface RoomService {
     Room getRoom(long id);
+
+    void updateRoom(Room room);
+
+    void deleteRoom(long roomId);
 }

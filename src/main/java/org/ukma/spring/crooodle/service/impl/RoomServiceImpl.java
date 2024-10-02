@@ -13,5 +13,14 @@ public class RoomServiceImpl implements RoomService {
         return null;
     }
 
+    @Override
+    public void updateRoom(Room room) {
+        //TODO: implement necessary logic
+    }
+
+    @Override
+    public void deleteRoom(long roomId) {
+        //TODO: implement necessary logic
+    }
 
 }
