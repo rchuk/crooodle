@@ -24,7 +24,7 @@ public class RoomsController {
     @Autowired
     private UserExpService reviewService;
 
-    // Load rooms
+    // Load room
     @GetMapping("")
     public String getRoom(@RequestParam("id") long roomId, Model model) {
 
@@ -32,7 +32,7 @@ public class RoomsController {
         Room room = roomService.getRoom(roomId);
         model.addAttribute("room", room);
 
-        // Load the first 10 reviews for this room
+        // TODO: first 10 reviews for this room - or load all, and handle limitation on frontend
         List<Review> reviews = reviewService.getReviews(roomId);
         if (reviews.size() > 10) {
             reviews = reviews.subList(0, 10);  // Limit to the first 10 reviews
