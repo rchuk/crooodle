@@ -3,13 +3,8 @@ package org.ukma.spring.crooodle.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.ukma.spring.crooodle.model.Review;
-import org.ukma.spring.crooodle.model.Room;
-import org.ukma.spring.crooodle.model.User;
-import org.ukma.spring.crooodle.model.Booking;
+import org.springframework.web.bind.annotation.*;
+import org.ukma.spring.crooodle.model.*;
 import org.ukma.spring.crooodle.service.BookingService;
 import org.ukma.spring.crooodle.service.RoomService;
 import org.ukma.spring.crooodle.service.UserExpService;
@@ -29,6 +24,7 @@ public class RoomsController {
     @Autowired
     private UserExpService reviewService;
 
+    // Load rooms
     @GetMapping("")
     public String getRoom(@RequestParam("id") long roomId, Model model) {
 
@@ -46,7 +42,8 @@ public class RoomsController {
         return "room/details";
     }
 
-    @GetMapping("/book")
+    // Book Room
+    @PostMapping("/book")
     public String book(@RequestParam("roomId") long roomId,
                        @RequestParam("startDate") String startDate,
                        @RequestParam("endDate") String endDate,
@@ -68,4 +65,37 @@ public class RoomsController {
             return "rooms/error"; // error page
         }
     }
+
+    @PutMapping("/update")
+    public String updateRoom(@RequestParam("roomId") long roomId,
+                             @RequestParam("hotelId") long hotelId,
+                             @RequestParam("description") String description,
+                             @RequestParam("price") int price,
+                             Model model) {
+        try {
+            Room room = roomService.getRoom(roomId);
+            room.setPricePerNight(price);
+
+            roomService.updateRoom(room);
+            model.addAttribute("message", "Room updated successfully!");
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to update room");
+        }
+
+        return "redirect:/rooms?id=" + roomId;  // updated room details page
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteRoom(@RequestParam("roomId") long roomId, Model model) {
+        try {
+            roomService.deleteRoom(roomId);
+            model.addAttribute("message", "Room deleted successfully!");
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to delete room");
+        }
+
+        return "redirect:/rooms";  // rooms listing page
+    }
+
+
 }
