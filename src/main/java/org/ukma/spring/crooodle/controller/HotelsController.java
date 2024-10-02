@@ -4,10 +4,7 @@ package org.ukma.spring.crooodle.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.service.HotelService;
 
@@ -25,6 +22,28 @@ public class HotelsController {
         Hotel hotel = hotelService.getHotel(hotelId);
         model.addAttribute("hotel", hotel);
 
+        return "hotel/details";
+    }
+
+    // Create hotel
+    @PostMapping("/create")
+    public String createHotel(@RequestParam("name") String name,
+                         @RequestParam("address") String address,
+                         @RequestParam("ranking") double ranking,
+                         @RequestParam("totalRanks") int totalRanks,
+                         Model model) {
+        try {
+            Hotel hotel = new Hotel();
+            hotel.setName(name);
+            hotel.setAddress(address);
+            hotel.setRanking(ranking);
+            hotel.setTotalRanks(totalRanks);
+
+            hotelService.createHotel(hotel);
+            model.addAttribute("message", "Hotel created successfully!");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
         return "hotel/details";
     }
 
@@ -49,6 +68,18 @@ public class HotelsController {
             model.addAttribute("error", e.getMessage());
         }
         return "hotel/details";
+    }
+
+    // Delete hotel
+    @DeleteMapping("/delete")
+    public String deleteHotel(@RequestParam("hotelId") long hotelId, Model model) {
+        try {
+            hotelService.deleteHotel(hotelId);
+            model.addAttribute("message", "Hotel deleted successfully!");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "hotels";
     }
 
 
