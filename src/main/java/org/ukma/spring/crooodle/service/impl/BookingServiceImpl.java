@@ -1,7 +1,8 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.ukma.spring.crooodle.exception.PublicBadRequestException;
+import org.ukma.spring.crooodle.dto.BookingDto;
 import org.ukma.spring.crooodle.model.Booking;
 import org.ukma.spring.crooodle.model.User;
 import org.ukma.spring.crooodle.model.Room;
@@ -21,8 +22,16 @@ public class BookingServiceImpl implements BookingService {
     private List<Booking> existingBookings = new ArrayList<>(); // Список для фіктивних бронювань
 
     @Override
-    public Booking bookRoom(User user, long roomId, LocalDate startDate, LocalDate endDate) {
+    public BookingDto bookRoom(BookingDto bookingDto) {
+
+        //unpack
+        var user = bookingDto.getUser();
+        var roomId = bookingDto.getRoomId();
+        var startDate = bookingDto.getStartDate();
+        var endDate = bookingDto.getEndDate();
+
         var room = roomService.getRoom(roomId);
+
         if (checkAvailabilityImpl(room, startDate, endDate)) {
             Booking booking = Booking.builder()
                 .user(user)
@@ -33,9 +42,9 @@ public class BookingServiceImpl implements BookingService {
                 .status("Confirmed")
                 .build();
             existingBookings.add(booking); // Додаємо нове бронювання до списку
-            return booking;
+            return new BookingDto(booking);
         } else {
-            throw new RuntimeException("Room is not available for the selected dates.");
+            throw new PublicBadRequestException("Date is already occupied");
         }
     }
 

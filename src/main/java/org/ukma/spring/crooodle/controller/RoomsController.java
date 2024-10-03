@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.dto.BookingDto;
 import org.ukma.spring.crooodle.dto.LoadRoomResponseDto;
+import org.ukma.spring.crooodle.dto.common.PublicErrorDto;
 import org.ukma.spring.crooodle.model.*;
 import org.ukma.spring.crooodle.service.BookingService;
 import org.ukma.spring.crooodle.service.RoomService;
@@ -35,19 +36,8 @@ public class RoomsController {
 
     // Book Room
     @PostMapping("/book")
-    public BookingDto book(@RequestParam("roomId") long roomId,
-                           @RequestParam("startDate") String startDate,
-                           @RequestParam("endDate") String endDate,
-                           Model model) {
-
-        // Mocking user (later to load from session token or authentication system)
-        User user = new User();
-
-        try {
-            return bookingService.bookRoom(user, roomId, LocalDate.parse(startDate), LocalDate.parse(endDate));
-        } catch (Exception e) {
-
-        }
+    public BookingDto book(@RequestBody @Valid BookingDto bookingDto) {
+        return bookingService.bookRoom(bookingDto);
     }
 
     @PutMapping("/update")
