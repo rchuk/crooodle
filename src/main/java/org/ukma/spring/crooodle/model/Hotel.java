@@ -29,6 +29,9 @@ public class Hotel {
     @PositiveOrZero
     private int totalRanks;
 
+    private Double latitude;
+    private Double longitude;
+
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Room> rooms;
 

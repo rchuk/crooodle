@@ -1,5 +1,7 @@
 package org.ukma.spring.crooodle.app;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
+
     @ExceptionHandler(PublicNotFoundException.class)
     public ResponseEntity<PublicErrorDto> handlePublicNotFoundException(PublicNotFoundException ex, WebRequest request) {
         var errorDto = PublicErrorDto.builder().message(ex.getMessage()).build();
@@ -57,6 +61,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<PublicErrorDto> handleUnknownException(Exception ex) {
+        log.debug("Unhandled exception: %s", ex);
         var errorDto = PublicErrorDto.builder().message("Unknown error").build();
 
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);

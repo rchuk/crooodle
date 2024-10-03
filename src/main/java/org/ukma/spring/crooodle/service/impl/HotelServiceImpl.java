@@ -1,23 +1,26 @@
 package org.ukma.spring.crooodle.service.impl;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.ukma.spring.crooodle.dto.WeatherForecastResponseDto;
 import org.ukma.spring.crooodle.dto.common.PaginationDto;
+import org.ukma.spring.crooodle.exception.PublicNotFoundException;
 import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.model.Room;
 import org.ukma.spring.crooodle.model.grouped.RoomTypeWithCount;
 import org.ukma.spring.crooodle.repository.HotelRepository;
 import org.ukma.spring.crooodle.repository.RoomRepository;
 import org.ukma.spring.crooodle.service.HotelService;
+import org.ukma.spring.crooodle.service.WeatherService;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class HotelServiceImpl implements HotelService {
+    private final WeatherService weatherService;
     private HotelRepository hotelRepository;
     private RoomRepository roomRepository;
 
@@ -81,5 +84,12 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public void createHotel(Hotel hotel) {
         hotelRepository.save(hotel);
+    }
+
+    @Override
+    public WeatherForecastResponseDto getHotelWeatherForecast(long hotelId) {
+        var hotel = hotelRepository.findById(hotelId).orElseThrow(PublicNotFoundException::new);
+
+        return weatherService.getWeatherForecast(hotel.getLatitude(), hotel.getLongitude());
     }
 }

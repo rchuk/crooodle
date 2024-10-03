@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.service;
 
 import org.springframework.data.domain.Page;
+import org.ukma.spring.crooodle.dto.WeatherForecastResponseDto;
 import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.model.Room;
@@ -23,4 +24,6 @@ public interface HotelService {
 
     // TODO: Pass criteria DTO
     Page<Hotel> listHotels(PaginationDto paginationDto);
+
+    WeatherForecastResponseDto getHotelWeatherForecast(long hotelId);
 }

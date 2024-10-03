@@ -2,18 +2,25 @@ package org.ukma.spring.crooodle.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.ukma.spring.crooodle.dto.WeatherForecastResponseDto;
 import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.service.HotelService;
 
-@Controller
+@RestController
 @RequestMapping("/hotel")
 public class HotelsController {
 
     @Autowired
     private HotelService hotelService;
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/{id}/weather")
+    public WeatherForecastResponseDto getHotelWeatherForecast(@PathVariable("id") long hotelId) {
+        return hotelService.getHotelWeatherForecast(hotelId);
+    }
 
     // View hotel
     @GetMapping("")

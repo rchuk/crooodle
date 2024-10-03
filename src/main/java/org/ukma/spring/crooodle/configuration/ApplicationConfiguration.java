@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestClient;
 
 @EnableJpaRepositories("org.ukma.spring.crooodle.repository")
 @EnableWebSecurity
@@ -36,14 +37,14 @@ public class ApplicationConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/", "/auth/register", "/auth/login").permitAll()
-                .anyRequest().authenticated()
-            )
-            .csrf(AbstractHttpConfigurer::disable); // TODO: Enable
+        http.csrf(AbstractHttpConfigurer::disable); // TODO: Enable
 
         return http.build();
+    }
+
+    @Bean
+    public RestClient getRestClient() {
+        return RestClient.create();
     }
 }
 
