@@ -1,6 +1,9 @@
 package org.ukma.spring.crooodle.service;
 
+import jakarta.validation.Valid;
 import org.ukma.spring.crooodle.dto.LoadRoomResponseDto;
+import org.ukma.spring.crooodle.dto.RoomCrudRequestDto;
+import org.ukma.spring.crooodle.dto.RoomCrudResponseDto;
 import org.ukma.spring.crooodle.model.Room;
 
 public interface RoomService {
@@ -8,7 +11,7 @@ public interface RoomService {
 
     LoadRoomResponseDto loadRoom(long roomId);
 
-    void updateRoom(Room room);
+    RoomCrudResponseDto updateRoom(@Valid RoomCrudRequestDto requestDto);
 
-    void deleteRoom(long roomId);
+    RoomCrudResponseDto deleteRoom(long roomId);
 }
