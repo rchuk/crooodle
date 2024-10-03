@@ -111,7 +111,7 @@ public class HotelServiceImpl implements HotelService {
                 .totalRanks(0)
                 .build();
 
-        return hotelRepository.save(hotel).getId();
+        return hotelRepository.saveAndFlush(hotel).getId();
     }
 
     @Override

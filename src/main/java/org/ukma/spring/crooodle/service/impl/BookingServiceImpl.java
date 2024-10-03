@@ -28,11 +28,10 @@ public class BookingServiceImpl implements BookingService {
     private List<Booking> existingBookings = new ArrayList<>(); // Список для фіктивних бронювань
 
     @Override
-    public BookingDto bookRoom(BookingDto bookingDto) {
+    public BookingDto bookRoom(long roomId, BookingDto bookingDto) {
 
         //unpack
         var user = userService.getCurrentUser();
-        var roomId = bookingDto.getRoomId();
         var startDate = bookingDto.getStartDate();
         var endDate = bookingDto.getEndDate();
 
