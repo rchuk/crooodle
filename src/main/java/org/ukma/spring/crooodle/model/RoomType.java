@@ -1,8 +1,8 @@
 package org.ukma.spring.crooodle.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.ukma.spring.crooodle.model.enums.RoomTypeKind;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +15,6 @@ public class RoomType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    private String type; // e.g., "Standard", "Deluxe"
+    @Enumerated(EnumType.STRING)
+    private RoomTypeKind type; // e.g., "Standard", "Deluxe"
 }

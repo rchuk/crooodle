@@ -23,13 +23,13 @@ public class UserExpServiceImpl implements UserExpService {
         // later we plan to implement classification positive/negative review,
         // so there will be a need to structurally obtain reviews from this service
 
-        return hotelService.getHotel(hotelId).getReviews();
+        return hotelService.getHotelEntity(hotelId).getReviews();
     }
 
     @Override
     public void addReview(long hotelId, String content) {
         var user = userService.getCurrentUser();
-        var hotel = hotelService.getHotel(hotelId);
+        var hotel = hotelService.getHotelEntity(hotelId);
 
         Review review = Review.builder()
             .author(user)
@@ -52,7 +52,7 @@ public class UserExpServiceImpl implements UserExpService {
 
     @Override
     public void addRanking(long hotelId, int rank) {
-        var hotel = hotelService.getHotel(hotelId);
+        var hotel = hotelService.getHotelEntity(hotelId);
 
         double totalRank = hotel.getRanking() * hotel.getTotalRanks();
 
@@ -64,7 +64,7 @@ public class UserExpServiceImpl implements UserExpService {
 
     @Override
     public void deleteRanking(long hotelId, int rank) {
-        var hotel = hotelService.getHotel(hotelId);
+        var hotel = hotelService.getHotelEntity(hotelId);
 
         double totalRank = hotel.getRanking() * hotel.getTotalRanks();
 

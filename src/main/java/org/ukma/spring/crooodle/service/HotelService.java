@@ -1,7 +1,7 @@
 package org.ukma.spring.crooodle.service;
 
 import org.springframework.data.domain.Page;
-import org.ukma.spring.crooodle.dto.WeatherForecastResponseDto;
+import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.model.Hotel;
 import org.ukma.spring.crooodle.model.Room;
@@ -10,20 +10,22 @@ import org.ukma.spring.crooodle.model.grouped.RoomTypeWithCount;
 import java.util.List;
 
 public interface HotelService {
-    Hotel getHotel(long hotelId);
+    long createHotel(HotelCreateRequestDto requestDto);
 
-    void updateHotel(Hotel hotel);
+    void updateHotel(long id, HotelUpdateRequestDto requestDto);
 
-    void deleteHotel(long hotelId);
+    HotelResponseDto getHotel(long id);
 
-    void createHotel(Hotel hotel);
+    void deleteHotel(long id);
 
-    List<RoomTypeWithCount> getAvailableRoomTypes(long hotelId);
+    List<RoomTypeWithCountResponseDto> getAvailableRoomTypes(long hotelId);
 
     Page<Room> listRooms(long hotelId, PaginationDto paginationDto);
 
     // TODO: Pass criteria DTO
-    Page<Hotel> listHotels(PaginationDto paginationDto);
+    Page<HotelResponseDto> listHotels(PaginationDto paginationDto);
 
     WeatherForecastResponseDto getHotelWeatherForecast(long hotelId);
+
+    Hotel getHotelEntity(long id);
 }

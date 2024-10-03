@@ -1,93 +1,57 @@
 package org.ukma.spring.crooodle.controller;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.ukma.spring.crooodle.dto.WeatherForecastResponseDto;
-import org.ukma.spring.crooodle.model.Hotel;
+import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.service.HotelService;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/hotel")
 public class HotelsController {
-
-    @Autowired
-    private HotelService hotelService;
+    private final HotelService hotelService;
 
     @PreAuthorize("permitAll()")
     @GetMapping("/{id}/weather")
-    public WeatherForecastResponseDto getHotelWeatherForecast(@PathVariable("id") long hotelId) {
-        return hotelService.getHotelWeatherForecast(hotelId);
+    public WeatherForecastResponseDto getHotelWeatherForecast(@PathVariable long id) {
+        return hotelService.getHotelWeatherForecast(id);
     }
 
     // View hotel
-    @GetMapping("")
-    public String getHotel(@RequestParam("id") long hotelId, Model model) {
-
-        Hotel hotel = hotelService.getHotel(hotelId);
-        model.addAttribute("hotel", hotel);
-
-        return "hotel/details";
+    @PreAuthorize("permitAll()")
+    @GetMapping("/{id}")
+    public HotelResponseDto getHotel(@PathVariable long id) {
+        return hotelService.getHotel(id);
     }
 
     // Create hotel
-    @PostMapping("/create")
-    public String createHotel(@RequestParam("name") String name,
-                         @RequestParam("address") String address,
-                         @RequestParam("ranking") double ranking,
-                         @RequestParam("totalRanks") int totalRanks,
-                         Model model) {
-        try {
-            Hotel hotel = new Hotel();
-            hotel.setName(name);
-            hotel.setAddress(address);
-            hotel.setRanking(ranking);
-            hotel.setTotalRanks(totalRanks);
-
-            hotelService.createHotel(hotel);
-            model.addAttribute("message", "Hotel created successfully!");
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-        }
-        return "hotel/details";
+    @PreAuthorize("permitAll()")
+    @PostMapping()
+    public long createHotel(@RequestBody @Valid HotelCreateRequestDto requestDto) {
+        return hotelService.createHotel(requestDto);
     }
 
     // Update hotel
-    @PutMapping("/update")
-    public String updateHotel(@RequestParam("hotelId") long hotelId,
-                         @RequestParam("name") String name,
-                         @RequestParam("address") String address,
-                         @RequestParam("ranking") double ranking,
-                         @RequestParam("totalRanks") int totalRanks,
-                         Model model) {
-        try {
-            Hotel hotel = hotelService.getHotel(hotelId);
-            hotel.setName(name);
-            hotel.setAddress(address);
-            hotel.setRanking(ranking);
-            hotel.setTotalRanks(totalRanks);
+    @PreAuthorize("permitAll()")
+    @PutMapping("/{id}")
+    public void updateHotel(@PathVariable long id, @RequestBody @Valid HotelUpdateRequestDto requestDto) {
+        hotelService.updateHotel(id, requestDto);
+    }
 
-            hotelService.updateHotel(hotel);
-            model.addAttribute("message", "Hotel updated successfully!");
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-        }
-        return "hotel/details";
+    @PreAuthorize("permitAll()")
+    @GetMapping("/{id}/rooms")
+    public List<RoomTypeWithCountResponseDto> getHotelRoomsByType(@PathVariable long id) {
+        return hotelService.getAvailableRoomTypes(id);
     }
 
     // Delete hotel
-    @DeleteMapping("/delete")
-    public String deleteHotel(@RequestParam("hotelId") long hotelId, Model model) {
-        try {
-            hotelService.deleteHotel(hotelId);
-            model.addAttribute("message", "Hotel deleted successfully!");
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-        }
-        return "hotels";
+    @PreAuthorize("permitAll()")
+    @DeleteMapping("/{id}")
+    public void deleteHotel(@PathVariable long id) {
+        hotelService.deleteHotel(id);
     }
-
-
 }
