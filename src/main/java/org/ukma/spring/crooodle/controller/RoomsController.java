@@ -1,9 +1,12 @@
 package org.ukma.spring.crooodle.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.ukma.spring.crooodle.dto.BookingDto;
+import org.ukma.spring.crooodle.dto.LoadRoomResponseDto;
 import org.ukma.spring.crooodle.model.*;
 import org.ukma.spring.crooodle.service.BookingService;
 import org.ukma.spring.crooodle.service.RoomService;
@@ -26,43 +29,24 @@ public class RoomsController {
 
     // Load room
     @GetMapping("")
-    public String getRoom(@RequestParam("id") long roomId, Model model) {
-
-        // Load room details
-        Room room = roomService.getRoom(roomId);
-        model.addAttribute("room", room);
-
-        // TODO: first 10 reviews for this room - or load all, and handle limitation on frontend
-        List<Review> reviews = reviewService.getReviews(roomId);
-        if (reviews.size() > 10) {
-            reviews = reviews.subList(0, 10);  // Limit to the first 10 reviews
-        }
-        model.addAttribute("reviews", reviews);
-
-        return "room/details";
+    public LoadRoomResponseDto getRoom(@PathVariable("id") long roomId) {
+        return roomService.loadRoom(roomId);
     }
 
     // Book Room
     @PostMapping("/book")
-    public String book(@RequestParam("roomId") long roomId,
-                       @RequestParam("startDate") String startDate,
-                       @RequestParam("endDate") String endDate,
-                       Model model) {
+    public BookingDto book(@RequestParam("roomId") long roomId,
+                           @RequestParam("startDate") String startDate,
+                           @RequestParam("endDate") String endDate,
+                           Model model) {
 
         // Mocking user (later to load from session token or authentication system)
         User user = new User();
 
         try {
-            Booking booking = bookingService.bookRoom(user, roomId, LocalDate.parse(startDate), LocalDate.parse(endDate));
+            return bookingService.bookRoom(user, roomId, LocalDate.parse(startDate), LocalDate.parse(endDate));
+        } catch (Exception e) {
 
-            model.addAttribute("booking", booking);
-            model.addAttribute("message", "Room booked successfully!");
-
-            return "rooms/confirmation"; // confirmation page
-        } catch (RuntimeException e) {
-            // Handle booking errors
-            model.addAttribute("error", "Failed to book room");
-            return "rooms/error"; // error page
         }
     }
 

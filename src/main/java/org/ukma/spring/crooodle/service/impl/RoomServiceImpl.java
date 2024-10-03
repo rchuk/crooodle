@@ -2,6 +2,7 @@ package org.ukma.spring.crooodle.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.ukma.spring.crooodle.dto.LoadRoomResponseDto;
 import org.ukma.spring.crooodle.model.Room;
 import org.ukma.spring.crooodle.service.RoomService;
 
@@ -10,6 +11,10 @@ import org.ukma.spring.crooodle.service.RoomService;
 public class RoomServiceImpl implements RoomService {
     @Override
     public Room getRoom(long id) {
+        return null;
+    }
+
+    public LoadRoomResponseDto loadRoom(long roomId) {
         return null;
     }
 
