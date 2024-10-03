@@ -39,13 +39,13 @@ public class RoomsController {
     }
 
     @PutMapping("/update")
-    public RoomCrudResponseDto updateRoom(@RequestBody @Valid RoomCrudRequestDto requestDto) {
-        return roomService.updateRoom(requestDto);
+    public void updateRoom(@PathVariable("id") long roomId, @RequestBody @Valid RoomCrudRequestDto requestDto) {
+        roomService.updateRoom(requestDto);
     }
 
     @DeleteMapping("/delete")
-    public RoomCrudResponseDto deleteRoom(@PathVariable("id") long roomId) {
-        return roomService.deleteRoom(roomId);
+    public void deleteRoom(@PathVariable("id") long roomId) {
+        roomService.deleteRoom(roomId);
     }
 
 

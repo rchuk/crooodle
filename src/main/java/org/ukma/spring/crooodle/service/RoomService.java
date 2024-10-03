@@ -11,7 +11,7 @@ public interface RoomService {
 
     LoadRoomResponseDto loadRoom(long roomId);
 
-    RoomCrudResponseDto updateRoom(@Valid RoomCrudRequestDto requestDto);
+    void updateRoom(@Valid RoomCrudRequestDto requestDto);
 
-    RoomCrudResponseDto deleteRoom(long roomId);
+    void deleteRoom(long roomId);
 }

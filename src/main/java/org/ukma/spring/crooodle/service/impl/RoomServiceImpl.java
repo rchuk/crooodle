@@ -22,19 +22,16 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomCrudResponseDto updateRoom(@Valid RoomCrudRequestDto requestDto) {
+    public void updateRoom(@Valid RoomCrudRequestDto requestDto) {
 
         //TODO: implement necessary logic
 
-        return new RoomCrudResponseDto();
     }
 
     @Override
-    public RoomCrudResponseDto deleteRoom(long roomId) {
+    public void deleteRoom(long roomId) {
 
         //TODO: implement necessary logic
-
-        return new RoomCrudResponseDto();
     }
 
 }

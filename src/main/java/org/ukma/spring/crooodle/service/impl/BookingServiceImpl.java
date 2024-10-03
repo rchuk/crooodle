@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.ukma.spring.crooodle.exception.PublicBadRequestException;
 import org.ukma.spring.crooodle.dto.BookingDto;
 import org.ukma.spring.crooodle.model.Booking;
@@ -9,6 +10,8 @@ import org.ukma.spring.crooodle.model.Room;
 import org.ukma.spring.crooodle.service.BookingService;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.service.RoomService;
+import org.ukma.spring.crooodle.service.UserExpService;
+import org.ukma.spring.crooodle.service.UserService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,13 +22,16 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
     private final RoomService roomService;
 
+    @Autowired
+    private UserService userService;
+
     private List<Booking> existingBookings = new ArrayList<>(); // Список для фіктивних бронювань
 
     @Override
     public BookingDto bookRoom(BookingDto bookingDto) {
 
         //unpack
-        var user = bookingDto.getUser();
+        var user = userService.getCurrentUser();
         var roomId = bookingDto.getRoomId();
         var startDate = bookingDto.getStartDate();
         var endDate = bookingDto.getEndDate();
