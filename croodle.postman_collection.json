@@ -1,0 +1,421 @@
+{
+	"info": {
+		"_postman_id": "af04b80f-7d83-4615-a4e7-3761f905c53f",
+		"name": "croodle",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29520257"
+	},
+	"item": [
+		{
+			"name": "register_test_account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code\", () => {\r",
+							"    pm.response.to.have.status(400)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Test Account\",\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"00000000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_account_short_password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Test Account1\",\r\n    \"email\": \"test1@test.com\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login_test_account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Fields\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.accessToken).to.be.a('string');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"00000000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create_hotel",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response\", () => {\r",
+							"    pm.expect(pm.response.json()).to.be.a('number');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Abc\",\r\n    \"address\": \"Somewhere\",\r\n    \"latitude\": 50.4504,\r\n    \"longitude\": 30.5245\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/hotel",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hotel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_hotel_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Fields\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.id).to.be.a('number');\r",
+							"    pm.expect(responseJson.name).to.be.a('string');\r",
+							"    pm.expect(responseJson.address).to.be.a('string');\r",
+							"    pm.expect(responseJson.ranking).to.be.a('number');\r",
+							"    pm.expect(responseJson.totalRanks).to.be.a('number');\r",
+							"    pm.expect(responseJson.latitude).to.be.a('number');\r",
+							"    pm.expect(responseJson.longitude).to.be.a('number');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/hotel/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hotel",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_hotel_weather",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Fields\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.latitude).to.be.a('number');\r",
+							"    pm.expect(responseJson.longitude).to.be.a('number');\r",
+							"    pm.expect(responseJson.dailyMinTemperature).to.have.length(7);\r",
+							"    pm.expect(responseJson.dailyMaxTemperature).to.have.length(7);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/hotel/1/weather",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hotel",
+						"1",
+						"weather"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_hotel_info_invalid_url",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code\", () => {\r",
+							"    pm.response.to.have.status(404)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/hotel/-1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hotel",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_hotel",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"New Hotel Name\"   \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/hotel/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hotel",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hotel_rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Fields\", () => {\r",
+							"    pm.expect(pm.response.json()).to.be.a('array');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/hotel/1/rooms",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hotel",
+						"1",
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzI4ODM4OTEwLCJleHAiOjE3Mjg4Mzg5MTN9.U6nN2KnCZoSCn-i20LiwCa6mYlv1c9Ss4Ct4HDXVIdUs",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
