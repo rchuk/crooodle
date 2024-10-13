@@ -18,6 +18,7 @@ import org.springframework.web.client.RestClient;
 @Configuration
 // Позначаємо клас як конфігураційний, він буде обробляти залежності та налаштування
 public class ApplicationConfiguration {
+    private static final String[] SWAGGER_PATHS = {"/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-ui/**", "/webjars/swagger-ui/**"};
 
     @Value("${app.pbkdf2.secret}")
     private String pbkdf2Secret; // Значення секрету для алгоритму PBKDF2 із конфігураційного файлу
@@ -37,7 +38,11 @@ public class ApplicationConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable); // TODO: Enable
+        http.csrf(AbstractHttpConfigurer::disable) // TODO: Enable
+                .authorizeHttpRequests(r ->
+                        r.requestMatchers(SWAGGER_PATHS)
+                                .permitAll()
+                );
 
         return http.build();
     }
