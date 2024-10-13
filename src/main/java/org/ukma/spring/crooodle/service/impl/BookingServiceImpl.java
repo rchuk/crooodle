@@ -1,52 +1,62 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.ukma.spring.crooodle.exception.PublicBadRequestException;
 import org.ukma.spring.crooodle.dto.BookingDto;
+import org.ukma.spring.crooodle.config.BookingConfig;
 import org.ukma.spring.crooodle.model.Booking;
-import org.ukma.spring.crooodle.model.User;
 import org.ukma.spring.crooodle.model.Room;
 import org.ukma.spring.crooodle.service.BookingService;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.service.RoomService;
-import org.ukma.spring.crooodle.service.UserExpService;
 import org.ukma.spring.crooodle.service.UserService;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
+
     private final RoomService roomService;
+    private final UserService userService;
+    private final BookingConfig bookingConfig;
 
-    @Autowired
-    private UserService userService;
-
-    private List<Booking> existingBookings = new ArrayList<>(); // Список для фіктивних бронювань
+    private List<Booking> existingBookings = new ArrayList<>();
 
     @Override
     public BookingDto bookRoom(long roomId, BookingDto bookingDto) {
+        // Check if booking functionality is enabled
+        if (!bookingConfig.isEnabled()) {
+            throw new PublicBadRequestException("Booking functionality is currently disabled.");
+        }
 
-        //unpack
+        // Unpack DTO
         var user = userService.getCurrentUser();
         var startDate = bookingDto.getStartDate();
         var endDate = bookingDto.getEndDate();
-
         var room = roomService.getRoom(roomId);
 
+        // Validate booking duration
+        long bookingDuration = ChronoUnit.DAYS.between(startDate, endDate);
+        if (bookingDuration > bookingConfig.getMaxDays() || bookingDuration < bookingConfig.getMinDays()) {
+            throw new PublicBadRequestException(
+                    "Booking duration should be between " + bookingConfig.getMinDays() + " and " + bookingConfig.getMaxDays() + " days.");
+        }
+
+        // Check if the room is available
         if (checkAvailabilityImpl(room, startDate, endDate)) {
-            Booking booking = Booking.builder()
-                .user(user)
-                .room(room)
-                .startDate(startDate)
-                .endDate(endDate)
-                .totalPrice(calculateTotalPrice(room, startDate, endDate))
-                .status("Confirmed")
-                .build();
-            existingBookings.add(booking); // Додаємо нове бронювання до списку
+            var booking = Booking.builder()
+                    .user(user)
+                    .room(room)
+                    .startDate(startDate)
+                    .endDate(endDate)
+                    .totalPrice(calculateTotalPrice(room, startDate, endDate))
+                    .status("Confirmed")
+                    .build();
+            existingBookings.add(booking); // Add the new booking to the list
             return new BookingDto(booking);
         } else {
             throw new PublicBadRequestException("Date is already occupied");
@@ -67,15 +77,15 @@ public class BookingServiceImpl implements BookingService {
                     ((startDate.isBefore(booking.getEndDate()) && startDate.isAfter(booking.getStartDate())) ||
                             (endDate.isBefore(booking.getEndDate()) && endDate.isAfter(booking.getStartDate())) ||
                             startDate.equals(booking.getStartDate()) || endDate.equals(booking.getEndDate()))) {
-                return false; // Якщо дати перетинаються, номер недоступний
+                return false; // If dates overlap, room is not available
             }
         }
-        return true; // Якщо жодних конфліктів, номер доступний
+        return true; // If no conflicts, room is available
     }
 
     private int calculateTotalPrice(Room room, LocalDate startDate, LocalDate endDate) {
-        var days = (int)java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+        var days = (int)ChronoUnit.DAYS.between(startDate, endDate);
 
-        return days * room.getPricePerNight(); // Загальна ціна залежить від кількості днів та ціни за ніч
+        return days * room.getPricePerNight(); // Total price depends on the number of days and room price per night
     }
 }
