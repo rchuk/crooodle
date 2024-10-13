@@ -17,7 +17,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long>, JpaSpecific
         JOIN Room room ON hotel = room.hotel
         JOIN RoomType roomType ON room.roomType = roomType
         WHERE hotel.id = :hotelId
-        GROUP BY roomType
+        GROUP BY room.roomType
         """
     )
     List<RoomTypeWithCount> getRoomTypesWithCount(@Param("hotelId") Long hotelId);
