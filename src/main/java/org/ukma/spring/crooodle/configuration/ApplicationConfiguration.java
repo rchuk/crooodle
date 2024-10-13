@@ -38,13 +38,21 @@ public class ApplicationConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(r -> r.anyRequest().permitAll())
+                .build();
+        /*
         http.csrf(AbstractHttpConfigurer::disable) // TODO: Enable
-                .authorizeHttpRequests(r ->
-                        r.requestMatchers(SWAGGER_PATHS)
-                                .permitAll()
-                );
+            .authorizeHttpRequests(r -> r
+                .requestMatchers(SWAGGER_PATHS)
+                .permitAll()
+                .requestMatchers("/auth/login", "/auth/register")
+                .permitAll()
+            );
 
         return http.build();
+
+         */
     }
 
     @Bean
