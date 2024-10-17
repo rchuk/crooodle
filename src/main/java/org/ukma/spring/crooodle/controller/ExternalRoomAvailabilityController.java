@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +11,7 @@ import org.ukma.spring.crooodle.dto.BookingDto;
 import java.time.LocalDate;
 
 @RestController
+@Slf4j
 public class ExternalRoomAvailabilityController {
 
     @Autowired(required = false)
@@ -21,6 +23,7 @@ public class ExternalRoomAvailabilityController {
             @RequestParam String startDate,
             @RequestParam String endDate
     ) {
+        log.info("Received request to check room availability for room {}", roomId);
         if (externalRoomAvailabilityService != null) {
             BookingDto bookingDto = new BookingDto();
             bookingDto.setRoomId(roomId);
