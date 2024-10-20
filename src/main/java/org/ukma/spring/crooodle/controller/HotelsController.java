@@ -2,6 +2,7 @@ package org.ukma.spring.crooodle.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.dto.*;
@@ -12,12 +13,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/hotel")
+@Slf4j
 public class HotelsController {
     private final HotelService hotelService;
 
     @PreAuthorize("permitAll()")
     @GetMapping("/{id}/weather")
     public WeatherForecastResponseDto getHotelWeatherForecast(@PathVariable long id) {
+        log.info("Getting weather forecast for hotel with id {}", id);
         return hotelService.getHotelWeatherForecast(id);
     }
 
@@ -25,6 +28,7 @@ public class HotelsController {
     @PreAuthorize("permitAll()")
     @GetMapping("/{id}")
     public HotelResponseDto getHotel(@PathVariable long id) {
+        log.info("Getting hotel with id {}", id);
         return hotelService.getHotel(id);
     }
 
@@ -32,6 +36,7 @@ public class HotelsController {
     @PreAuthorize("permitAll()")
     @PostMapping()
     public long createHotel(@RequestBody @Valid HotelCreateRequestDto requestDto) {
+        log.info("Creating hotel with name {}", requestDto.getName());
         return hotelService.createHotel(requestDto);
     }
 
@@ -39,12 +44,14 @@ public class HotelsController {
     @PreAuthorize("permitAll()")
     @PutMapping("/{id}")
     public void updateHotel(@PathVariable long id, @RequestBody @Valid HotelUpdateRequestDto requestDto) {
+        log.info("Updating hotel with id {}", id);
         hotelService.updateHotel(id, requestDto);
     }
 
     @PreAuthorize("permitAll()")
     @GetMapping("/{id}/rooms")
     public List<RoomTypeWithCountResponseDto> getHotelRoomsByType(@PathVariable long id) {
+        log.info("Getting room types for hotel with id {}", id);
         return hotelService.getAvailableRoomTypes(id);
     }
 
@@ -52,6 +59,7 @@ public class HotelsController {
     @PreAuthorize("permitAll()")
     @DeleteMapping("/{id}")
     public void deleteHotel(@PathVariable long id) {
+        log.info("Deleting hotel with id {}", id);
         hotelService.deleteHotel(id);
     }
 }
