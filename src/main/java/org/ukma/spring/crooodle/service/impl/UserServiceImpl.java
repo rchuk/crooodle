@@ -16,9 +16,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         var email = auth.getName();
-
         return userRepository.findByEmail(email).orElseThrow();
     }
 }

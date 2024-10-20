@@ -39,9 +39,9 @@ public class User implements UserDetails {
 
     @ManyToMany
     @JoinTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<UserRole> roles;
 
@@ -57,7 +57,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO
-        return List.of();
+        return roles;
     }
 }

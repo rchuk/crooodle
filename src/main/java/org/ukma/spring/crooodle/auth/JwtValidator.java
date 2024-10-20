@@ -1,16 +1,17 @@
 package org.ukma.spring.crooodle.auth;
 
 import jakarta.servlet.ServletException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class JwtValidator extends OncePerRequestFilter {
 
-    private JwtGenerator tokenProvider;
+    private final JwtGenerator tokenProvider;
 
     public JwtValidator(JwtGenerator tokenProvider) {
         this.tokenProvider = tokenProvider;
@@ -34,4 +35,3 @@ public class JwtValidator extends OncePerRequestFilter {
         return null;
     }
 }
-
