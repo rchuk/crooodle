@@ -21,19 +21,22 @@ public class JwtServiceImpl implements JwtService {
     @Value("${app.jwt.expiration.seconds}")
     private int jwtExpirationSeconds;
 
+    @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationSeconds))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * jwtExpirationSeconds))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
 

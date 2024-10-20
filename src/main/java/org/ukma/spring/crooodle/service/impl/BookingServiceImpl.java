@@ -1,10 +1,9 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.ukma.spring.crooodle.config.BookingConfig;
 import org.ukma.spring.crooodle.exception.PublicBadRequestException;
 import org.ukma.spring.crooodle.dto.BookingDto;
+import org.ukma.spring.crooodle.config.BookingConfig;
 import org.ukma.spring.crooodle.model.Booking;
 import org.ukma.spring.crooodle.model.Room;
 import org.ukma.spring.crooodle.service.BookingService;
@@ -22,19 +21,13 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
 
     private final RoomService roomService;
-
-    @Autowired
-    private UserService userService;
-
-    // Injecting the new BookingConfig class
-    @Autowired
-    private BookingConfig bookingConfig;
+    private final UserService userService;
+    private final BookingConfig bookingConfig;
 
     private List<Booking> existingBookings = new ArrayList<>();
 
     @Override
     public BookingDto bookRoom(long roomId, BookingDto bookingDto) {
-
         // Check if booking functionality is enabled
         if (!bookingConfig.isEnabled()) {
             throw new PublicBadRequestException("Booking functionality is currently disabled.");
@@ -55,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
 
         // Check if the room is available
         if (checkAvailabilityImpl(room, startDate, endDate)) {
-            Booking booking = Booking.builder()
+            var booking = Booking.builder()
                     .user(user)
                     .room(room)
                     .startDate(startDate)
@@ -66,17 +59,19 @@ public class BookingServiceImpl implements BookingService {
             existingBookings.add(booking); // Add the new booking to the list
             return new BookingDto(booking);
         } else {
-            throw new PublicBadRequestException("Date is already occupied.");
+            throw new PublicBadRequestException("Date is already occupied");
         }
     }
 
     @Override
     public boolean checkAvailability(long roomId, LocalDate startDate, LocalDate endDate) {
         var room = roomService.getRoom(roomId);
+
         return checkAvailabilityImpl(room, startDate, endDate);
     }
 
     private boolean checkAvailabilityImpl(Room room, LocalDate startDate, LocalDate endDate) {
+        // TODO: Validate that room is from current hotel
         for (Booking booking : existingBookings) {
             if (booking.getRoom().equals(room) &&
                     ((startDate.isBefore(booking.getEndDate()) && startDate.isAfter(booking.getStartDate())) ||
@@ -89,7 +84,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private int calculateTotalPrice(Room room, LocalDate startDate, LocalDate endDate) {
-        var days = (int) ChronoUnit.DAYS.between(startDate, endDate);
+        var days = (int)ChronoUnit.DAYS.between(startDate, endDate);
+
         return days * room.getPricePerNight(); // Total price depends on the number of days and room price per night
     }
 }

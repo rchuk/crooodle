@@ -33,7 +33,7 @@ public class HotelsController {
     }
 
     // Create hotel
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
     @PostMapping()
     public long createHotel(@RequestBody @Valid HotelCreateRequestDto requestDto) {
         log.info("Creating hotel with name {}", requestDto.getName());
@@ -41,7 +41,7 @@ public class HotelsController {
     }
 
     // Update hotel
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PutMapping("/{id}")
     public void updateHotel(@PathVariable long id, @RequestBody @Valid HotelUpdateRequestDto requestDto) {
         log.info("Updating hotel with id {}", id);
@@ -56,7 +56,7 @@ public class HotelsController {
     }
 
     // Delete hotel
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteHotel(@PathVariable long id) {
         log.info("Deleting hotel with id {}", id);
