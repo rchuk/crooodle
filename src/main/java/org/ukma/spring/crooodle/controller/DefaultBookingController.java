@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,6 +9,7 @@ import org.ukma.spring.crooodle.WelcomeServise.DefaultBookingService;
 import org.ukma.spring.crooodle.dto.BookingDto;
 
 @RestController
+@Slf4j
 public class DefaultBookingController {
 
     @Autowired(required = false)
@@ -15,6 +17,7 @@ public class DefaultBookingController {
 
     @GetMapping("/default-welcome")
     public String getDefaultWelcomeMessage(@RequestParam String name, @RequestParam Long roomId) {
+        log.info("Received request for default welcome message for user {}", name);
         if (defaultBookingService != null) {
             // Тепер ми можемо використовувати конструктор без параметрів і методи setRoomId
             BookingDto bookingDto = new BookingDto();
