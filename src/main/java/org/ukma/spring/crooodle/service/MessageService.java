@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.service;
 
 import org.springframework.stereotype.Service;
+/*
 import org.ukma.spring.starter.WelcomeService;
 
 @Service
@@ -18,3 +19,4 @@ public class MessageService {
         return myCustomService.formatMessage(name);
     }
 }
+*/

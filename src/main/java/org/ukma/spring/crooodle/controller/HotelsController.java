@@ -29,14 +29,14 @@ public class HotelsController {
     }
 
     // Create hotel
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
     @PostMapping()
     public long createHotel(@RequestBody @Valid HotelCreateRequestDto requestDto) {
         return hotelService.createHotel(requestDto);
     }
 
     // Update hotel
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PutMapping("/{id}")
     public void updateHotel(@PathVariable long id, @RequestBody @Valid HotelUpdateRequestDto requestDto) {
         hotelService.updateHotel(id, requestDto);
@@ -49,7 +49,7 @@ public class HotelsController {
     }
 
     // Delete hotel
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteHotel(@PathVariable long id) {
         hotelService.deleteHotel(id);

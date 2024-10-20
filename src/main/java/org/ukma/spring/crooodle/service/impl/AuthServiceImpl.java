@@ -1,9 +1,9 @@
 package org.ukma.spring.crooodle.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.dto.AccessTokenResponseDto;
@@ -18,10 +18,11 @@ import org.ukma.spring.crooodle.service.JwtService;
 
 @RequiredArgsConstructor
 @Service
-public class AuthServiceImpl implements AuthService, UserDetailsService {
-    private final JwtService jwtService;
+public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public AccessTokenResponseDto register(UserRegisterRequestDto registerRequestDto) {
@@ -43,20 +44,20 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
 
     @Override
     public AccessTokenResponseDto login(UserLoginRequestDto loginRequestDto) {
-        var user = userRepository.findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new PublicNotFoundException("User with given email doesn't exist")); // TODO
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    loginRequestDto.getEmail(),
+                    loginRequestDto.getPassword()
+            ));
+        } catch (BadCredentialsException e) {
+            throw new PublicBadRequestException("Invalid username or password");
+        }
 
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPasswordHash()))
-            throw new RuntimeException("Wrong password"); // TODO
+        var user = userRepository.findByEmail(loginRequestDto.getEmail())
+                .orElseThrow(() -> new PublicNotFoundException("User with given email doesn't exist"));
 
         return AccessTokenResponseDto.builder()
                 .accessToken(jwtService.generateToken(user))
                 .build();
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }
