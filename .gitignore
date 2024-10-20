@@ -34,3 +34,7 @@ build/
 
 # Env file
 .env
+
+# Logs
+logs/*
+!logs/.gitkeep
