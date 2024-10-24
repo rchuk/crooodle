@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Room Details</title>
+</head>
+<body>
+<h1 th:text="${room.name}">Room Name</h1>
+<p th:text="${room.description}">Room Description</p>
+<form th:action="@{/rooms/book}" method="post">
+    <input type="hidden" name="roomId" th:value="${room.id}">
+    <button type="submit">Book Room</button>
+</form>
+</body>
+</html>
