@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>Hotel Details</title>
+    </head>
+    <body>
+        <h1 th:text="${hotel.name}">Hotel Name</h1>
+
+        <p th:text="${hotel.description}">
+            Hotel Description
+        </p>
+
+        <h2>
+            Rooms
+        </h2>
+        <ul>
+
+            <li th:each="room : ${hotel.rooms}">
+                <a th:href="@{/rooms/{id}(id=${room.id})}" th:text="${room.name}"></a>
+
+            </li>
+        </ul>
+
+        <!-- Для користувача залишити відгук -->
+        <div sec:authorize="hasRole('USER')">
+            <h3>Leave a Review</h3>
+
+            <form th:action="@{/reviews/add}" method="post">
+
+                <input type="hidden" name="hotelId" th:value="${hotel.id}">
+
+                <textarea name="reviewText" placeholder="Write your review"></textarea><br>
+
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+
+    <!-- Для адміністратора -- переглянути всі відгуки -->
+        <div sec:authorize="hasRole('ADMIN')">
+
+            <h3>
+                All Reviews
+            </h3>
+            <ul>
+                <li th:each="review : ${hotel.reviews}">
+
+                    <p th:text="${review.text}">
+                        Review Text
+                    </p>
+
+                    <p><strong>
+                        By:
+                    </strong>
+                        <span th:text="${review.user.name}">
+                            User Name
+                        </span>
+                    </p>
+                </li>
+            </ul>
+        </div>
+
+    </body>
+</html>

@@ -1,15 +1,19 @@
 package org.ukma.spring.crooodle.dto;
 
 import jakarta.validation.constraints.Email;
-import lombok.Value;
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
-@Value
+@Data
 public class UserRegisterRequestDto {
-    @Length(min = 3, max = 128)
-    String name;
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
     @Email
-    String email;
-    @Length(min = 6, max = 128)
-    String password;
+    private String email;
+
+    @NotBlank
+    private String password;
 }

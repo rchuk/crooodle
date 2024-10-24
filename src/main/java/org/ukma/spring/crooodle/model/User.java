@@ -19,14 +19,18 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Length(min = 3, max = 128)
     private String name;
+
     @Length(min = 3, max = 320)
+    @Column(unique = true, nullable = false) // Забезпечення унікальності
     private String email;
+
     @Length(max = 344)
     @NotBlank
     private String passwordHash;
@@ -39,11 +43,16 @@ public class User implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "user_role_relation",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
+            name = "user_role_relation",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<UserRole> roles;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles; // Повертаємо ролі як GrantedAuthority
+    }
 
     @Override
     public String getUsername() {
@@ -56,7 +65,22 @@ public class User implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+    public boolean isAccountNonExpired() {
+        return true; // Акаунт завжди дійсний
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // Акаунт не заблокований
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // Дані для входу дійсні
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // Користувач завжди активний
     }
 }
