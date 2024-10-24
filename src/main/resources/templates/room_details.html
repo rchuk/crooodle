@@ -1,14 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Room Details</title>
-</head>
-<body>
-<h1 th:text="${room.name}">Room Name</h1>
-<p th:text="${room.description}">Room Description</p>
-<form th:action="@{/rooms/book}" method="post">
-    <input type="hidden" name="roomId" th:value="${room.id}">
-    <button type="submit">Book Room</button>
-</form>
-</body>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec=http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>Room Details</title>
+    </head>
+
+    <body>
+        <h1 th:text="${room.name}">Room Name</h1>
+
+        <p th:text="${room.description}">Room Description</p>
+
+
+            <!-- звичайний користувач може забронювати кімнату -->
+
+            <div sec:authorize="hasRole('USER')">
+                <form th:action="@{/rooms/book}" method="post">
+                    <input type="hidden" name="roomId" th:value="${room.id}">
+
+                    <button type="submit">Book Room</button>
+                </form>
+            </div>
+
+
+            <!-- адмін лише може переглянути всі заброньовані кімнати -->
+        
+            <div sec:authorize="hasRole('ADMIN')">
+                <p>Hello, you are in admin mode</p>
+                <button type="submit">View All Bookings</button>
+            </div>
+
+    </body>
 </html>
