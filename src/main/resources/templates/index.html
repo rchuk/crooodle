@@ -1,20 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="EN">
-<head>
-    <title>Home</title>
-</head>
-<body>
-<h1>Welcome to Crooodle!</h1>
-<p th:if="${#authentication.principal == null}">
-    You are not logged in. Please <a th:href="@{/auth/login}">log in</a> or <a th:href="@{/auth/register}">register</a>.
-</p>
-<div th:if="${#authentication.principal != null}">
-    <h2>Available Hotels</h2>
-    <ul>
-        <li th:each="hotel : ${hotels}">
-            <a th:href="@{/hotels/{id}(id=${hotel.id})}" th:text="${hotel.name}"></a>
-        </li>
-    </ul>
-</div>
-</body>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="EN">
+
+    <head>
+        <title>
+            Home
+        </title>
+
+    </head>
+
+    <body>
+        <h1>
+            Welcome to Crooodle!
+        </h1>
+
+        <!-- користувач не авторизований -->
+        <p sec:authorize="isAnonymous()">
+            You are not logged in. Please <a th:href="@{/auth/login}">log in</a> or <a th:href="@{/auth/register}">register</a>.
+        </p>
+
+        <!-- користувач авторизований -->
+        <div sec:authorize="isAuthenticated()">
+            <h2>
+                Available Hotels
+            </h2>
+
+            <ul>
+                <li th:each="hotel : ${hotels}">
+                    <a th:href="@{/hotels/{id}(id=${hotel.id})}" th:text="${hotel.name}"></a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </body>
 </html>
