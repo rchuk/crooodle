@@ -29,39 +29,59 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
+
     private final UserService userService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Value("${app.pbkdf2.secret}")
-    private String pbkdf2Secret; // Значення секрету для алгоритму PBKDF2 із конфігураційного файлу
+    private String pbkdf2Secret;
 
     @Value("${app.pbkdf2.iterations}")
-    private int pbkdf2Iterations; // Кількість ітерацій для PBKDF2
+    private int pbkdf2Iterations;
 
     @Value("${app.pbkdf2.salt.length}")
-    private int pbkdf2SaltLength; // Довжина salt для алгоритму PBKDF2
+    private int pbkdf2SaltLength;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(_ -> {
-                var corsConfiguration = new CorsConfiguration();
-                corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-                corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                corsConfiguration.setAllowedHeaders(List.of("*"));
-                corsConfiguration.setAllowCredentials(true);
-                return corsConfiguration;
-            }))
-            .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfiguration.setAllowedHeaders(List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
+                    return corsConfiguration;
+                }))
+                .authorizeHttpRequests(auth -> auth
+                        // Дозволити доступ до сторінок логіну, реєстрації та помилок без аутентифікації
+                        .requestMatchers("/auth/**", "/login", "/register", "/error").permitAll()
+                        // Дозволити доступ до статичних ресурсів
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                        // Заборонити доступ до інших URL без аутентифікації
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/auth/login") // Налаштування сторінки логіну
+                        .defaultSuccessUrl("/", true) // Перенаправлення на головну після успішного логіну
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // URL для виходу
+                        .logoutSuccessUrl("/auth/login") // Повернення на логін після виходу
+                        .permitAll()
+                )
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS)) // Безсесійний режим
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        var authProvider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(getPasswordEncoder());
         return authProvider;
@@ -74,8 +94,11 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        // Створюємо та повертаємо об'єкт PasswordEncoder, використовуючи алгоритм PBKDF2 з налаштуваннями
-        return new Pbkdf2PasswordEncoder(pbkdf2Secret, pbkdf2SaltLength, pbkdf2Iterations,
-                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
+        return new Pbkdf2PasswordEncoder(
+                pbkdf2Secret,
+                pbkdf2SaltLength,
+                pbkdf2Iterations,
+                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
+        );
     }
 }

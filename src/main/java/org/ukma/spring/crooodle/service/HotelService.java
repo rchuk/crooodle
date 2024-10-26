@@ -28,4 +28,6 @@ public interface HotelService {
     WeatherForecastResponseDto getHotelWeatherForecast(long hotelId);
 
     Hotel getHotelEntity(long id);
+
+    List<HotelResponseDto> listAllHotels();
 }

@@ -144,4 +144,10 @@ public class HotelServiceImpl implements HotelService {
                 .longitude(hotel.getLongitude())
                 .build();
     }
+    @Override
+    public List<HotelResponseDto> listAllHotels() {
+        return hotelRepository.findAll().stream()
+                .map(this::buildHotelResponseDto)
+                .toList();
+    }
 }
