@@ -15,7 +15,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         // Завантажити список готелів
-        model.addAttribute("hotels", hotelService.listAllHotels());
+        // model.addAttribute("hotels", hotelService.listAllHotels());
         return "index";
     }
 }
