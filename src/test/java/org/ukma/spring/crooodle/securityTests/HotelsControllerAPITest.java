@@ -5,19 +5,19 @@ import org.junit.jupiter.api.Test;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import org.ukma.spring.crooodle.controller.HotelsController;
 import org.ukma.spring.crooodle.dto.*;
-import org.ukma.spring.crooodle.model.enums.RoomTypeKind;
 import org.ukma.spring.crooodle.service.HotelService;
+import org.ukma.spring.crooodle.service.JwtService;
+import org.ukma.spring.crooodle.service.UserService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +36,14 @@ class HotelsControllerAPITest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private HotelService hotelService;
+
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private JwtService jwtService;
 
     @InjectMocks
     private HotelsController hotelsController;

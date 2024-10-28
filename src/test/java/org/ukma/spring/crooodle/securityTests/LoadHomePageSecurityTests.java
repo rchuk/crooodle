@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import org.ukma.spring.crooodle.controller.HomeController;
 import org.ukma.spring.crooodle.service.HotelService;
+import org.ukma.spring.crooodle.service.JwtService;
+import org.ukma.spring.crooodle.service.UserService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -21,6 +23,12 @@ class LoadHomePageSecurityTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtService jwtService;
+
+    @MockBean
+    private UserService userService;
 
     @MockBean
     private HotelService hotelService;
