@@ -12,4 +12,11 @@ public class WeatherForecastResponseDto {
     double longitude;
     List<Float> dailyMinTemperature;
     List<Float> dailyMaxTemperature;
+
+    public WeatherForecastResponseDto(double latitude, double longitude, List<Float> dailyMinTemperature, List<Float> dailyMaxTemperature) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.dailyMinTemperature = dailyMinTemperature;
+        this.dailyMaxTemperature = dailyMaxTemperature;
+    }
 }
