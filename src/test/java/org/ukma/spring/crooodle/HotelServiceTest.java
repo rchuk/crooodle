@@ -1,10 +1,8 @@
 package org.ukma.spring.crooodle;
 
-import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.ukma.spring.crooodle.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.service.HotelService;
