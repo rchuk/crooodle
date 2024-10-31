@@ -1,37 +1,70 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="EN">
 
-    <head>
-        <title>
-            Home
-        </title>
+<head>
+    <title>
+        Home
+    </title>
+</head>
 
-    </head>
+<body>
+<h1>
+    Welcome to Crooodle!
+</h1>
 
-    <body>
-        <h1>
-            Welcome to Crooodle!
-        </h1>
+<!-- User not authenticated -->
+<p sec:authorize="isAnonymous()">
+    You are not logged in. Please <a th:href="@{/auth/login}">log in</a> or <a th:href="@{/auth/register}">register</a>.
+</p>
 
-        <!-- користувач не авторизований -->
-        <p sec:authorize="isAnonymous()">
-            You are not logged in. Please <a th:href="@{/auth/login}">log in</a> or <a th:href="@{/auth/register}">register</a>.
-        </p>
+<!-- User authenticated -->
+<div sec:authorize="isAuthenticated()">
+    <h2>
+        Available Hotels
+    </h2>
+    <ul>
 
-        <!-- користувач авторизований -->
-        <div sec:authorize="isAuthenticated()">
-            <h2>
-                Available Hotels
-            </h2>
+        <!-- commented for tests without a database-->
+        <!--li th:each="hotel : ${hotels}">
+            <a th:href="@{/hotels/{id}(id=${hotel.id})}" th:text="${hotel.name}"></a>
+        </li> -->
 
-            <ul>
-                <li th:each="hotel : ${hotels}">
-                    <a th:href="@{/hotels/{id}(id=${hotel.id})}" th:text="${hotel.name}"></a>
-                </li>
+        <li>
+            Hotel 1
+        </li>
 
-            </ul>
+        <li>
+            Hotel 2
+        </li>
+    </ul>
+</div>
 
-        </div>
+<!-- Admin-only section -->
+<div sec:authorize="hasRole('ROLE_ADMIN')">
 
-    </body>
+    <h2>
+        Admin Dashboard
+    </h2>
+
+    <p>
+        Welcome, Admin! Here are some admin-only options:
+    </p>
+
+    <ul>
+
+        <li>
+            <a th:href="@{/admin/add-hotel}">
+            Add New Hotel
+            </a>
+        </li>
+
+        <li>
+            <a th:href="@{/admin/settings}">
+                Admin Settings
+            </a>
+        </li>
+    </ul>
+</div>
+
+</body>
 </html>

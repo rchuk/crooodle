@@ -39,7 +39,7 @@ public class WeatherServiceImpl implements WeatherService {
             .get()
             .uri(url)
             .retrieve()
-            .onStatus(HttpStatusCode::isError, (_, _) -> { throw new PublicServerException("Couldn't get weather forecast"); })
+            .onStatus(HttpStatusCode::isError, (t1, t2) -> { throw new PublicServerException("Couldn't get weather forecast"); })
             .body(WeatherForecastRawResponseDto.class);
         if (rawResponseDto == null)
             throw new PublicServerException("Couldn't get weather forecast");
