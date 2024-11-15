@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ukma.spring.crooodle.app.CustomMapCacheManager;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 public class CacheController {
 
-    private final CacheManager cacheManager;
+    private final CustomMapCacheManager cacheManager;
     private static final Logger logger = LoggerFactory.getLogger(CacheController.class);
 
     @Autowired
-    public CacheController(CacheManager cacheManager) {
+    public CacheController(CustomMapCacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
 
@@ -37,21 +37,19 @@ public class CacheController {
             if (cacheNames != null && !cacheNames.isEmpty()) {
                 List<String> notFoundCaches = cacheNames.stream()
                         .filter(name -> cacheManager.getCache(name) == null)
-                        .collect(Collectors.toList());
+                        .toList();
 
                 // Очищення знайдених кешів
-                cacheNames.stream()
-                        .filter(name -> cacheManager.getCache(name) != null)
-                        .forEach(name -> {
-                            cacheManager.getCache(name).clear();
-                            logger.info("Кеш '{}' успішно очищено", name);
-                        });
+                cacheNames.forEach(name -> {
+                    if (cacheManager.clearCache(name))
+                        logger.info("Кеш '{}' успішно очищено", name);
+                });
 
                 if (notFoundCaches.isEmpty()) {
                     return ResponseEntity.ok("Усі вказані кеші очищено: " + cacheNames);
                 } else {
                     return ResponseEntity.ok("Очищено існуючі кеші: " + cacheNames.stream()
-                            .filter(name -> !notFoundCaches.contains(name)).collect(Collectors.toList())
+                            .filter(name -> !notFoundCaches.contains(name)).toList()
                             + ". Не знайдено кеші: " + notFoundCaches);
                 }
             } else {

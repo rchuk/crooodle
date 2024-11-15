@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
 @EnableCaching
 public class CustomMapCacheManager implements CacheManager {
 
@@ -29,10 +28,14 @@ public class CustomMapCacheManager implements CacheManager {
         return Collections.unmodifiableSet(caches.keySet());
     }
 
-    public void clearCache(String cacheName) {
+    public boolean clearCache(String cacheName) {
         var cache = caches.get(cacheName);
-        if (cache != null)
-            cache.clear();
+        if (cache == null)
+            return false;
+
+        cache.clear();
+
+        return true;
     }
 
     public void clearAllCaches() {
