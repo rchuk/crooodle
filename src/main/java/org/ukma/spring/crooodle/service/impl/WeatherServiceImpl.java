@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -25,6 +26,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     private final RestClient restClient;
 
+    @Cacheable(cacheNames = "weather")
     @Override
     public WeatherForecastResponseDto getWeatherForecast(double latitude, double longitude) {
         var url = UriComponentsBuilder
