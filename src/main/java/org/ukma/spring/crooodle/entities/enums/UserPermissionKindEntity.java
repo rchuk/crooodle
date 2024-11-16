@@ -6,5 +6,5 @@ public enum UserPermissionKindEntity {
     HOTEL_VIEW,
     HOTEL_DELETE,
 
-    HOTEL_VIEW_PUBLIC;
+    HOTEL_VIEW_PUBLIC
 }

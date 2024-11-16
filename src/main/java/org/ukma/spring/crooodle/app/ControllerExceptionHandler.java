@@ -11,7 +11,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.ukma.spring.crooodle.dto.common.PublicErrorDto;
 import org.ukma.spring.crooodle.dto.common.PublicValidationErrorDto;
