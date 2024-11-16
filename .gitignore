@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/**/*
 *.iws
 *.iml
 *.ipr
@@ -32,9 +32,19 @@ build/
 ### VS Code ###
 .vscode/
 
-# Env file
+### Env file ###
 .env
 
-# Logs
+### Database ###
+data/*
+!data/.gitkeep
+
+### Logs ###
 logs/*
 !logs/.gitkeep
+
+### Include IntelliJ IDEA code-style ###
+!.idea/codeStyles
+!.idea/codeStyles/*
+!.idea/inspectionProfiles
+!.idea/inspectionProfiles/*

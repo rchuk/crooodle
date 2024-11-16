@@ -1,0 +1,12 @@
+[2024-11-16T19:50:03.255977100] Exception in method AuthServiceImpl.register(..) with parameters [UserRegisterRequestDto(name=Dima, email=0@gmail.com, password=12345678), ]: User with given email is already registered
+[2024-11-16T19:54:22.259508300] Exception in method AuthServiceImpl.login(..) with parameters [UserLoginRequestDto(email=0@gmail.com, password=142414141), ]: Invalid username or password
+[2024-11-16T20:19:32.479964300] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:19:34.002828400] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:19:38.310305600] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:19:39.675458900] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:20:40.228259200] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:20:41.556055600] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:21:55.993381100] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:21:57.377291300] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:22:55.151569400] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 
+[2024-11-16T20:22:56.518670900] Exception in method UserServiceImpl.loadUserByUsername(..) with parameters [, ]: 

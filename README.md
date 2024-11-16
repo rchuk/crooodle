@@ -1,8 +1,7 @@
-# Croodle
-
+# Crooodle
 
 ## About
-Crooodle is a E-vacations system that helps connects users, hotels and transport companies
+Crooodle is an E-vacations system that helps connects users, hotels and transport companies
 
 ### Primary features
 - Authentication
@@ -14,24 +13,21 @@ Crooodle is a E-vacations system that helps connects users, hotels and transport
 - Leave and remove reviews
 - Give and revert ranking
 
-
 ### Secondary features
 - Feature tags
 - Managing hotel info
 - Managing prices
 - Write in/out guests for hotel administrator
 - Approval of booking by hotel administrator
-- Request of hotel rempval
+- Request of hotel removal
 - Transport Entity
 - Transportation options
-
-
 
 ### Advanced features
 - Map integration
 - Reviews classification
 - Route planning
-- Advenced address-based filtering
+- Advanced address-based filtering
 
 
 ## Development
@@ -44,10 +40,3 @@ It also uses PostgresSQL database and can be deployed using Docker.
 ### Local
 Run `./mvnw package` (with required environment variables from the .env.example file set).
 Then run the resulting jar file using `java -jar target/crooodle-{VERSION}.jar`.
-
-### Docker
-In console run:
-`docker compose up`.
-
-Database can be run separately using
-`docker compose up backend_postgres`.

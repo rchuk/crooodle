@@ -1,86 +1,16 @@
 package org.ukma.spring.crooodle.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.Builder;
+import lombok.Data;
+import org.ukma.spring.crooodle.model.enums.UserPermission;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@Getter
-@Setter
-@Entity
-@Table(name = "users")
-public class User implements UserDetails {
+@Data
+public class User {
+    String name;
+    String email;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Length(min = 3, max = 128)
-    private String name;
-
-    @Length(min = 3, max = 320)
-    @Column(unique = true, nullable = false) // Забезпечення унікальності
-    private String email;
-
-    @Length(max = 344)
-    @NotBlank
-    private String passwordHash;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Booking> bookings;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Review> reviews;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_role_relation",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<UserRole> roles;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles; // Повертаємо ролі як GrantedAuthority
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return passwordHash;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true; // Акаунт завжди дійсний
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true; // Акаунт не заблокований
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true; // Дані для входу дійсні
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true; // Користувач завжди активний
-    }
+    Set<UserPermission> permissions;
 }
