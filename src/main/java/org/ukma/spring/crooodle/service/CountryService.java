@@ -2,6 +2,9 @@ package org.ukma.spring.crooodle.service;
 
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.entities.CountryEntity;
+
+import java.util.List;
 
 public interface CountryService {
     int create(CountryCreateRequestDto requestDto);
@@ -12,4 +15,6 @@ public interface CountryService {
 
     CountryResponseDto get(int id);
     PageResponseDto<CountryResponseDto> list(CountryCriteriaDto criteriaDto);
+
+    List<CountryEntity> mapIdsToCountries(List<Integer> ids);
 }

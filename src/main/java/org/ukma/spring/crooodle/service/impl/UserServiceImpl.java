@@ -6,24 +6,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.ukma.spring.crooodle.mappers.UserMapper;
-import org.ukma.spring.crooodle.model.User;
+import org.ukma.spring.crooodle.entities.UserEntity;
 import org.ukma.spring.crooodle.repository.UserRepository;
 import org.ukma.spring.crooodle.service.UserService;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserMapper userMapper;
     private final UserRepository userRepository;
 
     @Override
-    public User getCurrentUser() {
+    public UserEntity getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         var email = auth.getName();
         var userEntity = userRepository.findByEmail(email).orElseThrow();
 
-        return userMapper.entityToModel(userEntity);
+        return userEntity;
     }
 
     @Override
