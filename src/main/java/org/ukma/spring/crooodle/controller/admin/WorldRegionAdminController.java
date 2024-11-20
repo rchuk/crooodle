@@ -3,6 +3,7 @@ package org.ukma.spring.crooodle.controller.admin;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
@@ -15,6 +16,7 @@ public class WorldRegionAdminController {
     private final WorldRegionService service;
 
     @Operation(operationId = "createWorldRegion")
+    @PreAuthorize("hasAuthority('WORLD_CREATE')")
     @PostMapping
     public int create(@RequestBody @Valid WorldRegionCreateRequestDto requestDto) {
         return service.create(requestDto);

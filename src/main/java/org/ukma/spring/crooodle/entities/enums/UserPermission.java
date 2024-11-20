@@ -7,15 +7,11 @@ public enum UserPermission {
     COUNTRY_VIEW,
     COUNTRY_DELETE,
 
-    COUNTRY_VIEW_PUBLIC,
-
-    // Region
-    REGION_CREATE,
-    REGION_EDIT,
-    REGION_VIEW,
-    REGION_DELETE,
-
-    REGION_VIEW_PUBLIC,
+    // World region
+    WORLD_REGION_CREATE,
+    WORLD_REGION_EDIT,
+    WORLD_REGION_VIEW,
+    WORLD_REGION_DELETE,
 
     // City
     CITY_CREATE,
@@ -31,6 +27,4 @@ public enum UserPermission {
     HOTEL_EDIT,
     HOTEL_VIEW,
     HOTEL_DELETE,
-
-    HOTEL_VIEW_PUBLIC,
 }
