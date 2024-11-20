@@ -40,7 +40,7 @@ public class WorldRegionAdminController {
 
     @Operation(operationId = "listWorldRegionsAdmin")
     @GetMapping
-    public PageResponseDto<WorldRegionAdminResponseDto> list(@RequestParam @Valid WorldRegionCriteriaDto criteriaDto) {
+    public PageResponseDto<WorldRegionAdminResponseDto> list(@RequestParam(required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
         return service.listAdmin(criteriaDto);
     }
 }

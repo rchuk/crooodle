@@ -40,7 +40,7 @@ public class CountryAdminController {
 
     @Operation(operationId = "listCountriesAdmin")
     @GetMapping
-    public PageResponseDto<CountryAdminResponseDto> list(@RequestParam @Valid CountryCriteriaDto criteriaDto) {
+    public PageResponseDto<CountryAdminResponseDto> list(@RequestParam(required = false) @Valid CountryCriteriaDto criteriaDto) {
         return service.listAdmin(criteriaDto);
     }
 }

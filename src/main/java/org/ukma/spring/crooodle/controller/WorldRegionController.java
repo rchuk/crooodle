@@ -23,7 +23,7 @@ public class WorldRegionController {
 
     @Operation(operationId = "listWorldRegions")
     @GetMapping
-    public PageResponseDto<WorldRegionResponseDto> list(@RequestParam @Valid WorldRegionCriteriaDto criteriaDto) {
+    public PageResponseDto<WorldRegionResponseDto> list(@RequestParam(required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
         return service.list(criteriaDto);
     }
 }
