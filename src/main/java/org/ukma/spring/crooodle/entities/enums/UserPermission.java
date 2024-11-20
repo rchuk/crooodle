@@ -19,8 +19,6 @@ public enum UserPermission {
     CITY_VIEW,
     CITY_DELETE,
 
-    CITY_VIEW_PUBLIC,
-
     // Hotel
     HOTEL_CREATE,
     HOTEL_REQUEST_CREATION,

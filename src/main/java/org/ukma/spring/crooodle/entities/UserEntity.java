@@ -35,7 +35,7 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String passwordHash;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
         name = "user_to_permission",
         joinColumns = @JoinColumn(name = "user_id"),
