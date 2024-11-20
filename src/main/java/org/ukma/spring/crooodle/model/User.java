@@ -2,7 +2,7 @@ package org.ukma.spring.crooodle.model;
 
 import lombok.Builder;
 import lombok.Data;
-import org.ukma.spring.crooodle.model.enums.UserPermission;
+import org.ukma.spring.crooodle.entities.enums.UserPermission;
 
 import java.util.Set;
 

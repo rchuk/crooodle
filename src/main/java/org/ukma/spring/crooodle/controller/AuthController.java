@@ -13,17 +13,17 @@ import org.ukma.spring.crooodle.service.AuthService;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
+    private final AuthService service;
 
     @PreAuthorize("permitAll()")
     @PostMapping("/register")
     public AccessTokenResponseDto register(@RequestBody @Valid UserRegisterRequestDto requestDto) {
-        return authService.register(requestDto);
+        return service.register(requestDto);
     }
 
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public AccessTokenResponseDto login(@RequestBody @Valid UserLoginRequestDto requestDto) {
-        return authService.login(requestDto);
+        return service.login(requestDto);
     }
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.ukma.spring.crooodle.entities.enums.UserPermissionKindEntity;
+import org.ukma.spring.crooodle.entities.enums.UserPermission;
 
 import java.util.Set;
 
@@ -20,14 +20,14 @@ public class UserPermissionEntity implements GrantedAuthority {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
-    private UserPermissionKindEntity name;
+    @Column(name = "name", nullable = false)
+    private UserPermission kind;
 
     @ManyToMany(mappedBy = "permissions")
     private Set<UserEntity> users;
 
     @Override
     public String getAuthority() {
-        return name.name();
+        return kind.name();
     }
 }
