@@ -162,14 +162,38 @@
                 <version>1.4</version>
                 <executions>
                     <execution>
-                        <id>integration-test</id>
+                        <id>openapi-generation</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
+                        <phase>integration-test</phase>
                         <configuration>
                             <apiDocsUrl>http://localhost:8080/v3/api-docs.yaml</apiDocsUrl>
                             <outputFileName>openapi.yaml</outputFileName>
                             <outputDir>${project.basedir}</outputDir>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Frontend API client generation -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.10.0</version>
+                <executions>
+                    <execution>
+                        <id>openapi-client-generation</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                        <configuration>
+                            <inputSpec>openapi.yaml</inputSpec>
+                            <generatorName>typescript</generatorName>
+                            <configOptions>
+                                <cleanupOutput>true</cleanupOutput>
+                                <sourceFolder>../frontend/generated</sourceFolder>
+                            </configOptions>
                         </configuration>
                     </execution>
                 </executions>

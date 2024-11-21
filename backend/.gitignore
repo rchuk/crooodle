@@ -50,5 +50,4 @@ logs/*
 !.idea/inspectionProfiles/*
 
 ### Misc ###
-openapi.yaml
 exceptions.log

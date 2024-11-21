@@ -25,28 +25,28 @@ public class CountryAdminController {
     @Operation(operationId = "getCountryAdmin")
     @PreAuthorize("hasAuthority('COUNTRY_VIEW')")
     @GetMapping("/{id}")
-    public CountryAdminResponseDto get(@PathVariable int id) {
+    public CountryAdminResponseDto get(@PathVariable("id") int id) {
         return service.getAdmin(id);
     }
 
     @Operation(operationId = "editCountry")
     @PreAuthorize("hasAuthority('COUNTRY_EDIT')")
     @PutMapping("/{id}")
-    public void edit(@PathVariable int id, @RequestBody @Valid CountryEditRequestDto requestDto) {
+    public void edit(@PathVariable("id") int id, @RequestBody @Valid CountryEditRequestDto requestDto) {
         service.edit(id, requestDto);
     }
 
     @Operation(operationId = "deleteCountry")
     @PreAuthorize("hasAuthority('COUNTRY_DELETE')")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable("id") int id) {
         service.delete(id);
     }
 
     @Operation(operationId = "listCountriesAdmin")
     @PreAuthorize("hasAuthority('COUNTRY_VIEW')")
     @GetMapping
-    public PageResponseDto<CountryAdminResponseDto> list(@RequestParam(required = false) @Valid CountryCriteriaDto criteriaDto) {
+    public PageResponseDto<CountryAdminResponseDto> list(@RequestParam(name = "criteria", required = false) @Valid CountryCriteriaDto criteriaDto) {
         return service.listAdmin(criteriaDto);
     }
 }

@@ -19,14 +19,14 @@ public class WorldRegionController {
     @Operation(operationId = "getWorldRegion")
     @PreAuthorize("permitAll()")
     @GetMapping("/{id}")
-    public WorldRegionResponseDto get(@PathVariable int id) {
+    public WorldRegionResponseDto get(@PathVariable("id") int id) {
         return service.get(id);
     }
 
     @Operation(operationId = "listWorldRegions")
     @PreAuthorize("permitAll()")
     @GetMapping
-    public PageResponseDto<WorldRegionResponseDto> list(@RequestParam(required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
+    public PageResponseDto<WorldRegionResponseDto> list(@RequestParam(name = "criteria", required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
         return service.list(criteriaDto);
     }
 }

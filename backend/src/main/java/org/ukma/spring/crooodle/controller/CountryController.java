@@ -18,15 +18,15 @@ public class CountryController {
 
     @Operation(operationId = "getCountry")
     @PreAuthorize("permitAll()")
-    @GetMapping("/{id}")
-    public CountryResponseDto get(@PathVariable int id) {
+    @GetMapping
+    public CountryResponseDto get(@PathVariable("id") int id) {
         return service.get(id);
     }
 
     @Operation(operationId = "listCountries")
     @PreAuthorize("permitAll()")
     @GetMapping
-    public PageResponseDto<CountryResponseDto> list(@RequestParam(required = false) @Valid CountryCriteriaDto criteriaDto) {
+    public PageResponseDto<CountryResponseDto> list(@RequestParam(name = "criteria", required = false) @Valid CountryCriteriaDto criteriaDto) {
         return service.list(criteriaDto);
     }
 }

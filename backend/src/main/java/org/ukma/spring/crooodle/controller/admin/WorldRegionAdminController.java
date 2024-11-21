@@ -25,28 +25,28 @@ public class WorldRegionAdminController {
     @Operation(operationId = "getWorldRegionAdmin")
     @PreAuthorize("hasAuthority('WORLD_REGION_VIEW')")
     @GetMapping("/{id}")
-    public WorldRegionAdminResponseDto get(@PathVariable int id) {
+    public WorldRegionAdminResponseDto get(@PathVariable("id") int id) {
         return service.getAdmin(id);
     }
 
     @Operation(operationId = "editWorldRegion")
     @PreAuthorize("hasAuthority('WORLD_REGION_EDIT')")
     @PutMapping("/{id}")
-    public void edit(@PathVariable int id, @RequestBody @Valid WorldRegionEditRequestDto requestDto) {
+    public void edit(@PathVariable("id") int id, @RequestBody @Valid WorldRegionEditRequestDto requestDto) {
         service.edit(id, requestDto);
     }
 
     @Operation(operationId = "deleteWorldRegion")
     @PreAuthorize("hasAuthority('WORLD_REGION_DELETE')")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable("id") int id) {
         service.delete(id);
     }
 
     @Operation(operationId = "listWorldRegionsAdmin")
     @PreAuthorize("hasAuthority('WORLD_REGION_VIEW')")
     @GetMapping
-    public PageResponseDto<WorldRegionAdminResponseDto> list(@RequestParam(required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
+    public PageResponseDto<WorldRegionAdminResponseDto> list(@RequestParam(name = "criteria", required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
         return service.listAdmin(criteriaDto);
     }
 }
