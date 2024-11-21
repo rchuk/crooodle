@@ -51,3 +51,4 @@ logs/*
 
 ### Misc ###
 openapi.yaml
+exceptions.log
