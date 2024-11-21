@@ -16,31 +16,35 @@ public class WorldRegionAdminController {
     private final WorldRegionService service;
 
     @Operation(operationId = "createWorldRegion")
-    @PreAuthorize("hasAuthority('WORLD_CREATE')")
+    @PreAuthorize("hasAuthority('WORLD_REGION_CREATE')")
     @PostMapping
     public int create(@RequestBody @Valid WorldRegionCreateRequestDto requestDto) {
         return service.create(requestDto);
     }
 
     @Operation(operationId = "getWorldRegionAdmin")
+    @PreAuthorize("hasAuthority('WORLD_REGION_VIEW')")
     @GetMapping("/{id}")
     public WorldRegionAdminResponseDto get(@PathVariable int id) {
         return service.getAdmin(id);
     }
 
     @Operation(operationId = "editWorldRegion")
+    @PreAuthorize("hasAuthority('WORLD_REGION_EDIT')")
     @PutMapping("/{id}")
     public void edit(@PathVariable int id, @RequestBody @Valid WorldRegionEditRequestDto requestDto) {
         service.edit(id, requestDto);
     }
 
     @Operation(operationId = "deleteWorldRegion")
+    @PreAuthorize("hasAuthority('WORLD_REGION_DELETE')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id) {
         service.delete(id);
     }
 
     @Operation(operationId = "listWorldRegionsAdmin")
+    @PreAuthorize("hasAuthority('WORLD_REGION_VIEW')")
     @GetMapping
     public PageResponseDto<WorldRegionAdminResponseDto> list(@RequestParam(required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
         return service.listAdmin(criteriaDto);
