@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.entities.UserEntity;
 import org.ukma.spring.crooodle.entities.enums.UserPermission;
 import org.ukma.spring.crooodle.exception.PublicNotFoundException;
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+    @Transactional
     @Override
     public void addPermission(String email, UserPermission permission) {
         var user = userRepository.findByEmail(email).orElseThrow(PublicNotFoundException::new);
