@@ -18,7 +18,7 @@ public class CountryController {
 
     @Operation(operationId = "getCountry")
     @PreAuthorize("permitAll()")
-    @GetMapping
+    @GetMapping("/{id}")
     public CountryResponseDto get(@PathVariable("id") int id) {
         return service.get(id);
     }
