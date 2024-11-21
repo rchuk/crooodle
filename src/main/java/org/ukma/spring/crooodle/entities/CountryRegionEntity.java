@@ -14,7 +14,10 @@ import java.util.List;
 @Builder
 @Data
 @Entity
-@Table(name = "country_regions")
+@Table(
+    name = "country_regions",
+    uniqueConstraints = { @UniqueConstraint(columnNames = { "country_id", "name" }) }
+)
 public class CountryRegionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

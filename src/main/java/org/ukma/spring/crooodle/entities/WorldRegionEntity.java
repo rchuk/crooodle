@@ -21,7 +21,7 @@ public class WorldRegionEntity {
     private Integer id;
 
     @Length(min = 1, max = 500)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "worldRegion", cascade = CascadeType.PERSIST)
