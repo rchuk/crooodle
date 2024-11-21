@@ -46,7 +46,7 @@ public class CountryAdminController {
     @Operation(operationId = "listCountriesAdmin")
     @PreAuthorize("hasAuthority('COUNTRY_VIEW')")
     @GetMapping
-    public PageResponseDto<CountryAdminResponseDto> list(@RequestParam @Valid CountryCriteriaDto criteriaDto) {
+    public PageResponseDto<CountryAdminResponseDto> list(@RequestParam(required = false) @Valid CountryCriteriaDto criteriaDto) {
         return service.listAdmin(criteriaDto);
     }
 }
