@@ -46,7 +46,7 @@ public class WorldRegionAdminController {
     @Operation(operationId = "listWorldRegionsAdmin")
     @PreAuthorize("hasAuthority('WORLD_REGION_VIEW')")
     @GetMapping
-    public PageResponseDto<WorldRegionAdminResponseDto> list(@RequestParam(name = "criteria", required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
+    public PageResponseDto<WorldRegionAdminResponseDto> list(@RequestParam @Valid WorldRegionCriteriaDto criteriaDto) {
         return service.listAdmin(criteriaDto);
     }
 }

@@ -26,7 +26,7 @@ public class CountryController {
     @Operation(operationId = "listCountries")
     @PreAuthorize("permitAll()")
     @GetMapping
-    public PageResponseDto<CountryResponseDto> list(@RequestParam(name = "criteria", required = false) @Valid CountryCriteriaDto criteriaDto) {
+    public PageResponseDto<CountryResponseDto> list(@RequestParam @Valid CountryCriteriaDto criteriaDto) {
         return service.list(criteriaDto);
     }
 }

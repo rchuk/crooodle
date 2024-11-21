@@ -103,39 +103,13 @@
 
     <build>
         <plugins>
-            <!-- Integration test support -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>pre-integration-test</id>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>post-integration-test</id>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Mapstruct -->
+            <!-- Mapstruct and Lombok -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
+                    <parameters>true</parameters>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -154,6 +128,25 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <!-- Integration test support -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-integration-test</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!-- OpenAPI generation -->
             <plugin>
@@ -190,10 +183,8 @@
                         <configuration>
                             <inputSpec>openapi.yaml</inputSpec>
                             <generatorName>typescript</generatorName>
-                            <configOptions>
-                                <cleanupOutput>true</cleanupOutput>
-                                <sourceFolder>../frontend/generated</sourceFolder>
-                            </configOptions>
+                            <cleanupOutput>true</cleanupOutput>
+                            <output>${project.basedir}/../frontend/generated</output>
                         </configuration>
                     </execution>
                 </executions>

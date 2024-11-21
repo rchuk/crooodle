@@ -5,8 +5,6 @@ info:
 servers:
 - url: http://localhost:8080
   description: Generated server url
-security:
-- bearerAuth: []
 paths:
   /admin/world-regions/{id}:
     get:
@@ -66,7 +64,13 @@ paths:
       tags:
       - country-admin-controller
       operationId: getCountryAdmin
-      parameters: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
       responses:
         "200":
           description: OK
@@ -152,7 +156,7 @@ paths:
       parameters:
       - name: arg0
         in: query
-        required: false
+        required: true
         schema:
           $ref: "#/components/schemas/WorldRegionCriteriaDto"
       responses:
@@ -188,7 +192,7 @@ paths:
       parameters:
       - name: arg0
         in: query
-        required: false
+        required: true
         schema:
           $ref: "#/components/schemas/CountryCriteriaDto"
       responses:
@@ -224,7 +228,7 @@ paths:
       parameters:
       - name: arg0
         in: query
-        required: false
+        required: true
         schema:
           $ref: "#/components/schemas/WorldRegionCriteriaDto"
       responses:
@@ -239,7 +243,13 @@ paths:
       tags:
       - world-region-controller
       operationId: getWorldRegion
-      parameters: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
       responses:
         "200":
           description: OK
@@ -255,7 +265,7 @@ paths:
       parameters:
       - name: arg0
         in: query
-        required: false
+        required: true
         schema:
           $ref: "#/components/schemas/CountryCriteriaDto"
       responses:
@@ -476,7 +486,7 @@ components:
           items:
             $ref: "#/components/schemas/CountryAdminResponseDto"
   securitySchemes:
-    bearerAuth:
+    Bearer:
       type: http
-      scheme: bearer
+      scheme: Bearer
       bearerFormat: JWT

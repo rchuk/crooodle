@@ -1,5 +1,7 @@
 package org.ukma.spring.crooodle.configuration;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,12 @@ import java.util.List;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+@SecurityScheme(
+    name = "Bearer",
+    type = SecuritySchemeType.HTTP,
+    bearerFormat = "JWT",
+    scheme = "Bearer"
+)
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
