@@ -22,22 +22,23 @@ public class RoomServiceImpl implements RoomService {
     private final HotelRepository hotelRepository;
 
     @Override
-    public int create(int hotelId, RoomCreateRequestDto requestDto) {
+    public int create(Long hotelId, RoomCreateRequestDto requestDto) {
         HotelEntity hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+            .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
 
         RoomEntity room = RoomEntity.builder()
-                .name(requestDto.getName())
-                .capacity(requestDto.getCapacity())
-                .pricePerNight(requestDto.getPricePerNight())
-                .description(requestDto.getDescription())
-                .available(requestDto.isAvailable())
-                .hotel(hotel)
-                .build();
+            .name(requestDto.getName())
+            .capacity(requestDto.getCapacity())
+            .pricePerNight(requestDto.getPricePerNight())
+            .description(requestDto.getDescription())
+            .available(requestDto.isAvailable())
+            .hotel(hotel)
+            .build();
 
         room = roomRepository.save(room);
-        return room.getId();
+        return room.getId().intValue(); // Повертаємо int, якщо це необхідно
     }
+
 
     @Override
     public RoomAdminResponseDto getAdmin(int hotelId, int roomId) {
@@ -84,12 +85,12 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomResponseDto get(int hotelId, int roomId) {
+    public RoomResponseDto get(Long hotelId, Long roomId) {
         RoomEntity room = roomRepository.findByIdAndHotelId(roomId, hotelId)
-                .orElseThrow(() -> new IllegalArgumentException("Room not found in the given hotel"));
-
+            .orElseThrow(() -> new IllegalArgumentException("Room not found in the given hotel"));
         return mapToResponseDto(room);
     }
+
 
     @Override
     public PageResponseDto<RoomResponseDto> list(int hotelId, @Valid RoomCriteriaDto criteriaDto) {

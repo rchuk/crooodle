@@ -1,8 +1,10 @@
 package org.ukma.spring.crooodle.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class RoomAdminResponseDto {
     private int id;
     private String name;
@@ -11,5 +13,4 @@ public class RoomAdminResponseDto {
     private String description;
     private boolean available;
     private String hotelName;
-    private String roomTypeName;
 }

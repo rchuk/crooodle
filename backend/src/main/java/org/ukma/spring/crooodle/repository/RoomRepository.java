@@ -4,13 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.ukma.spring.crooodle.entities.RoomEntity;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.List;
 
 @Repository
-public interface RoomRepository extends JpaRepository<RoomEntity, Integer> {
+public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
 
-    Optional<RoomEntity> findByIdAndHotelId(int roomId, int hotelId);
+    Optional<RoomEntity> findByIdAndHotelId(Long roomId, Long hotelId);
 
-    List<RoomEntity> findByHotelId(int hotelId);
+    List<RoomEntity> findByHotelId(Long hotelId);
 }
