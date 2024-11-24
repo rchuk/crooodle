@@ -41,7 +41,7 @@ public class HotelEntity {
     private CoordinatesEntity coordinates;
 
     @ManyToOne
-    private CountryRegionEntity country_region;
+    private WorldRegionEntity country_region;
 
     @ManyToOne(optional = false)
     private CountryEntity country;
