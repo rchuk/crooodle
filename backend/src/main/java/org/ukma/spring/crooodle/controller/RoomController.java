@@ -20,14 +20,14 @@ public class RoomController {
     @Operation(operationId = "getRoom")
     @PreAuthorize("permitAll()")
     @GetMapping("/{room_id}")
-    public RoomResponseDto get(@PathVariable("hotel_id") int hotelId, @PathVariable("room_id") int roomId) {
+    public RoomResponseDto get(@PathVariable("hotel_id") Long hotelId, @PathVariable("room_id") Long roomId) {
         return service.get(hotelId, roomId);
     }
 
     @Operation(operationId = "listRooms")
     @PreAuthorize("permitAll()")
     @GetMapping
-    public PageResponseDto<RoomResponseDto> list(@PathVariable("hotel_id") int hotelId,
+    public PageResponseDto<RoomResponseDto> list(@PathVariable("hotel_id") Long hotelId,
                                                  @RequestParam(required = false) @Valid RoomCriteriaDto criteriaDto) {
         return service.list(hotelId, criteriaDto);
     }

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class RoomResponseDto {
-    private int id;
+    private Long id; // Змінено на Long
     private String name;
     private int capacity;
     private double pricePerNight;
