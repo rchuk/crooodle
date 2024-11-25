@@ -27,9 +27,9 @@ public class CrooodleCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String...args) {
-        tryRun(_ -> userPermissionSeeder.seed());
+        tryRun(t1 -> userPermissionSeeder.seed());
 
-        tryRun(_ -> {
+        tryRun(t1 -> {
             authService.register(UserRegisterRequestDto.builder()
                 .name("Admin")
                 .email(adminEmail)
@@ -38,7 +38,7 @@ public class CrooodleCommandLineRunner implements CommandLineRunner {
             );
         });
 
-        tryRun(_ -> {
+        tryRun(t1 -> {
             for (var permission : UserPermission.values())
                 userService.addPermission(adminEmail, permission);
         });
@@ -47,6 +47,6 @@ public class CrooodleCommandLineRunner implements CommandLineRunner {
     private void tryRun(Consumer<Void> fn) {
         try {
             fn.accept(null);
-        } catch (Exception _) {}
+        } catch (Exception ee) {}
     }
 }

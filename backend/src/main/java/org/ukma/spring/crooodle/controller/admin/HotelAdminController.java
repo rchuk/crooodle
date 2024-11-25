@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.controller.admin;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.dto.*;
@@ -13,6 +14,7 @@ public class HotelAdminController {
 
     private final HotelService service;
 
+    @Valid
     @PostMapping
     public Long create(@RequestBody HotelCreateRequestDto requestDto) {
         return service.create(requestDto);
