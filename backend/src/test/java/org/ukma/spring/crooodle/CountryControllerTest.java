@@ -214,10 +214,10 @@ class CountryControllerTests {
 
                 .andExpect(status().isOk())
                 .andExpect(
-                    jsonPath("$.content[0].id")
+                    jsonPath("$.items[0].id")
                     .value(1))
                 .andExpect(
-                    jsonPath("$.content[0].name")
+                    jsonPath("$.items[0].name")
                     .value("TestCountry"))
                 .andExpect(
                     jsonPath("$.totalElements")
