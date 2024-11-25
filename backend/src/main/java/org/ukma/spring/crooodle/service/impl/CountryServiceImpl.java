@@ -53,13 +53,19 @@ public class CountryServiceImpl implements CountryService {
         return null;
     }
 
+
     @Override
     public CountryResponseDto get(int id) {
-        var entity = repository.findById(id)
-            .orElseThrow(PublicNotFoundException::new);
+
+        var entity = repository
+            .findById(id)
+            .orElseThrow(
+                () -> new PublicNotFoundException("Country not found")
+            );
 
         return mapper.entityToDto(entity);
     }
+
 
     @Override
     public PageResponseDto<CountryResponseDto> list(CountryCriteriaDto criteriaDto) {

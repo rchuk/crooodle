@@ -27,6 +27,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(PublicNotFoundException.class)
     public ResponseEntity<PublicErrorDto> handlePublicNotFoundException(PublicNotFoundException ex) {
+        log.info("PublicNotFoundException handled for: {}", ex.getMessage());
         return new ResponseEntity<>(
             PublicErrorDto.fromMessage(ex.getMessage()),
             HttpStatus.NOT_FOUND
@@ -87,11 +88,13 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<PublicErrorDto> handleUnknownException(Exception ex) {
-        log.debug("Unhandled exception: %s", ex);
+
+        log.error("Unhandled exception: {}", ex.getMessage(), ex);
 
         return new ResponseEntity<>(
-            PublicErrorDto.fromMessage("Unknown error"),
+            PublicErrorDto.fromMessage(ex.getMessage() != null ? ex.getMessage() : "Unknown error"),
             HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
+
 }
