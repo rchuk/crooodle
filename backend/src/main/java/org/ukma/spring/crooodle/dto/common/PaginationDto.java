@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
  * DTO for receiving pagination information
  * in various list endpoints
  */
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
