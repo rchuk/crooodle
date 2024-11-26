@@ -8,6 +8,6 @@ import java.util.List;
 @Builder
 @Value
 public class PageResponseDto<T> {
-    long total;
-    List<T> items;
+    long total; // Загальна кількість елементів
+    List<T> items; // Список елементів на поточній сторінці
 }
