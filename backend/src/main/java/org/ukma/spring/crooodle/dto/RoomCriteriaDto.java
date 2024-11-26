@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class RoomCriteriaDto {
-    private String name;
+    private long hotelId;
+    private String query;
+    private Integer roomTypeId;
     private boolean available;
-    private int hotelId;
-    private int roomTypeId;
 }

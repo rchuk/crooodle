@@ -1,128 +1,84 @@
 package org.ukma.spring.crooodle.service.impl;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
-import org.ukma.spring.crooodle.entities.HotelEntity;
-import org.ukma.spring.crooodle.entities.RoomEntity;
-import org.ukma.spring.crooodle.repository.HotelRepository;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
+import org.ukma.spring.crooodle.mappers.RoomMapper;
 import org.ukma.spring.crooodle.repository.RoomRepository;
 import org.ukma.spring.crooodle.service.RoomService;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class RoomServiceImpl implements RoomService {
-
     private final RoomRepository roomRepository;
-    private final HotelRepository hotelRepository;
+
+    private final RoomMapper mapper;
 
     @Override
-    public int create(Long hotelId, RoomCreateRequestDto requestDto) {
-        HotelEntity hotel = hotelRepository.findById(hotelId)
-            .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+    public long create(RoomCreateRequestDto requestDto) {
+        var entity = mapper.dtoToEntity(requestDto);
+        roomRepository.saveAndFlush(entity);
 
-        RoomEntity room = RoomEntity.builder()
-            .name(requestDto.getName())
-            .capacity(requestDto.getCapacity())
-            .pricePerNight(requestDto.getPricePerNight())
-            .description(requestDto.getDescription())
-            .available(requestDto.isAvailable())
-            .hotel(hotel)
-            .build();
-
-        room = roomRepository.save(room);
-        return room.getId().intValue();
+        return entity.getId();
     }
 
     @Override
-    public RoomAdminResponseDto getAdmin(Long hotelId, Long roomId) {
-        RoomEntity room = roomRepository.findByIdAndHotelId(roomId, hotelId)
-            .orElseThrow(() -> new IllegalArgumentException("Room not found in the given hotel"));
-        return mapToAdminResponseDto(room);
+    public RoomAdminResponseDto getAdmin(long id) {
+        var entity = roomRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+        return mapper.entityToAdminDto(entity);
     }
 
     @Override
-    public void edit(Long hotelId, Long roomId, RoomEditRequestDto requestDto) {
-        RoomEntity room = roomRepository.findByIdAndHotelId(roomId, hotelId)
-            .orElseThrow(() -> new IllegalArgumentException("Room not found in the given hotel"));
+    public void edit(long id, RoomEditRequestDto requestDto) {
+        var entity = roomRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Room not found"));
 
-        room.setName(requestDto.getName());
-        room.setCapacity(requestDto.getCapacity());
-        room.setPricePerNight(requestDto.getPricePerNight());
-        room.setDescription(requestDto.getDescription());
-        room.setAvailable(requestDto.isAvailable());
+        mapper.update(entity, requestDto);
 
-        roomRepository.save(room);
+        roomRepository.save(entity);
     }
 
     @Override
-    public void delete(Long hotelId, Long roomId) {
-        RoomEntity room = roomRepository.findByIdAndHotelId(roomId, hotelId)
-            .orElseThrow(() -> new IllegalArgumentException("Room not found in the given hotel"));
+    public void delete(long id) {
+        var entity = roomRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Room not found"));
 
-        roomRepository.delete(room);
+        roomRepository.delete(entity);
     }
 
     @Override
-    public PageResponseDto<RoomAdminResponseDto> listAdmin(Long hotelId, RoomCriteriaDto criteriaDto) {
-        List<RoomEntity> rooms = roomRepository.findByHotelId(hotelId);
-
-        List<RoomAdminResponseDto> roomDtos = rooms.stream()
-            .map(this::mapToAdminResponseDto)
-            .collect(Collectors.toList());
+    public PageResponseDto<RoomAdminResponseDto> listAdmin(RoomCriteriaDto criteriaDto, PaginationDto paginationDto) {
+        var spec = mapper.criteriaToSpec(criteriaDto);
+        var entities = roomRepository.findAll(spec, paginationDto.toPageable());
 
         return PageResponseDto.<RoomAdminResponseDto>builder()
-            .total(roomDtos.size())
-            .items(roomDtos)
+            .items(entities.stream().map(mapper::entityToAdminDto).collect(Collectors.toList()))
+            .total(entities.getTotalElements())
             .build();
     }
 
     @Override
-    public RoomResponseDto get(Long hotelId, Long roomId) {
-        RoomEntity room = roomRepository.findByIdAndHotelId(roomId, hotelId)
-            .orElseThrow(() -> new IllegalArgumentException("Room not found in the given hotel"));
-        return mapToResponseDto(room);
+    public RoomResponseDto get(long id) {
+        var entity = roomRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+        return mapper.entityToDto(entity);
     }
 
     @Override
-    public PageResponseDto<RoomResponseDto> list(Long hotelId, RoomCriteriaDto criteriaDto) {
-        List<RoomEntity> rooms = roomRepository.findByHotelId(hotelId);
-
-        List<RoomResponseDto> roomDtos = rooms.stream()
-            .map(this::mapToResponseDto)
-            .collect(Collectors.toList());
+    public PageResponseDto<RoomResponseDto> list(RoomCriteriaDto criteriaDto, PaginationDto paginationDto) {
+        var spec = mapper.criteriaToSpec(criteriaDto);
+        var rooms = roomRepository.findAll(spec, paginationDto.toPageable());
 
         return PageResponseDto.<RoomResponseDto>builder()
-            .total(roomDtos.size())
-            .items(roomDtos)
-            .build();
-    }
-
-    private RoomAdminResponseDto mapToAdminResponseDto(RoomEntity room) {
-        return RoomAdminResponseDto.builder()
-            .id(room.getId())
-            .name(room.getName())
-            .capacity(room.getCapacity())
-            .pricePerNight(room.getPricePerNight())
-            .description(room.getDescription())
-            .available(room.isAvailable())
-            .hotelName(room.getHotel().getName())
-            .build();
-    }
-
-    private RoomResponseDto mapToResponseDto(RoomEntity room) {
-        return RoomResponseDto.builder()
-            .id(room.getId())
-            .name(room.getName())
-            .capacity(room.getCapacity())
-            .pricePerNight(room.getPricePerNight())
-            .description(room.getDescription())
-            .available(room.isAvailable())
+            .items(rooms.stream().map(mapper::entityToDto).collect(Collectors.toList()))
+            .total(rooms.getTotalElements())
             .build();
     }
 }

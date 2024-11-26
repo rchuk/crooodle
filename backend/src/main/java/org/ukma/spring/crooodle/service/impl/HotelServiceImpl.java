@@ -4,133 +4,76 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
-import org.ukma.spring.crooodle.entities.HotelEntity;
-import org.ukma.spring.crooodle.repository.CountryRepository;
-import org.ukma.spring.crooodle.repository.WorldRegionRepository;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
+import org.ukma.spring.crooodle.mappers.HotelMapper;
 import org.ukma.spring.crooodle.repository.HotelRepository;
 import org.ukma.spring.crooodle.service.HotelService;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class HotelServiceImpl implements HotelService {
-
-    private final HotelRepository hotelRepository;
-    private final CountryRepository countryRepository;
-    private final WorldRegionRepository regionRepository;
+    private final HotelRepository repository;
+    private final HotelMapper mapper;
 
     @Override
-    public Long create(HotelCreateRequestDto requestDto) {
-        var country = countryRepository.findById(requestDto.getCountryId())
-            .orElseThrow(() -> new IllegalArgumentException("Country not found"));
+    public long create(HotelCreateRequestDto requestDto) {
+        var entity = mapper.dtoToEntity(requestDto);
+        repository.saveAndFlush(entity);
 
-        var region = requestDto.getRegionId() != null
-            ? regionRepository.findById(requestDto.getRegionId())
-            .orElseThrow(() -> new IllegalArgumentException("Region not found"))
-            : null;
-
-        HotelEntity hotel = HotelEntity.builder()
-            .name(requestDto.getName())
-            .address(requestDto.getAddress())
-            .country(country)
-            .country_region(region)
-            .build();
-
-        hotel = hotelRepository.save(hotel);
-        return hotel.getId();
+        return entity.getId();
     }
 
     @Override
-    public HotelAdminResponseDto getAdmin(Long id) {
-        HotelEntity hotel = hotelRepository.findById(id)
+    public HotelAdminResponseDto getAdmin(long id) {
+        var entity = repository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
 
-        return mapToAdminDto(hotel);
+        return mapper.entityToAdminDto(entity);
     }
 
     @Override
-    public HotelResponseDto get(Long id) {
-        HotelEntity hotel = hotelRepository.findById(id)
+    public HotelResponseDto get(long id) {
+        var entity = repository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
 
-        return mapToDto(hotel);
+        return mapper.entityToDto(entity);
     }
 
     @Override
-    public PageResponseDto<HotelAdminResponseDto> listAdmin(HotelCriteriaDto criteriaDto) {
-        List<HotelEntity> hotels = hotelRepository.findAll();
-
-        List<HotelAdminResponseDto> hotelDtos = hotels.stream()
-            .map(this::mapToAdminDto)
-            .collect(Collectors.toList());
+    public PageResponseDto<HotelAdminResponseDto> listAdmin(HotelCriteriaDto criteriaDto, PaginationDto paginationDto) {
+        var entities = repository.findAll(paginationDto.toPageable());
 
         return PageResponseDto.<HotelAdminResponseDto>builder()
-            .total(hotelDtos.size())
-            .items(hotelDtos)
+            .items(entities.stream().map(mapper::entityToAdminDto).toList())
+            .total(entities.getTotalElements())
             .build();
     }
 
     @Override
-    public PageResponseDto<HotelResponseDto> list(HotelCriteriaDto criteriaDto) {
-        List<HotelEntity> hotels = hotelRepository.findAll();
-
-        List<HotelResponseDto> hotelDtos = hotels.stream()
-            .map(this::mapToDto)
-            .collect(Collectors.toList());
+    public PageResponseDto<HotelResponseDto> list(HotelCriteriaDto criteriaDto, PaginationDto paginationDto) {
+        var entities = repository.findAll(paginationDto.toPageable());
 
         return PageResponseDto.<HotelResponseDto>builder()
-            .total(hotelDtos.size())
-            .items(hotelDtos)
+            .items(entities.stream().map(mapper::entityToDto).toList())
+            .total(entities.getTotalElements())
             .build();
     }
 
     @Override
-    public void edit(Long id, HotelCreateRequestDto requestDto) {
-        HotelEntity hotel = hotelRepository.findById(id)
+    public void edit(long id, HotelEditRequestDto requestDto) {
+        var entity = repository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
 
-        hotel.setName(requestDto.getName());
-        hotel.setAddress(requestDto.getAddress());
-        hotel.setCountry(countryRepository.findById(requestDto.getCountryId())
-            .orElseThrow(() -> new IllegalArgumentException("Country not found")));
+        mapper.update(entity, requestDto);
 
-        hotel.setCountry_region(requestDto.getRegionId() != null
-            ? regionRepository.findById(requestDto.getRegionId())
-            .orElseThrow(() -> new IllegalArgumentException("Region not found"))
-            : null);
-
-        hotelRepository.save(hotel);
+        repository.save(entity);
     }
 
     @Override
-    public void delete(Long id) {
-        HotelEntity hotel = hotelRepository.findById(id)
+    public void delete(long id) {
+        var entity = repository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
 
-        hotelRepository.delete(hotel);
-    }
-
-    private HotelResponseDto mapToDto(HotelEntity hotel) {
-        return HotelResponseDto.builder()
-            .id(hotel.getId())
-            .name(hotel.getName())
-            .address(hotel.getAddress())
-            .countryName(hotel.getCountry().getName())
-            .regionName(hotel.getCountry_region() != null ? hotel.getCountry_region().getName() : null)
-            .build();
-    }
-
-    private HotelAdminResponseDto mapToAdminDto(HotelEntity hotel) {
-        return HotelAdminResponseDto.builder()
-            .id(hotel.getId())
-            .name(hotel.getName())
-            .address(hotel.getAddress())
-            .rankSum(hotel.getRankSum())
-            .rankCount(hotel.getRankCount())
-            .countryName(hotel.getCountry().getName())
-            .regionName(hotel.getCountry_region() != null ? hotel.getCountry_region().getName() : null)
-            .build();
+        repository.delete(entity);
     }
 }

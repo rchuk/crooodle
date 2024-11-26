@@ -40,9 +40,6 @@ public class HotelEntity {
     @Embedded
     private CoordinatesEntity coordinates;
 
-    @ManyToOne
-    private WorldRegionEntity country_region;
-
     @ManyToOne(optional = false)
     private CountryEntity country;
 
