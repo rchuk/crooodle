@@ -37,7 +37,7 @@ public class TestDataSeederServiceImpl implements TestDataSeederService {
 
     @Override
     public void seed() {
-        tryRun(_ -> {
+        tryRun(t1 -> {
             for (var country : countries)
                 countryService.create(country);
         });
@@ -46,6 +46,6 @@ public class TestDataSeederServiceImpl implements TestDataSeederService {
     private void tryRun(Consumer<Void> fn) {
         try {
             fn.accept(null);
-        } catch (Exception _) {}
+        } catch (Exception ee) {}
     }
 }
