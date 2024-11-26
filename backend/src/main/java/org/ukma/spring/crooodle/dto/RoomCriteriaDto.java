@@ -7,5 +7,5 @@ public class RoomCriteriaDto {
     private long hotelId;
     private String query;
     private Integer roomTypeId;
-    private boolean available;
+    private Boolean available;
 }
