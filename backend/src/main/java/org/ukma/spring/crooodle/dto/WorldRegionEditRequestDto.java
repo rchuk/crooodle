@@ -3,9 +3,11 @@ package org.ukma.spring.crooodle.dto;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
+@Jacksonized
 @Builder
 @Value
 public class WorldRegionEditRequestDto {
