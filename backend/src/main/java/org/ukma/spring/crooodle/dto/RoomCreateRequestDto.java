@@ -1,8 +1,10 @@
 package org.ukma.spring.crooodle.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Data;
 
+@Builder
 @Data
 public class RoomCreateRequestDto {
 

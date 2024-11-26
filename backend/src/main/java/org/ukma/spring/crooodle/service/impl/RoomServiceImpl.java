@@ -72,6 +72,10 @@ public class RoomServiceImpl implements RoomService {
     public PageResponseDto<RoomAdminResponseDto> listAdmin(Long hotelId, RoomCriteriaDto criteriaDto) {
         List<RoomEntity> rooms = roomRepository.findByHotelId(hotelId);
 
+        if (rooms == null || rooms.isEmpty()) {
+            throw new IllegalArgumentException("Hotel ID not found or no rooms available for the hotel");
+        }
+
         List<RoomAdminResponseDto> roomDtos = rooms.stream()
             .map(this::mapToAdminResponseDto)
             .collect(Collectors.toList());
@@ -81,6 +85,7 @@ public class RoomServiceImpl implements RoomService {
             .items(roomDtos)
             .build();
     }
+
 
     @Override
     public RoomResponseDto get(Long hotelId, Long roomId) {

@@ -1,6 +1,8 @@
 package org.ukma.spring.crooodle.dto;
 
+import lombok.Builder;
 import lombok.Data;
+
 
 @Data
 public class RoomCriteriaDto {
