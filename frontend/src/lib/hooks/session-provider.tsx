@@ -1,11 +1,11 @@
-import {createContext, PropsWithChildren} from "react";
+import {createContext, PropsWithChildren, useContext} from "react";
 
-type SessionProviderProps = {
+export type SessionData = {
   accessToken: string | null,
   setAccessToken: (value: string | null) => void,
 }
 
-const SessionContext = createContext<SessionProviderProps | null>(null);
+const SessionContext = createContext<SessionData | undefined>(undefined);
 
 const accessTokenKey: string = "access-token";
 
@@ -13,7 +13,7 @@ export function getCachedAccessToken(): string | null {
   return localStorage.getItem(accessTokenKey);
 }
 
-export default function SessionProvider(props: PropsWithChildren<SessionProviderProps>) {
+export function SessionProvider(props: PropsWithChildren<SessionData>) {
   function setToken(value: string | null) {
     if (value !== null)
       localStorage.setItem(accessTokenKey, value);
@@ -23,14 +23,22 @@ export default function SessionProvider(props: PropsWithChildren<SessionProvider
     props.setAccessToken(value);
   }
 
-  const authProps: SessionProviderProps = {
+  const sessionData: SessionData = {
     accessToken: props.accessToken,
     setAccessToken: setToken
   };
 
   return (
-    <SessionContext.Provider value={authProps}>
+    <SessionContext.Provider value={sessionData}>
       {props.children}
     </SessionContext.Provider>
   )
+}
+
+export default function useSession(): SessionData {
+  const context = useContext(SessionContext);
+  if (context === undefined)
+    throw new Error("useSession must be used within a SessionProvider");
+
+  return context;
 }

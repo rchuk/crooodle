@@ -182,7 +182,7 @@
                         <phase>integration-test</phase>
                         <configuration>
                             <inputSpec>openapi.yaml</inputSpec>
-                            <generatorName>typescript</generatorName>
+                            <generatorName>typescript-fetch</generatorName>
                             <cleanupOutput>true</cleanupOutput>
                             <output>${project.basedir}/../frontend/generated</output>
                         </configuration>

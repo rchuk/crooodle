@@ -232,12 +232,24 @@ paths:
               $ref: "#/components/schemas/UserRegisterRequestDto"
         required: true
       responses:
-        "200":
-          description: OK
+        "500":
+          description: Internal server error
           content:
-            '*/*':
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicErrorDto"
+        "200":
+          description: Ok
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/AccessTokenResponseDto"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicValidationErrorDto"
   /auth/login:
     post:
       tags:
@@ -801,11 +813,25 @@ components:
           enum:
           - TRAVELER
           - HOTEL_OWNER
+    PublicErrorDto:
+      type: object
+      properties:
+        message:
+          type: string
     AccessTokenResponseDto:
       type: object
       properties:
         accessToken:
           type: string
+    PublicValidationErrorDto:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: string
     UserLoginRequestDto:
       required:
       - email

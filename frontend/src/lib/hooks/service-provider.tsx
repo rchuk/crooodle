@@ -1,7 +1,7 @@
 "use client"
 
 import {
-  createConfiguration,
+  Configuration,
   AuthControllerApi,
   CountryControllerApi,
   WorldRegionControllerApi,
@@ -21,16 +21,8 @@ export type Services = {
 const ServiceContext = createContext<Services | undefined>(undefined);
 
 export function createServices(config: Config): Services {
-  const configuration = createConfiguration({
-    authMethods: {
-      "Bearer": config.accessToken !== undefined
-        ? {
-          tokenProvider: {
-            getToken: () => config.accessToken ?? ""
-          }
-        }
-        : undefined
-    }
+  const configuration = new Configuration({
+    accessToken: () => config.accessToken ?? ""
   });
 
   return {

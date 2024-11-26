@@ -3,7 +3,8 @@
 import {Config, createServices, ServiceProvider} from "@lib/hooks/service-provider";
 import {Provider} from "@/components/ui/provider";
 import {PropsWithChildren, useEffect, useMemo, useState} from "react";
-import SessionProvider, {getCachedAccessToken} from "@lib/hooks/session-provider";
+import {SessionProvider, getCachedAccessToken} from "@lib/hooks/session-provider";
+import {Toaster} from "@/components/ui/toaster";
 
 export default function Providers({ children } : PropsWithChildren<{}>) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -22,6 +23,7 @@ export default function Providers({ children } : PropsWithChildren<{}>) {
     <Provider>
       <SessionProvider accessToken={accessToken} setAccessToken={setAccessToken}>
         <ServiceProvider value={services}>
+          <Toaster />
           {children}
         </ServiceProvider>
       </SessionProvider>
