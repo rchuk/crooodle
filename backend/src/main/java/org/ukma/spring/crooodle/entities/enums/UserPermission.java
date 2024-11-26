@@ -25,4 +25,9 @@ public enum UserPermission {
     HOTEL_EDIT,
     HOTEL_VIEW,
     HOTEL_DELETE,
+
+    ROOM_CREATE,
+    ROOM_EDIT,
+    ROOM_VIEW,
+    ROOM_DELETE
 }
