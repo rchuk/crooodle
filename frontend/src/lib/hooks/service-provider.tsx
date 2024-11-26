@@ -7,9 +7,10 @@ import {
   WorldRegionControllerApi,
 } from "@api/index";
 import {createContext, PropsWithChildren, useContext} from "react";
-import {ConfigurationParameters} from "@api/configuration";
 
-export type Config = ConfigurationParameters;
+export type Config = {
+  accessToken?: string
+};
 
 export type Services = {
   authService: AuthControllerApi,
@@ -20,7 +21,17 @@ export type Services = {
 const ServiceContext = createContext<Services | undefined>(undefined);
 
 export function createServices(config: Config): Services {
-  const configuration = createConfiguration(config);
+  const configuration = createConfiguration({
+    authMethods: {
+      "Bearer": config.accessToken !== undefined
+        ? {
+          tokenProvider: {
+            getToken: () => config.accessToken ?? ""
+          }
+        }
+        : undefined
+    }
+  });
 
   return {
     authService: new AuthControllerApi(configuration),
