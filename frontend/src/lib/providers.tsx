@@ -1,6 +1,6 @@
 "use client"
 
-import {Config, createServices, ServiceProvider} from "@lib/hooks/ServiceProvider";
+import {Config, createServices, ServiceProvider} from "@lib/hooks/service-provider";
 import {Provider} from "@/components/ui/provider";
 import {PropsWithChildren, useMemo} from "react";
 

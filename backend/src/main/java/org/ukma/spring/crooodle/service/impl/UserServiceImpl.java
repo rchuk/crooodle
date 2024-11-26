@@ -14,6 +14,8 @@ import org.ukma.spring.crooodle.repository.UserPermissionRepository;
 import org.ukma.spring.crooodle.repository.UserRepository;
 import org.ukma.spring.crooodle.service.UserService;
 
+import java.util.Set;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,11 +38,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void addPermission(String email, UserPermission permission) {
+    public void addPermissions(String email, Set<UserPermission> permissions) {
         var user = userRepository.findByEmail(email).orElseThrow(PublicNotFoundException::new);
-        var permissionEntity = permissionRepository.findByKind(permission).orElseThrow();
+        var permissionEntities = permissionRepository.findAllByKindIn(permissions);
 
-        user.getPermissions().add(permissionEntity);
+        user.getPermissions().addAll(permissionEntities);
         userRepository.saveAndFlush(user);
     }
 }

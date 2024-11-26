@@ -5,6 +5,8 @@ info:
 servers:
 - url: http://localhost:8080
   description: Generated server url
+security:
+- Bearer: []
 paths:
   /admin/world-regions/{id}:
     get:
@@ -781,6 +783,7 @@ components:
       - email
       - name
       - password
+      - registerType
       type: object
       properties:
         name:
@@ -793,6 +796,11 @@ components:
           maxLength: 2147483647
           minLength: 8
           type: string
+        registerType:
+          type: string
+          enum:
+          - TRAVELER
+          - HOTEL_OWNER
     AccessTokenResponseDto:
       type: object
       properties:
