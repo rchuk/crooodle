@@ -1,6 +1,12 @@
 package org.ukma.spring.crooodle.entities.enums;
 
 public enum UserPermission {
+
+    // User
+
+    USER_ADMIN,
+    USER_REGULAR,
+
     // Country
     COUNTRY_CREATE,
     COUNTRY_EDIT,

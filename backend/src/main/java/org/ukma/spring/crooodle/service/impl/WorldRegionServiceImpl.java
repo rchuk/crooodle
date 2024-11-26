@@ -46,7 +46,7 @@ public class WorldRegionServiceImpl implements WorldRegionService {
 
     @Override
     public PageResponseDto<WorldRegionAdminResponseDto> listAdmin(WorldRegionCriteriaDto criteriaDto) {
-        // TODOs
+        // TODO
         return null;
     }
 

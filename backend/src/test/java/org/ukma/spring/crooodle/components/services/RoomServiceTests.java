@@ -67,7 +67,7 @@ import static org.mockito.Mockito.*;
  */
 
 
-class RoomServiceImplTest {
+class RoomServiceTests {
 
     @Mock
     private RoomRepository roomRepository;
