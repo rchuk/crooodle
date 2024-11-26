@@ -6,7 +6,6 @@ import lombok.Data;
 @Builder
 @Data
 public class HotelCriteriaDto {
-    private String name;
+    private String query;
     private Integer countryId;
-    private Integer regionId;
 }

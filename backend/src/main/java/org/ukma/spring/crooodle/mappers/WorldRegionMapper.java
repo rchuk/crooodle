@@ -2,10 +2,8 @@ package org.ukma.spring.crooodle.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-import org.ukma.spring.crooodle.dto.WorldRegionAdminResponseDto;
-import org.ukma.spring.crooodle.dto.WorldRegionCreateRequestDto;
-import org.ukma.spring.crooodle.dto.WorldRegionEditRequestDto;
-import org.ukma.spring.crooodle.dto.WorldRegionResponseDto;
+import org.springframework.data.jpa.domain.Specification;
+import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.entities.WorldRegionEntity;
 import org.ukma.spring.crooodle.service.CountryService;
 
@@ -17,5 +15,9 @@ public interface WorldRegionMapper {
     WorldRegionResponseDto entityToDto(WorldRegionEntity entity);
     WorldRegionAdminResponseDto entityToAdminDto(WorldRegionEntity entity);
 
-
+    default Specification<WorldRegionEntity> criteriaToSpec(WorldRegionCriteriaDto criteriaDto) {
+        return (root, _, builder) -> criteriaDto.getQuery() != null
+            ? builder.like(builder.lower(root.get("name")), "%" + criteriaDto.getQuery().toLowerCase() + "%")
+            : builder.conjunction();
+    }
 }

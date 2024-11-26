@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.ukma.spring.crooodle.entities.embedded.AmenitiesEntity;
 
 import java.util.List;
 
@@ -61,7 +62,4 @@ public class RoomEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "room_type_id", nullable = false)
     private RoomTypeEntity roomType; // Зв'язок із RoomTypeEntity
-
-    @Column(nullable = false)
-    private boolean available; // Доступність кімнати
 }

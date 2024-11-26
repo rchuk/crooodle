@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.exception.PublicNotFoundException;
 import org.ukma.spring.crooodle.mappers.WorldRegionMapper;
 import org.ukma.spring.crooodle.repository.WorldRegionRepository;
@@ -45,9 +46,14 @@ public class WorldRegionServiceImpl implements WorldRegionService {
     }
 
     @Override
-    public PageResponseDto<WorldRegionAdminResponseDto> listAdmin(WorldRegionCriteriaDto criteriaDto) {
-        // TODO
-        return null;
+    public PageResponseDto<WorldRegionAdminResponseDto> listAdmin(WorldRegionCriteriaDto criteriaDto, PaginationDto paginationDto) {
+        var spec = mapper.criteriaToSpec(criteriaDto);
+        var entities = repository.findAll(spec, paginationDto.toPageable());
+
+        return PageResponseDto.<WorldRegionAdminResponseDto>builder()
+            .items(entities.stream().map(mapper::entityToAdminDto).toList())
+            .total(entities.getTotalElements())
+            .build();
     }
 
     @Override
@@ -59,8 +65,13 @@ public class WorldRegionServiceImpl implements WorldRegionService {
     }
 
     @Override
-    public PageResponseDto<WorldRegionResponseDto> list(WorldRegionCriteriaDto criteriaDto) {
-        // TODO
-        return null;
+    public PageResponseDto<WorldRegionResponseDto> list(WorldRegionCriteriaDto criteriaDto, PaginationDto paginationDto) {
+        var spec = mapper.criteriaToSpec(criteriaDto);
+        var entities = repository.findAll(spec, paginationDto.toPageable());
+
+        return PageResponseDto.<WorldRegionResponseDto>builder()
+            .items(entities.stream().map(mapper::entityToDto).toList())
+            .total(entities.getTotalElements())
+            .build();
     }
 }

@@ -2,25 +2,24 @@ package org.ukma.spring.crooodle.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
+@Jacksonized
 @Builder
-@Data
+@Value
 public class RoomCreateRequestDto {
-
     @NotBlank
-    private String name;
+    String name;
 
     @PositiveOrZero
-    private int capacity;
+    int capacity;
 
     @PositiveOrZero
-    private double pricePerNight;
+    double pricePerNight;
 
-    private String description;
+    String description;
 
     @NotNull
-    private int roomTypeId;
-
-    private boolean available;
+    int roomTypeId;
 }

@@ -1,16 +1,15 @@
 package org.ukma.spring.crooodle.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
 public class RoomAdminResponseDto {
-    private Long id; // Змінено на Long
-    private String name;
-    private int capacity;
-    private double pricePerNight;
-    private String description;
-    private boolean available;
-    private String hotelName;
+    long id;
+    String name;
+    int capacity;
+    double pricePerNight;
+    String description;
+    boolean available;
 }

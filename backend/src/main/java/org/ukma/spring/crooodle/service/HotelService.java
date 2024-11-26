@@ -2,19 +2,20 @@ package org.ukma.spring.crooodle.service;
 
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 
 public interface HotelService {
-    Long create(HotelCreateRequestDto requestDto);
+    long create(HotelCreateRequestDto requestDto);
 
-    HotelAdminResponseDto getAdmin(Long id);
+    HotelAdminResponseDto getAdmin(long id);
 
-    HotelResponseDto get(Long id);
+    HotelResponseDto get(long id);
 
-    PageResponseDto<HotelAdminResponseDto> listAdmin(HotelCriteriaDto criteriaDto);
+    PageResponseDto<HotelAdminResponseDto> listAdmin(HotelCriteriaDto criteriaDto, PaginationDto paginationDto);
 
-    PageResponseDto<HotelResponseDto> list(HotelCriteriaDto criteriaDto);
+    PageResponseDto<HotelResponseDto> list(HotelCriteriaDto criteriaDto, PaginationDto paginationDto);
 
-    void edit(Long id, HotelCreateRequestDto requestDto);
+    void edit(long id, HotelEditRequestDto requestDto);
 
-    void delete(Long id);
+    void delete(long id);
 }

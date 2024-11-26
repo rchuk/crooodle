@@ -3,11 +3,13 @@ package org.ukma.spring.crooodle.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.dto.CountryCriteriaDto;
 import org.ukma.spring.crooodle.dto.CountryResponseDto;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.service.CountryService;
 
 @RestController
@@ -26,7 +28,10 @@ public class CountryController {
     @Operation(operationId = "listCountries")
     @PreAuthorize("permitAll()")
     @GetMapping
-    public PageResponseDto<CountryResponseDto> list(@RequestParam(required = false) @Valid CountryCriteriaDto criteriaDto) {
-        return service.list(criteriaDto);
+    public PageResponseDto<CountryResponseDto> list(
+        @ParameterObject @Valid CountryCriteriaDto criteriaDto,
+        @ParameterObject @Valid PaginationDto paginationDto
+    ) {
+        return service.list(criteriaDto, paginationDto);
     }
 }

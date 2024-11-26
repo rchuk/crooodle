@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.entities;
+package org.ukma.spring.crooodle.entities.embedded;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

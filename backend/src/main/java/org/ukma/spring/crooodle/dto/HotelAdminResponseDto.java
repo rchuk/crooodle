@@ -1,16 +1,15 @@
 package org.ukma.spring.crooodle.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
 public class HotelAdminResponseDto {
-    private Long id;
-    private String name;
-    private String address;
-    private long rankSum;
-    private int rankCount;
-    private String countryName;
-    private String regionName;
+    long id;
+    String name;
+    String address;
+    long rankSum;
+    int rankCount;
+    CountryResponseDto country;
 }

@@ -35,11 +35,6 @@ public class RoomTypeSeederImpl implements RoomTypeSeeder {
         repository.saveAllAndFlush(entities);
     }
 
-    // Визначення преміум-типів
-    private boolean isPremium(RoomType type) {
-        return type == RoomType.SUITE || type == RoomType.DELUXE || type == RoomType.FAMILY;
-    }
-
     // Опис для кожного типу
     private String getDescription(RoomType type) {
         return switch (type) {
