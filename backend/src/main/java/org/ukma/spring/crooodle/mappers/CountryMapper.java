@@ -2,10 +2,8 @@ package org.ukma.spring.crooodle.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-import org.ukma.spring.crooodle.dto.CountryAdminResponseDto;
-import org.ukma.spring.crooodle.dto.CountryCreateRequestDto;
-import org.ukma.spring.crooodle.dto.CountryEditRequestDto;
-import org.ukma.spring.crooodle.dto.CountryResponseDto;
+import org.springframework.data.jpa.domain.Specification;
+import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.entities.CountryEntity;
 
 @Mapper(componentModel = "spring")
@@ -15,4 +13,10 @@ public interface CountryMapper {
 
     CountryResponseDto entityToDto(CountryEntity entity);
     CountryAdminResponseDto entityToAdminDto(CountryEntity entity);
+
+    default Specification<CountryEntity> criteriaToSpec(CountryCriteriaDto criteriaDto) {
+        return (root, _, builder) -> criteriaDto.getQuery() != null
+            ? builder.like(builder.lower(root.get("name")), "%" + criteriaDto.getQuery().toLowerCase() + "%")
+            : builder.conjunction();
+    }
 }

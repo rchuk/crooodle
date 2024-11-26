@@ -1,11 +1,8 @@
 package org.ukma.spring.crooodle.dto;
 
-import lombok.Value;
-import org.springdoc.api.annotations.ParameterObject;
-import org.ukma.spring.crooodle.dto.common.PaginationDto;
+import lombok.Data;
 
-@ParameterObject
-@Value
+@Data
 public class WorldRegionCriteriaDto {
-    PaginationDto pagination;
+    String query;
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.entities.CountryEntity;
 import org.ukma.spring.crooodle.exception.PublicNotFoundException;
 import org.ukma.spring.crooodle.mappers.CountryMapper;
@@ -48,9 +49,14 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public PageResponseDto<CountryAdminResponseDto> listAdmin(CountryCriteriaDto criteriaDto) {
-        // TODO
-        return null;
+    public PageResponseDto<CountryAdminResponseDto> listAdmin(CountryCriteriaDto criteriaDto, PaginationDto paginationDto) {
+        var spec = mapper.criteriaToSpec(criteriaDto);
+        var entities = repository.findAll(spec, paginationDto.toPageable());
+
+        return PageResponseDto.<CountryAdminResponseDto>builder()
+            .items(entities.stream().map(mapper::entityToAdminDto).toList())
+            .total(entities.getTotalElements())
+            .build();
     }
 
     @Override
@@ -62,9 +68,14 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public PageResponseDto<CountryResponseDto> list(CountryCriteriaDto criteriaDto) {
-        // TODO
-        return null;
+    public PageResponseDto<CountryResponseDto> list(CountryCriteriaDto criteriaDto, PaginationDto paginationDto) {
+        var spec = mapper.criteriaToSpec(criteriaDto);
+        var entities = repository.findAll(spec, paginationDto.toPageable());
+
+        return PageResponseDto.<CountryResponseDto>builder()
+            .items(entities.stream().map(mapper::entityToDto).toList())
+            .total(entities.getTotalElements())
+            .build();
     }
 
     @Override

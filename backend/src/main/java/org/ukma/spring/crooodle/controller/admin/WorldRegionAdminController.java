@@ -3,10 +3,12 @@ package org.ukma.spring.crooodle.controller.admin;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.service.WorldRegionService;
 
 @RestController
@@ -46,7 +48,9 @@ public class WorldRegionAdminController {
     @Operation(operationId = "listWorldRegionsAdmin")
     @PreAuthorize("hasAuthority('WORLD_REGION_VIEW')")
     @GetMapping
-    public PageResponseDto<WorldRegionAdminResponseDto> list(@RequestParam(required = false) @Valid WorldRegionCriteriaDto criteriaDto) {
-        return service.listAdmin(criteriaDto);
+    public PageResponseDto<WorldRegionAdminResponseDto> list(
+        @ParameterObject @Valid WorldRegionCriteriaDto criteriaDto,
+        @ParameterObject @Valid PaginationDto paginationDto) {
+        return service.listAdmin(criteriaDto, paginationDto);
     }
 }
