@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CountryAdminController.class)
 class CountryAdminControllerTests {
 
+    @MockBean
     private MockMvc mockMvc;
 
     @Autowired
