@@ -1,13 +1,11 @@
-package org.ukma.spring.crooodle;
+package org.ukma.spring.crooodle.components.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -53,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(CountryController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class CountryControllerTests {
+public class CountryControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,7 +60,7 @@ class CountryControllerTests {
     private JwtService jwtService;
 
     @MockBean
-    private UserService userservice;
+    private UserService userService;
 
     @MockBean
     private CountryService service;

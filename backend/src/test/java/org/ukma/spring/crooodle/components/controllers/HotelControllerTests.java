@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle;
+package org.ukma.spring.crooodle.components.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +28,7 @@ import java.util.Collections;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // TODO: change .total to .totalElements in PageResponseDto for better consistency in code
@@ -169,6 +170,8 @@ class HotelControllerTests {
             pageResponseDto
         );
 
+        System.out.println("TEEST\n" + pageResponseDto);
+
 
         mockMvc.perform(
                 get("/hotels")
@@ -179,6 +182,8 @@ class HotelControllerTests {
                     status()
                     .isOk()
                 )
+
+            .andDo(print())
 
                 .andExpect(
                     jsonPath("$.items[0].id")

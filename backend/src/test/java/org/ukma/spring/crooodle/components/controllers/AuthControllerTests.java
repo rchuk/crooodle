@@ -1,13 +1,13 @@
-package org.ukma.spring.crooodle;
+package org.ukma.spring.crooodle.components.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.constraints.Email;
+import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,21 +15,36 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.ukma.spring.crooodle.controller.AuthController;
 import org.ukma.spring.crooodle.dto.AccessTokenResponseDto;
 import org.ukma.spring.crooodle.dto.UserLoginRequestDto;
 import org.ukma.spring.crooodle.dto.UserRegisterRequestDto;
+import org.ukma.spring.crooodle.repository.UserPermissionRepository;
 import org.ukma.spring.crooodle.service.AuthService;
 import org.ukma.spring.crooodle.service.JwtService;
+import org.ukma.spring.crooodle.service.UserService;
+import org.ukma.spring.crooodle.service.impl.UserPermissionSeederImpl;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AuthController.class)
+@WebMvcTest(controllers = AuthController.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // because I use @BeforeAll
 @ComponentScan(basePackages = "org.ukma.spring.crooodle")
-class AuthControllerTest {
+@AutoConfigureMockMvc(addFilters = false)
+class AuthControllerTests {
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @MockBean
+    private UserPermissionRepository userPermissionRepository;
+
+    @MockBean
+    private UserPermissionSeederImpl userPermissionSeeder;
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,10 +53,17 @@ class AuthControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
+    private EntityManagerFactory entityManagerFactory;
+
+    @MockBean
+    private UserService userService;
+
+    @MockBean
     private JwtService jwtService;
 
     @MockBean
     private AuthService authService;
+
 
 
     // ALLEGEDLY CORRECT VALUES
@@ -61,6 +83,8 @@ class AuthControllerTest {
 
     @BeforeAll
     void setUp() {
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
         // Correct input data
 

@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle;
+package org.ukma.spring.crooodle.components.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,51 +16,53 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.ukma.spring.crooodle.controller.RoomController;
-import org.ukma.spring.crooodle.dto.RoomCriteriaDto;
-import org.ukma.spring.crooodle.dto.RoomResponseDto;
+import org.springframework.test.web.servlet.MvcResult;
+import org.ukma.spring.crooodle.controller.WorldRegionController;
+import org.ukma.spring.crooodle.dto.WorldRegionCriteriaDto;
+import org.ukma.spring.crooodle.dto.WorldRegionResponseDto;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.service.JwtService;
-import org.ukma.spring.crooodle.service.RoomService;
 import org.ukma.spring.crooodle.service.UserService;
+import org.ukma.spring.crooodle.service.WorldRegionService;
 
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print; // for debug printing
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers; // for debug printing
-
-
 /**
- * testGetRoom:
- * Verifies the GET /hotels/{hotel_id}/rooms/{room_id} endpoint
- * returns the correct room details
+ *
+ * WorldRegionControllerTests:
+ * Verifies the behavior of the /world-regions endpoints
  *
  *
- * testGetRoomNotFound:
- * Checks error scenario for invalid room ID
+ * testGetWorldRegion:
+ * Verifies the GET /world-regions/{id} endpoint
  *
  *
- * testListRooms:
- * Tests the GET /hotels/{hotel_id}/rooms endpoint WITH filter (default behavior)
+ * testGetWorldRegion_ifInvalidID:
+ * Simulates an error scenario when the world region is not found (ID 99)
+ *
+ *
+ * testListWorldRegions:
+ * Tests the GET /world-regions endpoint WITH a filter (default behavior)
  *
  */
 
-@WebMvcTest(RoomController.class)
+@WebMvcTest(WorldRegionController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class RoomControllerTests {
+class WorldRegionControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private RoomService service;
+    private WorldRegionService service;
 
     @MockBean
     private JwtService jwtService;
@@ -67,59 +70,56 @@ class RoomControllerTests {
     @MockBean
     private UserService userService;
 
+    @Mock
+    private PaginationDto pagination;
+
+
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
-    private RoomCriteriaDto criteriaDto;
+    private WorldRegionResponseDto worldRegionResponseDto;
 
-    private RoomResponseDto roomResponseDto;
-    private PageResponseDto<RoomResponseDto> pageResponseDto;
+    private PageResponseDto<WorldRegionResponseDto> pageResponseDto;
+
+    @Mock
+    private WorldRegionCriteriaDto criteriaDto;
 
 
     @BeforeEach
     void setUp() {
 
-        roomResponseDto = RoomResponseDto
+        worldRegionResponseDto = WorldRegionResponseDto
             .builder()
-            .id(1L)
-            .name("TestRoom")
-            .pricePerNight(100)
-            .capacity(2)
-            .description("Some Sample Description 1")
+            .id(1)
+            .name("TestRegion")
             .build();
 
-
         pageResponseDto = PageResponseDto
-            .<RoomResponseDto>builder()
-            .items(
-                Collections.singletonList(
-                    roomResponseDto
-                )
-            )
+            .<WorldRegionResponseDto>builder()
+            .items(Collections.singletonList(worldRegionResponseDto))
             .total(1L)
             .totalPages(1)
             .build();
 
-        System.out.println(pageResponseDto);
 
     }
 
+
     @Test
-    void testGetRoom() throws Exception {
+    void testGetWorldRegion() throws Exception {
 
         when(
             service
-            .get(1L, 1L)
+            .get(1)
         )
         .thenReturn(
-            roomResponseDto
+            worldRegionResponseDto
         );
 
 
         mockMvc.perform(
-                get("/hotels/1/rooms/1")
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/world-regions/1")
+            .contentType(MediaType.APPLICATION_JSON)
             )
 
             .andExpect(
@@ -134,42 +134,30 @@ class RoomControllerTests {
 
             .andExpect(
                 jsonPath("$.name")
-                .value("TestRoom")
-            )
-
-            .andExpect(
-                jsonPath("$.pricePerNight")
-                .value(100)
-            )
-
-            .andExpect(
-                jsonPath("$.capacity")
-                .value(2)
+                .value("TestRegion")
             );
 
 
     }
 
+
     @Test
-    void testGetRoomNotFound() throws Exception {
+    void testGetWorldRegion_ifInvalidID() throws Exception {
 
         when(
             service
-            .get(
-                1L,
-                99L
-            )
+            .get(99)
         )
         .thenThrow(
             new RuntimeException(
-                "Room not found"
+                "World region not found"
             )
         );
 
 
         mockMvc.perform(
-                get("/hotels/1/rooms/99")
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/world-regions/99")
+            .contentType(MediaType.APPLICATION_JSON)
             )
 
             .andExpect(
@@ -177,15 +165,9 @@ class RoomControllerTests {
                 .isInternalServerError()
             )
 
-            .andDo(
-                print()
-            )
-
             .andExpect(
                 content()
-                .string(
-                    "{\"message\":\"Room not found\"}"
-                )
+                .string("{\"message\":\"World region not found\"}")
             );
 
 
@@ -199,26 +181,23 @@ class RoomControllerTests {
         "though expected list of items " +
         "as well as total and totalPages Values"
     )
-    void testListRooms() throws Exception {
+    void testListWorldRegions() throws Exception {
 
         when(
             service
-            .list(
-                any(Long.class),
-                any(RoomCriteriaDto.class)
-            )
+            .list(any(WorldRegionCriteriaDto.class))
         )
         .thenReturn(
             pageResponseDto
         );
 
 
-        System.out.println("TEEST\n" + pageResponseDto);
+        System.out.println(pageResponseDto);
 
 
         mockMvc.perform(
-                get("/hotels/1/rooms")
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/world-regions")
+            .contentType(MediaType.APPLICATION_JSON)
             )
 
             .andExpect(
@@ -235,7 +214,7 @@ class RoomControllerTests {
 
             .andExpect(
                 jsonPath("$.items[0].name")
-                .value("TestRoom")
+                .value("TestRegion")
             )
 
             .andExpect(
@@ -249,9 +228,43 @@ class RoomControllerTests {
             );
 
 
+
     }
+
+    /*
+
+    Didnt work as well
+
+    @Test
+    void testListWorldRegions() throws Exception {
+        when(
+            service
+                .list(any(WorldRegionCriteriaDto.class))
+        )
+            .thenReturn(
+                pageResponseDto
+            );
+
+        System.out.println(pageResponseDto);
+
+        MvcResult result = mockMvc.perform(get("/world-regions")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+
+        mockMvc.perform(asyncDispatch(result))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.items[0].id").value(1))
+            .andExpect(jsonPath("$.items[0].name").value("TestRegion"))
+            .andExpect(jsonPath("$.total").value(1))
+            .andExpect(jsonPath("$.totalPages").value(1));
+    }*/
 
 
 
 }
+
+
 
