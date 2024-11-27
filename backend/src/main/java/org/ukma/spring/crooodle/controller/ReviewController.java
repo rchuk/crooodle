@@ -26,14 +26,14 @@ public class ReviewController {
     private final ReviewService service;
 
     @Operation(operationId = "createReview")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('REVIEW_CREATE')")
     @PostMapping
     public ReviewResponseDto createReview(@RequestBody @Valid ReviewCreateRequestDto requestDto) {
         return service.createReview(requestDto);
     }
 
     @Operation(operationId = "updateReview")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('REVIEW_EDIT')")
     @PutMapping("/{id}")
 
     public ReviewResponseDto updateReview(
@@ -66,7 +66,7 @@ public class ReviewController {
 
 
     @Operation(operationId = "listReviewsByUser")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("permitAll()")
 
     @GetMapping("/user/{userId}")
     public PageResponseDto<ReviewResponseDto> listReviewsByUser(
@@ -78,7 +78,7 @@ public class ReviewController {
     }
 
     @Operation(operationId = "deleteReview")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('REVIEW_DELETE')")
     @DeleteMapping("/{id}")
     public void deleteReview(@PathVariable("id") long reviewId) {
         service.deleteReview(reviewId);
