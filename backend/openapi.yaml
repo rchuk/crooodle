@@ -232,6 +232,12 @@ paths:
               $ref: "#/components/schemas/UserRegisterRequestDto"
         required: true
       responses:
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicValidationErrorDto"
         "500":
           description: Internal server error
           content:
@@ -244,12 +250,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AccessTokenResponseDto"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PublicValidationErrorDto"
+      security: []
   /auth/login:
     post:
       tags:
@@ -268,6 +269,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/AccessTokenResponseDto"
+      security: []
   /admin/world-regions:
     get:
       tags:
@@ -813,6 +815,15 @@ components:
           enum:
           - TRAVELER
           - HOTEL_OWNER
+    PublicValidationErrorDto:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: string
     PublicErrorDto:
       type: object
       properties:
@@ -823,15 +834,6 @@ components:
       properties:
         accessToken:
           type: string
-    PublicValidationErrorDto:
-      type: object
-      properties:
-        message:
-          type: string
-        errors:
-          type: object
-          additionalProperties:
-            type: string
     UserLoginRequestDto:
       required:
       - email

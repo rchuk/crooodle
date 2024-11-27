@@ -1,11 +1,24 @@
-import {Flex, Heading, HStack, Icon, Input, Text, VStack} from "@chakra-ui/react"
+"use client"
+
+import {Flex, Heading, HStack, Icon, IconButton, Input, Text, VStack} from "@chakra-ui/react"
 import {Button} from "@/components/ui/button";
-import { RiMapPinLine } from "react-icons/ri";
+import { RiMapPinLine, RiUser3Fill } from "react-icons/ri";
+import {useRouter} from "next/navigation";
 
 export default function HomePage() {
+  const router = useRouter();
+  function handleUserClick() {
+    router.push("/login");
+  }
+
   return (
     <VStack height="100vh">
       <Flex width="100%" flexDirection="column" alignItems="center" rowGap={10} p={5} backgroundColor="bg.subtle">
+        <Flex width="100%" justifyContent="flex-end">
+          <IconButton rounded="full" size="sm" onClick={handleUserClick}>
+            <RiUser3Fill />
+          </IconButton>
+        </Flex>
         <Flex alignItems="center" columnGap={2}>
           <Heading size="5xl" color="red.500">
             Crooodle

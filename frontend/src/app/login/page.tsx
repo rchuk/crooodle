@@ -15,10 +15,12 @@ import {useState} from "react";
 import {PasswordInput} from "@/components/ui/password-input";
 import {toaster} from "@/components/ui/toaster";
 import {getRequestError} from "@lib/utils/request-utils";
+import {useRouter} from "next/navigation";
 
 export default function LoginPage() {
   const { authService } = useServices();
   const { setAccessToken } = useSession();
+  const router = useRouter();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -31,6 +33,7 @@ export default function LoginPage() {
           title: "Login was successful",
           type: "success"
         });
+        router.back();
       })
       .catch(e => toaster.create({
         title: "Login failed",
@@ -60,7 +63,7 @@ export default function LoginPage() {
           </Stack>
         </Card.Body>
         <Card.Footer justifyContent="flex-end">
-          <Button variant="outline">Cancel</Button>
+          <Button variant="outline" onClick={_ => router.back()}>Cancel</Button>
           <Button variant="solid" onClick={handleLogin}>Sign in</Button>
         </Card.Footer>
       </Card.Root>

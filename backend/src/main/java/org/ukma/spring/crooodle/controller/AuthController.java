@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,6 +52,7 @@ public class AuthController {
             }
         )
     })
+    @SecurityRequirements
     @Operation(operationId = "register")
     @PreAuthorize("permitAll()")
     @PostMapping("/register")
@@ -58,6 +60,7 @@ public class AuthController {
         return service.register(requestDto);
     }
 
+    @SecurityRequirements
     @Operation(operationId = "login")
     @PreAuthorize("permitAll()")
     @PostMapping("/login")

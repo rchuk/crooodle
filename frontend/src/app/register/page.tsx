@@ -23,6 +23,7 @@ import useServices from "@lib/hooks/service-provider";
 import useSession from "@lib/hooks/session-provider";
 import {toaster} from "@/components/ui/toaster";
 import {getRequestError} from "@lib/utils/request-utils";
+import {useRouter} from "next/navigation";
 
 const registerOptions = [
   { title: "Traveler", value: UserRegisterRequestDtoRegisterTypeEnum.Traveler, icon: <RiSuitcase3Line /> },
@@ -32,7 +33,8 @@ const registerOptions = [
 export default function RegisterPage() {
   const { authService } = useServices();
   const { setAccessToken } = useSession();
-
+  const router = useRouter();
+  
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -46,6 +48,7 @@ export default function RegisterPage() {
           title: "Registration was successful",
           type: "success"
         });
+        router.back();
       })
       .catch(e => toaster.create({
         title: "Registration failed",
@@ -103,7 +106,7 @@ export default function RegisterPage() {
           </Stack>
         </Card.Body>
         <Card.Footer justifyContent="flex-end">
-          <Button variant="outline">Cancel</Button>
+          <Button variant="outline" onClick={_ => router.back()}>Cancel</Button>
           <Button variant="solid" onClick={handleRegister}>Sign in</Button>
         </Card.Footer>
       </Card.Root>
