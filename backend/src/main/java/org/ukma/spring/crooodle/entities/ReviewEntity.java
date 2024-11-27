@@ -50,6 +50,7 @@ public class ReviewEntity {
     private LocalDate updatedAt; // Dates of the review
 
 
+    @NotNull
     @Min(1)
     @Max(5)
     @Column(nullable = false)
@@ -62,6 +63,7 @@ public class ReviewEntity {
 
 
 }
+
 
 
 
