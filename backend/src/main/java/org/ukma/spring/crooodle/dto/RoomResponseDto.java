@@ -9,5 +9,5 @@ public class RoomResponseDto {
     long id;
     String name;
     boolean available;
-    String groupName; // Назва групи кімнат, до якої належить кімната
+    RoomGroupResponseDto group; // Замість назви групи тепер об'єкт RoomGroupResponseDto
 }

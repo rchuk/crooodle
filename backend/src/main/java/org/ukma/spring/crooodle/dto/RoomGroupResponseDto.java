@@ -14,7 +14,7 @@ public class RoomGroupResponseDto {
     int capacity; // Максимальна кількість гостей
     double pricePerNight; // Ціна за ніч
     String description; // Опис групи
-    String hotelName; // Назва готелю
+    HotelResponseDto hotel; // Інформація про готель
     String roomTypeName; // Назва типу кімнат
     List<RoomResponseDto> rooms; // Список кімнат у групі
     AmenitiesEntity amenities; // Зручності

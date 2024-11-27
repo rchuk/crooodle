@@ -50,7 +50,7 @@ public class RoomGroupEntity {
     @JoinColumn(name = "hotel_id", nullable = false)
     private HotelEntity hotel;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "roomGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomEntity> rooms;
 
     @Embedded
@@ -66,14 +66,23 @@ public class RoomGroupEntity {
         return (double) rankSum / rankCount;
     }
 
-    // Оновлення рейтингу на основі кімнат
+    // Оновлення рейтингу на основі рейтингів кімнат
     public void updateRankFromRooms() {
         int result = 0;
+        // Оновлюємо rankSum за всіма кімнатами
         for (RoomEntity room : rooms) {
-            int sum = room.getRankSum();
-            result += sum;
+            result += room.getReservations().size(); // припускаємо, що кількість бронювань є індикатором рейтингу
         }
         rankSum = result;
-        rankCount = rooms.stream().mapToInt(RoomEntity::getRankCount).sum();
+
+        // Оновлюємо rankCount: сума кількості бронювань для всіх кімнат
+        rankCount = getRankCount();
+    }
+
+    // Метод для підрахунку загальної кількості бронювань у всіх кімнатах
+    public int getRankCount() {
+        return rooms.stream()
+            .mapToInt(room -> room.getReservations().size()) // Підсумовуємо кількість бронювань для кожної кімнати
+            .sum();
     }
 }

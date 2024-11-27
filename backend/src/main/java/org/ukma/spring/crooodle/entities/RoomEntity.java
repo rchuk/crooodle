@@ -33,11 +33,5 @@ public class RoomEntity {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservationEntity> reservations; // Список бронювань
-    @PositiveOrZero
-    @Column(nullable = false)
-    private int rankSum; // Додано поле для суми рейтингу
 
-    @PositiveOrZero
-    @Column(nullable = false)
-    private int rankCount; // Додано поле для кількості рейтингів
 }

@@ -36,7 +36,7 @@ public class RoomGroupAdminController {
     @PreAuthorize("hasAuthority('ROOM_GROUP_EDIT')")
     @PutMapping("/{id}")
     public void edit(@PathVariable("id") long id,
-                     @RequestBody @Valid RoomGroupEditRequestDto requestDto) {
+                     @RequestBody @Valid RoomGroupAdminEditRequestDto requestDto) {
         service.edit(id, requestDto);
     }
 
