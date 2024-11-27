@@ -29,8 +29,8 @@ public class TestDataSeederServiceImpl implements TestDataSeederService {
 
     @Override
     public void seed() {
-        tryRun(_ -> this.seedWorldRegions());
-        tryRun(_ -> this.seedCountries());
+        tryRun(t1 -> this.seedWorldRegions());
+        tryRun(t1 -> this.seedCountries());
     }
 
     private void seedCountries() {
