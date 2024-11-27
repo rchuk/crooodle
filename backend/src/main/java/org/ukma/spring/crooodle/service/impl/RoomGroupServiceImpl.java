@@ -37,7 +37,7 @@ public class RoomGroupServiceImpl implements RoomGroupService {
     }
 
     @Override
-    public void edit(long id, RoomGroupEditRequestDto requestDto) {
+    public void edit(long id, RoomGroupAdminEditRequestDto requestDto) {
         var entity = roomGroupRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("RoomGroup not found"));
 

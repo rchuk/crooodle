@@ -9,7 +9,7 @@ public interface RoomGroupService {
 
     RoomGroupAdminResponseDto getAdmin(long id);
 
-    void edit(long id, RoomGroupEditRequestDto requestDto);
+    void edit(long id, RoomGroupAdminEditRequestDto requestDto);
 
     void delete(long id);
 

@@ -12,7 +12,7 @@ public interface RoomGroupMapper {
     RoomGroupEntity dtoToEntity(RoomGroupCreateRequestDto requestDto);
 
     // Метод для оновлення сутності на основі DTO редагування
-    void update(@MappingTarget RoomGroupEntity entity, RoomGroupEditRequestDto requestDto);
+    void update(@MappingTarget RoomGroupEntity entity, RoomGroupAdminEditRequestDto requestDto);
 
     // Метод для перетворення сутності в DTO для публічного доступу
     RoomGroupResponseDto entityToDto(RoomGroupEntity entity);

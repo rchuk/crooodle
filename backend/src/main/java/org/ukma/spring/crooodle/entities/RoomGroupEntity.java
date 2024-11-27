@@ -68,7 +68,12 @@ public class RoomGroupEntity {
 
     // Оновлення рейтингу на основі кімнат
     public void updateRankFromRooms() {
-        rankSum = rooms.stream().mapToInt(RoomEntity::getRankSum).sum();
+        int result = 0;
+        for (RoomEntity room : rooms) {
+            int sum = room.getRankSum();
+            result += sum;
+        }
+        rankSum = result;
         rankCount = rooms.stream().mapToInt(RoomEntity::getRankCount).sum();
     }
 }
