@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.ukma.spring.crooodle.entities.embedded.AmenitiesEntity;
 
 import java.util.List;
 
@@ -28,38 +27,17 @@ public class RoomEntity {
     @Column(nullable = false)
     private String name; // Назва кімнати, наприклад, "Room 101"
 
-    @PositiveOrZero
-    @Column(nullable = false)
-    private int capacity; // Максимальна кількість гостей
-
-    @PositiveOrZero
-    @Column(nullable = false)
-    private double pricePerNight; // Ціна за ніч
-
-    @Length(max = 500)
-    private String description; // Опис кімнати (опціонально)
-
-    @PositiveOrZero
-    @Column(nullable = false)
-    private int rankSum; // Сума всіх рейтингів кімнати
-
-    @PositiveOrZero
-    @Column(nullable = false)
-    private int rankCount; // Кількість рейтингів для обчислення середнього
-
-    @NotNull
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "hotel_id", nullable = false)
-    private HotelEntity hotel; // Зв'язок із готелем
+    @ManyToOne
+    @JoinColumn(name = "room_group_id")
+    private RoomGroupEntity roomGroup; // Зв'язок із групою кімнат
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservationEntity> reservations; // Список бронювань
+    @PositiveOrZero
+    @Column(nullable = false)
+    private int rankSum; // Додано поле для суми рейтингу
 
-    @Embedded
-    private AmenitiesEntity amenities; // Зручності (Wi-Fi, кондиціонер тощо)
-
-    @NotNull
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "room_type_id", nullable = false)
-    private RoomTypeEntity roomType; // Зв'язок із RoomTypeEntity
+    @PositiveOrZero
+    @Column(nullable = false)
+    private int rankCount; // Додано поле для кількості рейтингів
 }

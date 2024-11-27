@@ -8,8 +8,6 @@ import lombok.Value;
 public class RoomResponseDto {
     long id;
     String name;
-    int capacity;
-    double pricePerNight;
-    String description;
     boolean available;
+    String groupName; // Назва групи кімнат, до якої належить кімната
 }
