@@ -4,7 +4,7 @@ import {
   Configuration,
   AuthControllerApi,
   CountryControllerApi,
-  WorldRegionControllerApi,
+  WorldRegionControllerApi, HotelControllerApi, ReviewControllerApi, RoomControllerApi, HotelAdminControllerApi,
 } from "@api/index";
 import {createContext, PropsWithChildren, useContext} from "react";
 
@@ -16,6 +16,11 @@ export type Services = {
   authService: AuthControllerApi,
   countryService: CountryControllerApi,
   worldRegionService: WorldRegionControllerApi,
+  hotelService: HotelControllerApi,
+  reviewService: ReviewControllerApi,
+  roomService: RoomControllerApi,
+
+  hotelAdminService: HotelAdminControllerApi
 }
 
 const ServiceContext = createContext<Services | undefined>(undefined);
@@ -29,6 +34,10 @@ export function createServices(config: Config): Services {
     authService: new AuthControllerApi(configuration),
     countryService: new CountryControllerApi(configuration),
     worldRegionService: new WorldRegionControllerApi(configuration),
+    hotelService: new HotelControllerApi(configuration),
+    reviewService: new ReviewControllerApi(configuration),
+    roomService: new RoomControllerApi(configuration),
+    hotelAdminService: new HotelAdminControllerApi(configuration)
   };
 }
 

@@ -8,6 +8,66 @@ servers:
 security:
 - Bearer: []
 paths:
+  /reviews/{id}:
+    get:
+      tags:
+      - review-controller
+      operationId: getReview
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReviewResponseDto"
+      security: []
+    put:
+      tags:
+      - review-controller
+      operationId: updateReview
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewEditRequestDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReviewResponseDto"
+      security: []
+    delete:
+      tags:
+      - review-controller
+      operationId: deleteReview
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+      security: []
   /admin/world-regions/{id}:
     get:
       tags:
@@ -220,6 +280,25 @@ paths:
       responses:
         "200":
           description: OK
+  /reviews:
+    post:
+      tags:
+      - review-controller
+      operationId: createReview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewCreateRequestDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReviewResponseDto"
+      security: []
   /auth/register:
     post:
       tags:
@@ -546,6 +625,74 @@ paths:
               schema:
                 $ref: "#/components/schemas/WorldRegionResponseDto"
       security: []
+  /reviews/user/{userId}:
+    get:
+      tags:
+      - review-controller
+      operationId: listReviewsByUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: string
+          example: 0
+        example: 0
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: string
+          example: 10
+        example: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseDtoReviewResponseDto"
+      security: []
+  /reviews/hotel/{hotelId}:
+    get:
+      tags:
+      - review-controller
+      operationId: listReviewsByHotel
+      parameters:
+      - name: hotelId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: string
+          example: 0
+        example: 0
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: string
+          example: 10
+        example: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseDtoReviewResponseDto"
+      security: []
   /hotels:
     get:
       tags:
@@ -730,6 +877,41 @@ paths:
       security: []
 components:
   schemas:
+    ReviewEditRequestDto:
+      required:
+      - ranking
+      type: object
+      properties:
+        ranking:
+          maximum: 5
+          minimum: 1
+          type: integer
+          format: int32
+        description:
+          maxLength: 500
+          minLength: 0
+          type: string
+    ReviewResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        ranking:
+          type: integer
+          format: int32
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date
+        updatedAt:
+          type: string
+          format: date
+        hotelName:
+          type: string
+        userName:
+          type: string
     WorldRegionEditRequestDto:
       type: object
       properties:
@@ -757,25 +939,6 @@ components:
           format: double
         description:
           type: string
-    AmenitiesDto:
-      type: object
-      properties:
-        wifi:
-          type: boolean
-        airConditioning:
-          type: boolean
-        tv:
-          type: boolean
-        minibar:
-          type: boolean
-        breakfastIncluded:
-          type: boolean
-        poolAccess:
-          type: boolean
-        parking:
-          type: boolean
-        gymAccess:
-          type: boolean
     HotelEditRequestDto:
       type: object
       properties:
@@ -788,8 +951,6 @@ components:
         regionId:
           type: integer
           format: int32
-        amenities:
-          $ref: "#/components/schemas/AmenitiesDto"
     CountryEditRequestDto:
       type: object
       properties:
@@ -800,6 +961,24 @@ components:
         worldRegionId:
           type: integer
           format: int32
+    ReviewCreateRequestDto:
+      required:
+      - hotelId
+      - ranking
+      type: object
+      properties:
+        hotelId:
+          type: integer
+          format: int64
+        ranking:
+          maximum: 5
+          minimum: 1
+          type: integer
+          format: int32
+        description:
+          maxLength: 500
+          minLength: 0
+          type: string
     UserRegisterRequestDto:
       required:
       - email
@@ -903,8 +1082,6 @@ components:
         regionId:
           type: integer
           format: int32
-        amenities:
-          $ref: "#/components/schemas/AmenitiesDto"
     CountryCreateRequestDto:
       required:
       - name
@@ -938,6 +1115,35 @@ components:
         countryCount:
           type: integer
           format: int32
+    PageResponseDtoReviewResponseDto:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReviewResponseDto"
+    AmenitiesDto:
+      type: object
+      properties:
+        wifi:
+          type: boolean
+        airConditioning:
+          type: boolean
+        tv:
+          type: boolean
+        minibar:
+          type: boolean
+        breakfastIncluded:
+          type: boolean
+        poolAccess:
+          type: boolean
+        parking:
+          type: boolean
+        gymAccess:
+          type: boolean
     CountryResponseDto:
       type: object
       properties:

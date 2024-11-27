@@ -17,6 +17,7 @@ public abstract class CountryMapper {
 
     @Mapping(source = "worldRegionId", target = "worldRegion", qualifiedByName = "mapWorldRegionIdToEntity")
     public abstract CountryEntity dtoToEntity(CountryCreateRequestDto requestDto);
+    @Mapping(source = "worldRegionId", target = "worldRegion", qualifiedByName = "mapWorldRegionIdToEntity")
     public abstract void update(@MappingTarget CountryEntity entity, CountryEditRequestDto requestDto);
 
     public abstract CountryResponseDto entityToDto(CountryEntity entity);

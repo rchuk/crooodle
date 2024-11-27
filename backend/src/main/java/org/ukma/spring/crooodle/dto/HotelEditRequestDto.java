@@ -12,5 +12,4 @@ public class HotelEditRequestDto {
     String address;
     String countryId;
     Integer regionId;
-    AmenitiesDto amenities;
 }
