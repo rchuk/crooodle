@@ -29,14 +29,21 @@ public abstract class HotelMapper {
 
     public Specification<HotelEntity> criteriaToSpec(HotelCriteriaDto criteriaDto) {
         return (root, r1, builder) -> {
-            var query = criteriaDto.getQuery() != null
-                ? builder.like(builder.lower(root.get("name")), "%" + criteriaDto.getQuery().toLowerCase() + "%")
-                : builder.conjunction();
-            var hotelId = criteriaDto.getCountryId() != null
-                ? builder.equal(root.get("country_id"), criteriaDto.getCountryId())
-                : builder.conjunction();
+            var predicates = builder.conjunction();
 
-            return builder.and(query, hotelId);
+            if (criteriaDto.getQuery() != null) {
+                var countryJoin = root.join("country");
+                predicates = builder.and(predicates, builder.or(
+                    builder.like(builder.lower(root.get("name")), "%" + criteriaDto.getQuery().toLowerCase() + "%"),
+                    builder.like(builder.lower(countryJoin.get("name")), "%" + criteriaDto.getQuery().toLowerCase() + "%")
+                ));
+            }
+
+            if (criteriaDto.getCountryId() != null)
+                predicates = builder.and(predicates, builder.equal(root.get("country_id"), criteriaDto.getCountryId()));
+
+
+            return predicates;
         };
     }
 

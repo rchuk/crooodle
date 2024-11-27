@@ -41,7 +41,8 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public PageResponseDto<HotelAdminResponseDto> listAdmin(HotelCriteriaDto criteriaDto, PaginationDto paginationDto) {
-        var entities = repository.findAll(paginationDto.toPageable());
+        var spec = mapper.criteriaToSpec(criteriaDto);
+        var entities = repository.findAll(spec, paginationDto.toPageable());
 
         return PageResponseDto.<HotelAdminResponseDto>builder()
             .items(entities.stream().map(mapper::entityToAdminDto).toList())
@@ -51,7 +52,8 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public PageResponseDto<HotelResponseDto> list(HotelCriteriaDto criteriaDto, PaginationDto paginationDto) {
-        var entities = repository.findAll(paginationDto.toPageable());
+        var spec = mapper.criteriaToSpec(criteriaDto);
+        var entities = repository.findAll(spec, paginationDto.toPageable());
 
         return PageResponseDto.<HotelResponseDto>builder()
             .items(entities.stream().map(mapper::entityToDto).toList())
