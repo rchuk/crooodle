@@ -1,15 +1,16 @@
 "use client"
 
 import {
-  createConfiguration,
+  Configuration,
   AuthControllerApi,
   CountryControllerApi,
   WorldRegionControllerApi,
 } from "@api/index";
 import {createContext, PropsWithChildren, useContext} from "react";
-import {ConfigurationParameters} from "@api/configuration";
 
-export type Config = ConfigurationParameters;
+export type Config = {
+  accessToken?: string
+};
 
 export type Services = {
   authService: AuthControllerApi,
@@ -20,7 +21,9 @@ export type Services = {
 const ServiceContext = createContext<Services | undefined>(undefined);
 
 export function createServices(config: Config): Services {
-  const configuration = createConfiguration(config);
+  const configuration = new Configuration({
+    accessToken: () => config.accessToken ?? ""
+  });
 
   return {
     authService: new AuthControllerApi(configuration),

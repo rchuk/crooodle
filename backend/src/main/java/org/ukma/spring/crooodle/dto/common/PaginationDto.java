@@ -23,6 +23,9 @@ public class PaginationDto {
     Integer limit;
 
     public Pageable toPageable() {
-        return PageRequest.of(this.page, this.limit);
+        return PageRequest.of(
+            this.page != null ? this.page : 0,
+            this.limit != null ? this.limit : 10
+        );
     }
 }

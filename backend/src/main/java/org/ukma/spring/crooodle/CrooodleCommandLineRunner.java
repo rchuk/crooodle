@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.ukma.spring.crooodle.dto.RegisterTypeDto;
 import org.ukma.spring.crooodle.dto.UserRegisterRequestDto;
 import org.ukma.spring.crooodle.entities.enums.UserPermission;
 import org.ukma.spring.crooodle.service.AuthService;
@@ -11,7 +12,9 @@ import org.ukma.spring.crooodle.service.TestDataSeederService;
 import org.ukma.spring.crooodle.service.UserPermissionSeeder;
 import org.ukma.spring.crooodle.service.UserService;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -36,13 +39,14 @@ public class CrooodleCommandLineRunner implements CommandLineRunner {
                 .name("Admin")
                 .email(adminEmail)
                 .password(adminPassword)
+                .registerType(RegisterTypeDto.TRAVELER)
                 .build()
             );
         });
 
         tryRun(t1 -> {
-            for (var permission : UserPermission.values())
-                userService.addPermission(adminEmail, permission);
+            var permissions = Arrays.stream(UserPermission.values()).collect(Collectors.toSet());
+            userService.addPermissions(adminEmail, permissions);
         });
 
         tryRun(t1 -> testDataSeederService.seed());

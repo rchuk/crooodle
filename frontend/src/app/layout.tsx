@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'Crooodle'
 };
 
-export default function RootLayout({ children }: PropsWithChildren<void>) {
+export default function RootLayout({ children }: PropsWithChildren<{}>) {
   return (
     <html suppressHydrationWarning lang="uk">
       <body className={inter.className}>

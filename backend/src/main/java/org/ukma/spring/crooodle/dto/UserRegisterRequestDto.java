@@ -26,4 +26,7 @@ public class UserRegisterRequestDto {
     @NotBlank
     @NotNull
     String password;
+
+    @NotNull
+    RegisterTypeDto registerType;
 }

@@ -86,6 +86,9 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<CountryEntity> mapIdsToCountries(List<Integer> ids) {
+        if (ids == null)
+            return List.of();
+
         return repository.findAllById(ids);
     }
 }
