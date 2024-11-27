@@ -18,7 +18,7 @@ public interface WorldRegionMapper {
     WorldRegionAdminResponseDto entityToAdminDto(WorldRegionEntity entity);
 
     default Specification<WorldRegionEntity> criteriaToSpec(WorldRegionCriteriaDto criteriaDto) {
-        return (root, _, builder) -> criteriaDto.getQuery() != null
+        return (root, r1, builder) -> criteriaDto.getQuery() != null
             ? builder.like(builder.lower(root.get("name")), "%" + criteriaDto.getQuery().toLowerCase() + "%")
             : builder.conjunction();
     }

@@ -93,7 +93,6 @@ public class CountryControllerTests {
                 builder()
             .items(Collections.singletonList(countryResponseDto))
             .total(1L)
-            .totalPages(1)
             .build();
 
 
@@ -157,7 +156,10 @@ public class CountryControllerTests {
     void testListCountries() throws Exception {
 
         when(
-            service.list(any(CountryCriteriaDto.class))
+            service.list(
+                any(CountryCriteriaDto.class),
+                any(PaginationDto.class)
+            )
         )
         .thenReturn(
             pageResponseDto
@@ -196,7 +198,11 @@ public class CountryControllerTests {
 
         when(
             service
-            .list(any(CountryCriteriaDto.class)))
+            .list(
+                any(CountryCriteriaDto.class),
+                any(PaginationDto.class)
+            )
+        )
         .thenReturn(
             pageResponseDto
         );

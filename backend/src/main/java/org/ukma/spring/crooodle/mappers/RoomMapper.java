@@ -15,7 +15,7 @@ public interface RoomMapper {
     RoomAdminResponseDto entityToAdminDto(RoomEntity entity);
 
     default Specification<RoomEntity> criteriaToSpec(RoomCriteriaDto criteriaDto) {
-        return (root, _, builder) -> {
+        return (root, r1, builder) -> {
             var hotel = builder.equal(root.get("hotel_id"), criteriaDto.getHotelId());
             var query = criteriaDto.getQuery() != null
                 ? builder.like(builder.lower(root.get("name")), "%" + criteriaDto.getQuery().toLowerCase() + "%")

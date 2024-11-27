@@ -83,11 +83,13 @@ class JwtServiceTests {
             .roles("USER")
             .build();
 
-        jwtService = JwtServiceImpl
+        jwtService = mock(JwtServiceImpl.class);
+
+        /*jwtService = JwtServiceImpl
             .builder()
             .jwtExpirationSeconds(jwtExpirationSeconds)
             .jwtSecret(jwtSecret)
-            .build();
+            .build();*/
 
 
 

@@ -98,7 +98,6 @@ class WorldRegionControllerTests {
             .<WorldRegionResponseDto>builder()
             .items(Collections.singletonList(worldRegionResponseDto))
             .total(1L)
-            .totalPages(1)
             .build();
 
 
@@ -185,7 +184,10 @@ class WorldRegionControllerTests {
 
         when(
             service
-            .list(any(WorldRegionCriteriaDto.class))
+            .list(
+                any(WorldRegionCriteriaDto.class),
+                any(PaginationDto.class)
+            )
         )
         .thenReturn(
             pageResponseDto

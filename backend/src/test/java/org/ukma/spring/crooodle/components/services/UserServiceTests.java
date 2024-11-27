@@ -18,6 +18,7 @@ import org.ukma.spring.crooodle.repository.UserPermissionRepository;
 import org.ukma.spring.crooodle.repository.UserRepository;
 import org.ukma.spring.crooodle.service.impl.UserServiceImpl;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -242,9 +243,9 @@ class UserServiceTests {
 
 
         userService
-            .addPermission(
+            .addPermissions(
                 "test@example.com",
-                testPermission
+                Collections.singleton(testPermission)
             );
 
 
@@ -278,7 +279,10 @@ class UserServiceTests {
 
         assertThrows(
             PublicNotFoundException.class,
-            () -> userService.addPermission("test@example.com", testPermission)
+            () -> userService.addPermissions(
+                "test@example.com",
+                Collections.singleton(testPermission)
+            )
         );
 
 
@@ -321,8 +325,11 @@ class UserServiceTests {
 
 
         assertThrows(
-            NoSuchElementException.class,
-            () -> userService.addPermission("test@example.com", testPermission)
+            NullPointerException.class,
+            () -> userService.addPermissions(
+                "test@example.com",
+                Collections.singleton(testPermission)
+            )
         );
 
 

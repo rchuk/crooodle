@@ -15,7 +15,7 @@ public interface HotelMapper {
     HotelAdminResponseDto entityToAdminDto(HotelEntity entity);
 
     default Specification<HotelEntity> criteriaToSpec(HotelCriteriaDto criteriaDto) {
-        return (root, _, builder) -> {
+        return (root, r1, builder) -> {
             var query = criteriaDto.getQuery() != null
                 ? builder.like(builder.lower(root.get("name")), "%" + criteriaDto.getQuery().toLowerCase() + "%")
                 : builder.conjunction();

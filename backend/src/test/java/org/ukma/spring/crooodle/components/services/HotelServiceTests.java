@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.entities.*;
 import org.ukma.spring.crooodle.repository.*;
 import org.ukma.spring.crooodle.service.impl.HotelServiceImpl;
@@ -76,7 +77,7 @@ class HotelServiceTests {
     private WorldRegionEntity testRegion;
 
     private HotelCreateRequestDto testHotelCreateRequestDto;
-    private HotelCreateRequestDto testHotelUpdateRequestDto;
+    private HotelEditRequestDto testHotelUpdateRequestDto;
 
     private HotelEntity testHotel;
 
@@ -107,7 +108,7 @@ class HotelServiceTests {
             .regionId(2)
             .build();
 
-        testHotelUpdateRequestDto = HotelCreateRequestDto
+        testHotelUpdateRequestDto = HotelEditRequestDto
             .builder()
             .name("New Hotel Name")
             .address("New Address")
@@ -120,7 +121,6 @@ class HotelServiceTests {
             .name("Hotel A")
             .address("123 Street")
             .country(testCountry)
-            .country_region(testRegion)
             .build();
 
         testHotelCriteriaDto = HotelCriteriaDto
@@ -204,7 +204,7 @@ class HotelServiceTests {
 
 
         assertThrows(
-            IllegalArgumentException.class, () -> hotelService.create(testHotelCreateRequestDto)
+            NullPointerException.class, () -> hotelService.create(testHotelCreateRequestDto)
         );
 
         verify(
@@ -296,7 +296,9 @@ class HotelServiceTests {
 
 
         PageResponseDto<HotelAdminResponseDto> response = hotelService
-                                                            .listAdmin(testHotelCriteriaDto);
+                                                            .listAdmin(
+                                                                testHotelCriteriaDto,
+                                                                new PaginationDto());
 
 
         assertNotNull(response);
@@ -414,7 +416,7 @@ class HotelServiceTests {
             hotelRepository,
             never()
         )
-        .delete(any());
+        .delete((HotelEntity) any());
 
 
     }

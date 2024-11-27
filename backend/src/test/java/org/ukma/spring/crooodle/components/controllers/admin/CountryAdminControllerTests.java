@@ -17,9 +17,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.ukma.spring.crooodle.controller.admin.CountryAdminController;
 import org.ukma.spring.crooodle.dto.CountryCreateRequestDto;
+import org.ukma.spring.crooodle.dto.CountryCriteriaDto;
 import org.ukma.spring.crooodle.dto.CountryEditRequestDto;
 import org.ukma.spring.crooodle.dto.CountryAdminResponseDto;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.service.CountryService;
 import org.ukma.spring.crooodle.service.JwtService;
 import org.ukma.spring.crooodle.service.UserService;
@@ -309,7 +311,10 @@ class CountryAdminControllerTests {
 
         when(
             countryService
-            .listAdmin(null)
+            .listAdmin(
+                any(CountryCriteriaDto.class),
+                any(PaginationDto.class)
+            )
         )
         .thenReturn(
             pageResponseDto
@@ -328,7 +333,8 @@ class CountryAdminControllerTests {
             countryService
         )
         .listAdmin(
-            null
+            any(CountryCriteriaDto.class),
+            any(PaginationDto.class)
         );
 
 

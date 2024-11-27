@@ -91,7 +91,6 @@ class HotelControllerTests {
             .<HotelResponseDto>builder()
             .items(Collections.singletonList(hotelResponseDto))
             .total(1L)
-            .totalPages(1)
             .build();
 
 
@@ -164,7 +163,10 @@ class HotelControllerTests {
 
         when(
             service
-            .list(any(HotelCriteriaDto.class))
+            .list(
+                any(HotelCriteriaDto.class),
+                any(PaginationDto.class)
+            )
         )
         .thenReturn(
             pageResponseDto
@@ -198,12 +200,8 @@ class HotelControllerTests {
                 .andExpect(
                     jsonPath("$.total")
                     .value(1)
-                )
-
-                .andExpect(
-                    jsonPath("$.totalPages")
-                    .value(1)
                 );
+
 
 
     }
