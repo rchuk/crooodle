@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.ukma.spring.crooodle.dto.*;
+import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.entities.ReviewEntity;
 import org.ukma.spring.crooodle.exception.PublicNotFoundException;
 import org.ukma.spring.crooodle.mappers.ReviewMapper;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-    
+
     private final ReviewMapper reviewMapper;
 
     @Override
@@ -78,17 +80,27 @@ public class ReviewServiceImpl implements ReviewService {
 
     }
 
+
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getReviewsByHotelId(long hotelId) {
+    public PageResponseDto<ReviewResponseDto> getReviewsByHotelId(long hotelId, PaginationDto paginationDto) {
 
-        List<ReviewEntity> reviews = reviewRepository.findAllByHotelId(hotelId);
+        var pageable = paginationDto.toPageable();
 
 
-        return reviews.stream()
-            .map(reviewMapper::entityToDto)
-            .collect(Collectors.toList()
-            );
+        var reviewPage = reviewRepository.findAllByHotelId(hotelId, pageable);
+
+
+        return PageResponseDto
+            .<ReviewResponseDto>builder()
+            .items(
+                reviewPage
+                    .stream()
+                    .map(reviewMapper::entityToDto)
+                    .toList()
+            )
+            .total(reviewPage.getTotalElements())
+            .build();
 
 
 
@@ -96,13 +108,21 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getReviewsByUserId(long userId) {
+    public PageResponseDto<ReviewResponseDto> getReviewsByUserId(long userId, PaginationDto paginationDto) {
 
-        List<ReviewEntity> reviews = reviewRepository.findAllByUserId(userId);
+        var reviewPage = reviewRepository.findAllByUserId(userId, paginationDto.toPageable());
 
-        return reviews.stream()
-            .map(reviewMapper::entityToDto)
-            .collect(Collectors.toList());
+
+        return PageResponseDto
+            .<ReviewResponseDto>builder()
+            .items(
+                reviewPage
+                    .stream()
+                    .map(reviewMapper::entityToDto)
+                    .toList()
+            )
+            .total(reviewPage.getTotalElements())
+            .build();
 
 
 
@@ -128,3 +148,27 @@ public class ReviewServiceImpl implements ReviewService {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

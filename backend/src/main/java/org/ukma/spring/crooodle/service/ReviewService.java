@@ -1,6 +1,8 @@
 package org.ukma.spring.crooodle.service;
 
 import org.ukma.spring.crooodle.dto.*;
+import org.ukma.spring.crooodle.dto.common.PageResponseDto;
+import org.ukma.spring.crooodle.dto.common.PaginationDto;
 
 import java.util.List;
 
@@ -16,9 +18,9 @@ public interface ReviewService {
     ReviewResponseDto getReviewById(long reviewId);
 
 
-    List<ReviewResponseDto> getReviewsByHotelId(long hotelId);
+    PageResponseDto<ReviewResponseDto> getReviewsByHotelId(long hotelId, PaginationDto paginationDto);
 
-    List<ReviewResponseDto> getReviewsByUserId(long userId);
+    PageResponseDto<ReviewResponseDto> getReviewsByUserId(long userId, PaginationDto paginationDto);
 
 
     void deleteReview(long reviewId);
@@ -26,3 +28,7 @@ public interface ReviewService {
 
 
 }
+
+
+
+
