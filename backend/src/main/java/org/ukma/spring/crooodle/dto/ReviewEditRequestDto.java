@@ -11,10 +11,10 @@ import lombok.Value;
 @Builder
 public class ReviewEditRequestDto {
 
-    @NotNull
+
     @Min(1)
     @Max(5)
-    int ranking;
+    Integer ranking;
 
     @Size(max = 500)
     String description;
@@ -22,6 +22,8 @@ public class ReviewEditRequestDto {
 
 
 }
+
+
 
 
 
