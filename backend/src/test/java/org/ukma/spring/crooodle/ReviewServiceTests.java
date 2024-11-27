@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
@@ -25,17 +24,60 @@ import org.ukma.spring.crooodle.exception.PublicBadRequestException;
 import org.ukma.spring.crooodle.exception.PublicNotFoundException;
 import org.ukma.spring.crooodle.mappers.ReviewMapper;
 import org.ukma.spring.crooodle.repository.ReviewRepository;
-import org.ukma.spring.crooodle.repository.UserRepository;
 import org.ukma.spring.crooodle.service.impl.ReviewServiceImpl;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+
+/**
+ * Component (unit) tests for the {@link ReviewServiceImpl} class
+ *
+ *
+ * createReview_success:
+ * Tests successful creation of a review
+ *
+ *
+ * updateReview_success:
+ * Tests successful update of an existing review
+ *
+ *
+ * updateReview_notFound:
+ * Error scenario - trying to update a review that does not exist
+ *
+ *
+ * updateReview_notOwner:
+ * Error scenario - trying to update a review created by another user
+ *
+ *
+ * getReviewById_found:
+ * Tests successful retrieval of a review by its ID
+ *
+ *
+ * getReviewById_notFound:
+ * Error scenario - review not exists
+ *
+ *
+ * getReviewsByHotelId_success:
+ * Tests successful retrieval of reviews for a given hotel
+ *
+ *
+ * getReviewsByHotelId_hotelDoesNotExist:
+ * Error scenario - no reviews found for a non-existent hotel
+ *
+ *
+ * getReviewsByUserId_success:
+ * Tests successful retrieval of reviews for a given user
+ *
+ *
+ * getReviewsByUserId_userDoesNotExist:
+ * Error scenario - no reviews found for a non-existent user
+ *
+ */
 
 class ReviewServiceTests {
 
@@ -59,11 +101,14 @@ class ReviewServiceTests {
     private static final long REVIEW_ID = 1L;
     private static final long HOTEL_ID = 1L;
 
+
+    private HotelEntity testHotel;
     private UserEntity testUserWhoCreated;
     private UserEntity testUserWhoNotCreated;
 
     @BeforeEach
     void setUp() {
+
         MockitoAnnotations.openMocks(this);
 
         when(
@@ -88,6 +133,13 @@ class ReviewServiceTests {
             .setContext(
                 securityContext
             );
+
+
+        testHotel = HotelEntity
+            .builder()
+            .id(HOTEL_ID)
+            .name("Test Hotel")
+            .build();
 
 
         testUserWhoCreated = UserEntity
@@ -381,6 +433,246 @@ class ReviewServiceTests {
     }
 
 
+    @Test
+    void getReviewsByHotelId_success() {
+
+        PaginationDto paginationDto = new PaginationDto(0, 10);
+
+        ReviewEntity reviewEntity = ReviewEntity
+                                            .builder()
+                                            .id(1L)
+                                            .hotel(testHotel)
+                                            .description("test revieeesw")
+                                            .createdAt(LocalDate.now())
+                                            .build();
+
+
+        System.out.println(reviewEntity);
+
+        ReviewResponseDto reviewResponseDto = ReviewResponseDto
+                                                        .builder()
+                                                        .hotelName(testHotel.getName())
+                                                        .description(reviewEntity.getDescription())
+                                                        .id(reviewEntity.getId())
+                                                        .userName(testUserWhoCreated.getName())
+                                                        .createdAt(reviewEntity.getCreatedAt())
+                                                        .build();
+
+
+        Page<ReviewEntity> reviewPage = new PageImpl<>(
+            List.of(
+                reviewEntity
+            )
+        );
+
+        when(
+            reviewRepository
+            .findAllByHotelId(
+                HOTEL_ID,
+                paginationDto.toPageable()
+            )
+        )
+        .thenReturn(
+            reviewPage
+        );
+
+        when(
+            reviewMapper
+            .entityToDto(reviewEntity)
+        )
+        .thenReturn(
+            reviewResponseDto
+        );
+
+
+        PageResponseDto<ReviewResponseDto> result = reviewService
+                                                            .getReviewsByHotelId(
+                                                                HOTEL_ID,
+                                                                paginationDto
+                                                            );
+
+
+        assertNotNull(result);
+
+        assertEquals(
+            1,
+            result
+                .getTotal()
+        );
+
+        assertEquals(
+            reviewResponseDto,
+            result
+                .getItems()
+                .get(0)
+        );
+
+
+    }
+
+    @Test
+    void getReviewsByHotelId_hotelDoesNotExist() {
+
+        PaginationDto paginationDto = new PaginationDto(0, 10);
+
+        Long nonExistentHotelId = 997L;
+
+
+        when(
+            reviewRepository
+            .findAllByHotelId(
+                nonExistentHotelId,
+                paginationDto.toPageable()
+            )
+        )
+        .thenReturn(
+            Page.empty()
+        );
+
+
+        PageResponseDto<ReviewResponseDto> result = reviewService
+                                                            .getReviewsByHotelId(
+                                                                nonExistentHotelId,
+                                                                paginationDto
+                                                            );
+
+
+        assertNotNull(result);
+
+        assertEquals(
+            0,
+            result.getTotal()
+        );
+
+        assertTrue(
+            result
+                .getItems()
+                .isEmpty()
+        );
+
+
+
+    }
+
+
+    @Test
+    void getReviewsByUserId_success() {
+
+        PaginationDto paginationDto = new PaginationDto(0, 10);
+
+        ReviewEntity reviewEntity = ReviewEntity
+                                            .builder()
+                                            .id(1L)
+                                            .user(testUserWhoNotCreated)
+                                            .description("test revieeesw")
+                                            .createdAt(LocalDate.now())
+                                            .build();
+
+
+        System.out.println(reviewEntity);
+
+        ReviewResponseDto reviewResponseDto = ReviewResponseDto
+                                                            .builder()
+                                                            .hotelName(testHotel.getName())
+                                                            .description(reviewEntity.getDescription())
+                                                            .id(reviewEntity.getId())
+                                                            .userName(testUserWhoNotCreated.getName())
+                                                            .createdAt(reviewEntity.getCreatedAt())
+                                                            .build();
+
+
+        Page<ReviewEntity> reviewPage = new PageImpl<>(
+            List.of(
+                reviewEntity
+            )
+        );
+
+        when(
+            reviewRepository
+                .findAllByUserId(
+                    OTHER_USER_ID,
+                    paginationDto.toPageable()
+                )
+        )
+            .thenReturn(
+                reviewPage
+            );
+
+        when(
+            reviewMapper
+                .entityToDto(reviewEntity)
+        )
+            .thenReturn(
+                reviewResponseDto
+            );
+
+
+        PageResponseDto<ReviewResponseDto> result = reviewService
+            .getReviewsByUserId(
+                OTHER_USER_ID,
+                paginationDto
+            );
+
+
+        assertNotNull(result);
+
+        assertEquals(
+            1,
+            result
+                .getTotal()
+        );
+
+        assertEquals(
+            reviewResponseDto,
+            result
+                .getItems()
+                .get(0)
+        );
+
+
+    }
+
+    @Test
+    void getReviewsByUserId_userDoesNotExist() {
+
+        PaginationDto paginationDto = new PaginationDto(0, 10);
+
+        Long nonExistentUserId = 999L;
+
+        when(
+            reviewRepository
+            .findAllByUserId(
+                nonExistentUserId,
+                paginationDto.toPageable()
+            )
+        )
+        .thenReturn(
+            Page.empty()
+        );
+
+
+        PageResponseDto<ReviewResponseDto> result = reviewService
+                                                            .getReviewsByUserId(
+                                                                nonExistentUserId,
+                                                                paginationDto
+                                                            );
+
+        assertNotNull(result);
+
+        assertEquals(
+            0,
+            result.getTotal()
+        );
+
+        assertTrue(
+            result
+                .getItems()
+                .isEmpty()
+        );
+
+
+
+    }
 
 
 
@@ -489,6 +781,21 @@ class ReviewServiceTests {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
