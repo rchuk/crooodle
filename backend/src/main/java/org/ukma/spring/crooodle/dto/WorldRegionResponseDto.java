@@ -10,5 +10,5 @@ import java.util.List;
 public class WorldRegionResponseDto {
     int id;
     String name;
-    List<CountryResponseDto> popularCountries;
+    int countryCount;
 }

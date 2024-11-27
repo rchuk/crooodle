@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.data.jpa.domain.Specification;
 import org.ukma.spring.crooodle.dto.*;
@@ -12,6 +13,7 @@ public interface WorldRegionMapper {
     WorldRegionEntity dtoToEntity(WorldRegionCreateRequestDto requestDto);
     void update(@MappingTarget WorldRegionEntity entity, WorldRegionEditRequestDto requestDto);
 
+    @Mapping(target = "countryCount", expression = "java(entity.getCountries().size())")
     WorldRegionResponseDto entityToDto(WorldRegionEntity entity);
     WorldRegionAdminResponseDto entityToAdminDto(WorldRegionEntity entity);
 

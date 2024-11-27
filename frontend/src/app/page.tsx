@@ -1,9 +1,10 @@
 "use client"
 
-import {Flex, Heading, HStack, Icon, IconButton, Input, Text, VStack} from "@chakra-ui/react"
+import {Box, Flex, Heading, HStack, Icon, IconButton, Input, Text, VStack} from "@chakra-ui/react"
 import {Button} from "@/components/ui/button";
 import { RiMapPinLine, RiUser3Fill } from "react-icons/ri";
 import {useRouter} from "next/navigation";
+import WorldRegionsList from "@lib/components/world-region/world-regions-list";
 
 export default function HomePage() {
   const router = useRouter();
@@ -37,6 +38,9 @@ export default function HomePage() {
           </Button>
         </HStack>
       </Flex>
+      <Box width="100%" p={5}>
+        <WorldRegionsList />
+      </Box>
     </VStack>
   );
 }
