@@ -43,16 +43,26 @@ public interface RoomGroupMapper {
                 ? builder.greaterThan(root.get("rooms").get("size"), 0)
                 : builder.conjunction();
 
-            // Фільтр за рейтингом (якщо передбачено в критеріях)
+            // Фільтр за рейтингом (мінімальний рейтинг)
             var minRankPredicate = criteriaDto.getMinRank() != null
-                ? builder.greaterThanOrEqualTo(root.get("rankSum"), criteriaDto.getMinRank() * root.get("rankCount"))
+                ? builder.greaterThanOrEqualTo(root.get("rankSum"),
+                builder.prod(criteriaDto.getMinRank(), root.get("rankCount")))
                 : builder.conjunction();
 
+            // Фільтр за рейтингом (максимальний рейтинг)
             var maxRankPredicate = criteriaDto.getMaxRank() != null
-                ? builder.lessThanOrEqualTo(root.get("rankSum"), criteriaDto.getMaxRank() * root.get("rankCount"))
+                ? builder.lessThanOrEqualTo(root.get("rankSum"),
+                builder.prod(criteriaDto.getMaxRank(), root.get("rankCount")))
                 : builder.conjunction();
 
-            return builder.and(hotelPredicate, roomTypePredicate, queryPredicate, availableRoomsPredicate, minRankPredicate, maxRankPredicate);
+            return builder.and(
+                hotelPredicate,
+                roomTypePredicate,
+                queryPredicate,
+                availableRoomsPredicate,
+                minRankPredicate,
+                maxRankPredicate
+            );
         };
     }
 }
