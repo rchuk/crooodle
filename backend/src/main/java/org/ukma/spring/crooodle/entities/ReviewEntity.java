@@ -49,11 +49,11 @@ public class ReviewEntity {
     @LastModifiedDate
     private LocalDate updatedAt; // Dates of the review
 
-    @NotNull
+
     @Min(1)
     @Max(5)
     @Column(nullable = false)
-    private int ranking; // 1-5 обмеження
+    private Integer ranking; // 1-5 обмеження
 
     @Column
     @Size(max = 500)

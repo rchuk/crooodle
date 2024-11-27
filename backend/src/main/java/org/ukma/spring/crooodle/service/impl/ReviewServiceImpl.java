@@ -3,6 +3,8 @@ package org.ukma.spring.crooodle.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,10 +12,13 @@ import org.ukma.spring.crooodle.dto.*;
 import org.ukma.spring.crooodle.dto.common.PageResponseDto;
 import org.ukma.spring.crooodle.dto.common.PaginationDto;
 import org.ukma.spring.crooodle.entities.ReviewEntity;
+import org.ukma.spring.crooodle.exception.PublicBadRequestException;
 import org.ukma.spring.crooodle.exception.PublicNotFoundException;
 import org.ukma.spring.crooodle.mappers.ReviewMapper;
 import org.ukma.spring.crooodle.repository.ReviewRepository;
+import org.ukma.spring.crooodle.repository.UserRepository;
 import org.ukma.spring.crooodle.service.ReviewService;
+import org.ukma.spring.crooodle.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,13 +36,28 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public ReviewResponseDto createReview(ReviewCreateRequestDto requestDto) {
 
-        ReviewEntity reviewEntity = reviewMapper.dtoToEntity(requestDto);
+        long authenticatedUserId = Long.parseLong(
+
+            SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName()
+
+        );
 
 
-        ReviewEntity savedEntity = reviewRepository.save(reviewEntity);
+        ReviewEntity reviewEntity = reviewMapper
+            .dtoToEntity(
+                requestDto,
+                authenticatedUserId // to avoid faking a review by other users
+            );
 
+        ReviewEntity savedEntity = reviewRepository.saveAndFlush(reviewEntity);
 
         return reviewMapper.entityToDto(savedEntity);
+
+
+
     }
 
     @Override
@@ -48,6 +68,28 @@ public class ReviewServiceImpl implements ReviewService {
             .findById(reviewId)
             .orElseThrow(
                 () -> new PublicNotFoundException("Review not found with id: " + reviewId)
+            );
+
+        long authenticatedUserId = Long.parseLong(
+
+            SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName()
+
+        );
+
+        // check who is editing
+        if (
+            existingReview
+                .getUser()
+                .getId()
+                !=
+                authenticatedUserId
+        )
+            throw new PublicBadRequestException(
+                "Only creator can edit review ( " + reviewId + " ), " +
+                    "but found: " + authenticatedUserId
             );
 
 
@@ -138,6 +180,30 @@ public class ReviewServiceImpl implements ReviewService {
                 () -> new PublicNotFoundException("Review not found with id: " + reviewId)
             );
 
+        long authenticatedUserId = Long.parseLong(
+
+            SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName()
+
+        );
+
+        // check who is deleting
+        if (
+            existingReview
+                .getUser()
+                .getId()
+                !=
+                authenticatedUserId
+        )
+            throw new PublicBadRequestException(
+                "Only creator can delete review ( " + reviewId + " ), " +
+                    "but found: " + authenticatedUserId
+            );
+
+
+
 
         reviewRepository.delete(existingReview);
 
@@ -148,6 +214,15 @@ public class ReviewServiceImpl implements ReviewService {
 
 
 }
+
+
+
+
+
+
+
+
+
 
 
 

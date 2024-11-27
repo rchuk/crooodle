@@ -14,7 +14,7 @@ import org.ukma.spring.crooodle.entities.ReviewEntity;
 )
 public interface ReviewMapper {
 
-    ReviewEntity dtoToEntity(ReviewCreateRequestDto requestDto);
+    ReviewEntity dtoToEntity(ReviewCreateRequestDto requestDto, long userId);
 
     void update(@MappingTarget ReviewEntity entity, ReviewEditRequestDto requestDto);
 

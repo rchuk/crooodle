@@ -15,9 +15,6 @@ public class ReviewCreateRequestDto {
     Long hotelId;
 
     @NotNull
-    Long userId;
-
-    @NotNull
     @Min(1)
     @Max(5)
     int ranking;
