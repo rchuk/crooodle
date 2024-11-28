@@ -60,7 +60,7 @@ export default function HotelList({
         setTotalCount(response.total!);
       })
       .catch();
-  }, [hotelService, page]);
+  }, [criteria, hotelService, page]);
 
   return (
     <>
