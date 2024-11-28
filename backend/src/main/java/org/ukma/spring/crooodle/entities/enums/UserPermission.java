@@ -35,5 +35,82 @@ public enum UserPermission {
     ROOM_CREATE,
     ROOM_EDIT,
     ROOM_VIEW,
-    ROOM_DELETE
+    ROOM_DELETE,
+
+    // Reviews
+
+    REVIEW_CREATE,
+    REVIEW_EDIT,
+    REVIEW_DELETE,
+
+    //TODO: напихайте рев'ю в авторизацію
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -8,4 +8,5 @@ import lombok.Data;
 public class HotelCriteriaDto {
     private String query;
     private Integer countryId;
+    private Integer worldRegionId;
 }

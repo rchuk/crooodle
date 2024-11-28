@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -13,6 +14,7 @@ import org.ukma.spring.crooodle.service.HotelService;
 
 @RestController
 @RequestMapping("/hotels")
+@SecurityRequirements
 @RequiredArgsConstructor
 public class HotelController {
     private final HotelService service;

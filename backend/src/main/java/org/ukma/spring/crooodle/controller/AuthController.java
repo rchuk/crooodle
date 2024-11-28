@@ -19,6 +19,7 @@ import org.ukma.spring.crooodle.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
+@SecurityRequirements
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService service;
@@ -52,7 +53,6 @@ public class AuthController {
             }
         )
     })
-    @SecurityRequirements
     @Operation(operationId = "register")
     @PreAuthorize("permitAll()")
     @PostMapping("/register")
@@ -60,7 +60,6 @@ public class AuthController {
         return service.register(requestDto);
     }
 
-    @SecurityRequirements
     @Operation(operationId = "login")
     @PreAuthorize("permitAll()")
     @PostMapping("/login")

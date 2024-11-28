@@ -4,12 +4,14 @@ import { RiArrowRightSLine } from "react-icons/ri";
 import {Button} from "@/components/ui/button";
 
 type WorldRegionCardProps = {
-  item: WorldRegionResponseDto
+  item: WorldRegionResponseDto,
+  onSelectWorldRegion: (id: number) => void
 }
 
 
 export default function WorldRegionCard({
-  item
+  item,
+  onSelectWorldRegion
 }: WorldRegionCardProps) {
   return (
     <Card.Root>
@@ -20,7 +22,7 @@ export default function WorldRegionCard({
       </Card.Header>
       <Card.Body />
       <Card.Footer>
-        <Button variant="plain" p={0}>
+        <Button variant="plain" p={0} onClick={_ => onSelectWorldRegion(item.id!)}>
           {item.countryCount} countries
           <Icon>
             <RiArrowRightSLine />

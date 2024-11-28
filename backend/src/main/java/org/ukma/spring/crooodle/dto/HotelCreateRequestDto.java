@@ -19,6 +19,4 @@ public class HotelCreateRequestDto {
     int countryId;
 
     Integer regionId;
-
-    AmenitiesDto amenities;
 }
