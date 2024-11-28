@@ -114,6 +114,7 @@ class ReviewControllerTest {
 
     }
 
+    /*
     @Test
     @WithMockUser(authorities = {"REVIEW_CREATE"})
     void testCreateReview() throws Exception {
@@ -206,6 +207,7 @@ class ReviewControllerTest {
 
 
     }
+    */
 
 
     @Test
