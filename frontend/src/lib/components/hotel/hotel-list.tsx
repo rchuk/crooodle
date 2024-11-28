@@ -1,10 +1,16 @@
-import {For, Grid, Heading, HStack, Icon} from "@chakra-ui/react";
+import {Flex, For, Grid, Heading, HStack, Icon} from "@chakra-ui/react";
 import {HotelResponseDto} from "@api/models";
 import {useEffect, useState} from "react";
 import useServices from "@lib/hooks/service-provider";
 import HotelCard from "@lib/components/hotel/hotel-card";
 import {ListHotelsRequest} from "@api/apis";
 import { RiEmotionSadLine } from "react-icons/ri";
+import {
+  PaginationItems,
+  PaginationNextTrigger,
+  PaginationPrevTrigger,
+  PaginationRoot
+} from "@/components/ui/pagination";
 
 type HotelListProps = {
   criteria: ListHotelsRequest
@@ -37,14 +43,24 @@ export default function HotelList({
   criteria
 }: HotelListProps) {
   const { hotelService } = useServices();
-  const [hotels, setHotels] = useState<HotelResponseDto[] | null>(null);
 
-  // TODO: Pagination
+  const limit = 9;
+  const [page, setPage] = useState<number>(1);
+  const [hotels, setHotels] = useState<HotelResponseDto[] | null>(null);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
+
   useEffect(() => {
-    hotelService.listHotels(criteria)
-      .then(response => setHotels(response.items ?? []))
+    hotelService.listHotels({
+      ...criteria,
+      page: (page - 1).toString(),
+      limit: limit.toString()
+    })
+      .then(response => {
+        setHotels(response.items!);
+        setTotalCount(response.total!);
+      })
       .catch();
-  }, [hotelService]);
+  }, [hotelService, page]);
 
   return (
     <>
@@ -58,6 +74,22 @@ export default function HotelList({
           )}
         </For>
       </Grid>
+      {hotels !== null && hotels.length !== 0 && (
+        <PaginationRoot
+          count={totalCount ?? 0}
+          pageSize={limit}
+          page={page}
+          onPageChange={e => setPage(e.page)}
+          variant="solid"
+          m={2}
+        >
+          <Flex justifyContent="center">
+            <PaginationPrevTrigger />
+            <PaginationItems />
+            <PaginationNextTrigger />
+          </Flex>
+        </PaginationRoot>
+      )}
     </>
   );
 }

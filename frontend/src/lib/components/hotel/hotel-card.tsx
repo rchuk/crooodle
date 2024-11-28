@@ -16,6 +16,9 @@ export default function HotelCard({
         <Heading size="lg">
           {item.name}
         </Heading>
+        <Card.Description>
+          Hotel in {item.country!.name}
+        </Card.Description>
       </Card.Header>
       <Card.Body>
         <Text fontSize="sm">
@@ -24,7 +27,7 @@ export default function HotelCard({
       </Card.Body>
       <Card.Footer>
         <Button variant="plain" p={0}>
-          Hotel in {item.country!.name}
+          View details
           <Icon>
             <RiArrowRightSLine />
           </Icon>
