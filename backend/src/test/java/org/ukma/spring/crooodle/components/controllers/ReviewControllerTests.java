@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle;
+package org.ukma.spring.crooodle.components.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

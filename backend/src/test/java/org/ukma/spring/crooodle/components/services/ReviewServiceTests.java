@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle;
+package org.ukma.spring.crooodle.components.services;
 
 
 import org.junit.jupiter.api.BeforeEach;
