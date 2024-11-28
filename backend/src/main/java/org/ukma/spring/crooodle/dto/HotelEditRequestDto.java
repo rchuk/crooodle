@@ -10,6 +10,6 @@ import lombok.extern.jackson.Jacksonized;
 public class HotelEditRequestDto {
     String name;
     String address;
-    String countryId;
+    Integer countryId;
     Integer regionId;
 }
