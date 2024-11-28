@@ -5,6 +5,7 @@ import {Provider} from "@/components/ui/provider";
 import {PropsWithChildren, useEffect, useMemo, useState} from "react";
 import {SessionProvider, getCachedAccessToken} from "@lib/hooks/session-provider";
 import {Toaster} from "@/components/ui/toaster";
+import {NuqsAdapter} from "nuqs/adapters/next/app";
 
 export default function Providers({ children } : PropsWithChildren<{}>) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -21,12 +22,14 @@ export default function Providers({ children } : PropsWithChildren<{}>) {
 
   return (
     <Provider>
-      <SessionProvider accessToken={accessToken} setAccessToken={setAccessToken}>
-        <ServiceProvider value={services}>
-          <Toaster />
-          {children}
-        </ServiceProvider>
-      </SessionProvider>
+      <NuqsAdapter>
+        <SessionProvider accessToken={accessToken} setAccessToken={setAccessToken}>
+          <ServiceProvider value={services}>
+            <Toaster />
+            {children}
+          </ServiceProvider>
+        </SessionProvider>
+      </NuqsAdapter>
     </Provider>
   );
 }

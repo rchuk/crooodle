@@ -42,6 +42,13 @@ public abstract class HotelMapper {
             if (criteriaDto.getCountryId() != null)
                 predicates = builder.and(predicates, builder.equal(root.get("country_id"), criteriaDto.getCountryId()));
 
+            if (criteriaDto.getWorldRegionId() != null) {
+                var countryJoin = root.join("country");
+                var regionJoin = countryJoin.join("worldRegion");
+                predicates = builder.and(predicates,
+                    builder.equal(regionJoin.get("id"), criteriaDto.getWorldRegionId())
+                );
+            }
 
             return predicates;
         };

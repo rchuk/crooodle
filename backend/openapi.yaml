@@ -311,18 +311,18 @@ paths:
               $ref: "#/components/schemas/UserRegisterRequestDto"
         required: true
       responses:
-        "200":
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccessTokenResponseDto"
         "400":
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PublicValidationErrorDto"
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessTokenResponseDto"
         "500":
           description: Internal server error
           content:
@@ -478,6 +478,12 @@ paths:
         schema:
           type: string
       - name: countryId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: worldRegionId
         in: query
         required: false
         schema:
@@ -710,6 +716,12 @@ paths:
         schema:
           type: integer
           format: int32
+      - name: worldRegionId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
       - name: page
         in: query
         required: false
@@ -878,8 +890,6 @@ paths:
 components:
   schemas:
     ReviewEditRequestDto:
-      required:
-      - ranking
       type: object
       properties:
         ranking:
@@ -1002,11 +1012,6 @@ components:
           enum:
           - TRAVELER
           - HOTEL_OWNER
-    AccessTokenResponseDto:
-      type: object
-      properties:
-        accessToken:
-          type: string
     PublicValidationErrorDto:
       type: object
       properties:
@@ -1016,6 +1021,11 @@ components:
           type: object
           additionalProperties:
             type: string
+    AccessTokenResponseDto:
+      type: object
+      properties:
+        accessToken:
+          type: string
     PublicErrorDto:
       type: object
       properties:
