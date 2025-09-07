@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.hotelsvc.api;
+package org.ukma.spring.crooodle.hotelsvc;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
