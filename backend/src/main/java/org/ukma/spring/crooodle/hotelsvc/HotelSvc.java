@@ -7,6 +7,8 @@ import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
 import org.ukma.spring.crooodle.usersvc.Role;
 import org.ukma.spring.crooodle.usersvc.UserSvc;
+import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
+import org.ukma.spring.crooodle.utils.exceptions.ForbiddenException;
 
 import java.util.UUID;
 
@@ -18,7 +20,7 @@ public class HotelSvc {
 
     public UUID create(@NotNull HotelUpsertDto upsertDto) {
         if (!canCreate(upsertDto))
-            throw new IllegalStateException("Only HOTEL_OWNER can create hotels");
+            throw new ForbiddenException("Only hotel owners can create hotels");
 
         var entity = HotelEntity.builder()
                 .name(upsertDto.name())
@@ -26,13 +28,14 @@ public class HotelSvc {
                 .ownerId(userSvc.getCurrentUser().id())
                 .build();
         entity = repo.save(entity);
+
         return entity.getId();
     }
 
     public HotelDto read(@NotNull UUID id) {
-        var entity = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+        var entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
         if (!canRead(entity))
-            throw new IllegalStateException("Cannot read Hotel");
+            throw new ForbiddenException("Cannot read hotel");
 
         return HotelDto.builder()
                 .id(entity.getId())
@@ -42,17 +45,19 @@ public class HotelSvc {
     }
 
     public void update(@NotNull UUID id, @NotNull HotelUpsertDto upsertDto) {
-        var entity = repo.findById(id)
-                .orElseThrow();
+        var entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
+        if (!canUpdate(entity, upsertDto))
+            throw new ForbiddenException("Cannot update hotel");
+
         entity.setName(upsertDto.name());
         entity.setAddress(upsertDto.address());
         repo.save(entity);
     }
 
     public void delete(@NotNull UUID id) {
-        var hotel = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+        var hotel = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
         if (!canDelete(hotel))
-            throw new IllegalStateException("Cannot delete Hotel");
+            throw new ForbiddenException("Cannot delete Hotel");
 
         repo.deleteById(id);
     }
