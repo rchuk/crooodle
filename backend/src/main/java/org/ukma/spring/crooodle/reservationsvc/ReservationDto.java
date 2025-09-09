@@ -12,14 +12,17 @@ import java.util.UUID;
 public record ReservationDto(
         @NotNull
         UUID id,
-        @Null
+        @NotNull
         UUID roomId,
         @NotNull
         int price,
         @NotNull
         Date checkIn,
         @NotNull
-        Date checkOut
+        Date checkOut,
+
+        @NotNull
+        ReservationState state
 ) {
 
 }

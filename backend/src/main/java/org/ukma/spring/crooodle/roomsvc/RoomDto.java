@@ -14,7 +14,10 @@ public record RoomDto(
         UUID id,
 
         @NotNull
-        String name
+        String number,
+
+        @NotNull
+        boolean isOccupied
 ) {
 
 }

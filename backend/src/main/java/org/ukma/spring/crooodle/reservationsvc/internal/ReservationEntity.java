@@ -3,7 +3,6 @@ package org.ukma.spring.crooodle.reservationsvc.internal;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 import org.ukma.spring.crooodle.reservationsvc.ReservationState;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
 
@@ -22,10 +21,10 @@ public class ReservationEntity {
     @GeneratedValue
     private UUID id;
 
-    // нуловий, бо задум у тому, що бронь створюється спочатку порожня, потім заповнюєсять датою, ціною
     @ManyToOne
     @JoinColumn(
             name = "id",
+            nullable = false,
             foreignKey = @ForeignKey(name = "fk_room_reservation")
     )
     private RoomEntity room;
