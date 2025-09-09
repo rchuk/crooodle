@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2969ab97-bd59-438a-b383-dc95853d33d5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/org/ukma/spring/crooodle/reservationsvc/internal/ReservationEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/org/ukma/spring/crooodle/reservationsvc/internal/ReservationRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
-    </list>
+    <list default="true" id="2969ab97-bd59-438a-b383-dc95853d33d5" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,7 +102,7 @@
       <workItem from="1757348155110" duration="4802000" />
       <workItem from="1757353764420" duration="3145000" />
       <workItem from="1757407132765" duration="1370000" />
-      <workItem from="1757421228009" duration="14479000" />
+      <workItem from="1757421228009" duration="15123000" />
     </task>
     <servers />
   </component>
