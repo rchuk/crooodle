@@ -27,8 +27,9 @@ public class CrooodleExceptionHandler {
         return new ResponseEntity<>(ExceptionDto.builder().message(e.getMessage()).build(), getHttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler
     public ResponseEntity<ExceptionDto> handleUnexpectedException(Exception e) {
-        return  new ResponseEntity<>(ExceptionDto.builder().message("Unexpected error").build(), getHttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ExceptionDto.builder().message("Unexpected error").build(), getHttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private static HttpHeaders getHttpHeaders() {
