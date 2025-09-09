@@ -16,20 +16,24 @@ public class HotelSvc {
     private final UserSvc userSvc;
     private final HotelRepo repo;
 
-    UUID create(@NotNull HotelUpsertDto upsertDto) {
-        if (userSvc.getCurrentUserRole() != Role.ROLE_HOTEL_OWNER)
-            throw new IllegalStateException("Only hotel owner can create HotelSvc"); // TODO
+    public UUID create(@NotNull HotelUpsertDto upsertDto) {
+        if (!canCreate(upsertDto))
+            throw new IllegalStateException("Only HOTEL_OWNER can create hotels");
 
         var entity = HotelEntity.builder()
                 .name(upsertDto.name())
                 .address(upsertDto.address())
+                .ownerId(userSvc.getCurrentUser().id())
                 .build();
         entity = repo.save(entity);
         return entity.getId();
     }
 
-    HotelDto read(@NotNull UUID id) {
+    public HotelDto read(@NotNull UUID id) {
         var entity = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+        if (!canRead(entity))
+            throw new IllegalStateException("Cannot read Hotel");
+
         return HotelDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
@@ -37,7 +41,7 @@ public class HotelSvc {
                 .build();
     }
 
-    void update(@NotNull UUID id, @NotNull HotelUpsertDto upsertDto) {
+    public void update(@NotNull UUID id, @NotNull HotelUpsertDto upsertDto) {
         var entity = repo.findById(id)
                 .orElseThrow();
         entity.setName(upsertDto.name());
@@ -45,10 +49,33 @@ public class HotelSvc {
         repo.save(entity);
     }
 
-    void delete(@NotNull UUID id) {
-        if (!repo.existsById(id))
-            throw new IllegalArgumentException("Hotel not found");
+    public void delete(@NotNull UUID id) {
+        var hotel = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+        if (!canDelete(hotel))
+            throw new IllegalStateException("Cannot delete Hotel");
 
         repo.deleteById(id);
+    }
+
+    private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
+        return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
+    }
+
+    private boolean canUpdate(HotelEntity hotel, HotelUpsertDto ignored_upsertDto) {
+        if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
+            return false;
+
+        return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
+    }
+
+    private boolean canRead(HotelEntity ignored_hotel) {
+        return true;
+    }
+
+    private boolean canDelete(HotelEntity hotel) {
+        if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
+            return false;
+
+        return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
     }
 }
