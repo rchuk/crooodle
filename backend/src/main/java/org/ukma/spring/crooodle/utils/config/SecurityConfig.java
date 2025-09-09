@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle;
+package org.ukma.spring.crooodle.utils.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

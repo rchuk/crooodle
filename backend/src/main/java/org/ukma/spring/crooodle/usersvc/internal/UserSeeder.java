@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle;
+package org.ukma.spring.crooodle.usersvc.internal;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,17 +8,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.ukma.spring.crooodle.usersvc.Role;
-import org.ukma.spring.crooodle.usersvc.internal.RoleEntity;
-import org.ukma.spring.crooodle.usersvc.internal.RoleRepo;
-import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
-import org.ukma.spring.crooodle.usersvc.internal.UserRepo;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
-public class DataSeeder implements ApplicationRunner {
+public class UserSeeder implements ApplicationRunner {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
@@ -28,10 +24,9 @@ public class DataSeeder implements ApplicationRunner {
     @Value("${auth.admin.password}")
     String adminPassword;
 
-
     @Override
     @Transactional
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         seedRoles();
         seedAdmin();
     }
