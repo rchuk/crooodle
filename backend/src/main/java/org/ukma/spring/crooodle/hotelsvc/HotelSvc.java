@@ -5,15 +5,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
+import org.ukma.spring.crooodle.usersvc.Role;
+import org.ukma.spring.crooodle.usersvc.UserSvc;
 
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class HotelSvc {
+    private final UserSvc userSvc;
     private final HotelRepo repo;
 
     UUID create(@NotNull HotelUpsertDto upsertDto) {
+        if (userSvc.getCurrentUserRole() != Role.ROLE_HOTEL_OWNER)
+            throw new IllegalStateException("Only hotel owner can create HotelSvc"); // TODO
+
         var entity = HotelEntity.builder()
                 .name(upsertDto.name())
                 .address(upsertDto.address())
