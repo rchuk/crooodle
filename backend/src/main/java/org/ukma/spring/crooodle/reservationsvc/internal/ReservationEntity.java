@@ -1,7 +1,6 @@
 package org.ukma.spring.crooodle.reservationsvc.internal;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.ukma.spring.crooodle.reservationsvc.ReservationState;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
@@ -23,21 +22,18 @@ public class ReservationEntity {
 
     @ManyToOne
     @JoinColumn(
-            name = "id",
+            name = "room_id",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_room_reservation")
     )
     private RoomEntity room;
 
-    @NotBlank
     @Column(nullable = false)
     private int price;
 
-    @NotBlank
     @Column(nullable = false)
     private Date checkIn;
 
-    @NotBlank
     @Column(nullable = false)
     private Date checkOut;
 

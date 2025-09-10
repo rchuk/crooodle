@@ -7,7 +7,6 @@ import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationRepo;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomRepo;
-import org.ukma.spring.crooodle.roomsvc.internal.RoomTypeEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -62,13 +61,12 @@ public class ReservationSvc {
         reservationRepo.deleteById(resId);
     }
 
-/*    boolean checkReservation(@NotNull UUID resId, @NotNull RoomEntity roomEntity){
+    boolean checkReservation(@NotNull UUID resId, @NotNull RoomEntity roomEntity){
 
         var reservation = reservationRepo.findById(resId);
         Date today = new Date();
-        boolean isValid = true;
-        List<ReservationEntity> reservationsForRoom = reservationRepo.findAllByRoomEntity(roomEntity);
-        // findAllByRoomEntity не активний...
+        boolean isValid;
+        List<ReservationEntity> reservationsForRoom = reservationRepo.findAllByRoom(roomEntity);
 
         for(ReservationEntity re : reservationsForRoom){
             Date start = re.getCheckIn(), end = re.getCheckOut();
@@ -82,6 +80,6 @@ public class ReservationSvc {
         }
 
         return true;
-    }*/
+    }
 
 }
