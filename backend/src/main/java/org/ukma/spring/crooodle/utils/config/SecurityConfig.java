@@ -71,10 +71,15 @@ public class SecurityConfig {
     @Bean
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize ->
-                authorize.anyRequest().permitAll()
+        http
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/register").permitAll()
+                .anyRequest().permitAll()
             )
-            .formLogin(Customizer.withDefaults());;
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/register")
+            )
+            .formLogin(Customizer.withDefaults());
 
         return http.build();
     }
