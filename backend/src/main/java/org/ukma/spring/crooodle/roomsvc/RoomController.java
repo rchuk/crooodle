@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.aggregator;
+package org.ukma.spring.crooodle.roomsvc;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
