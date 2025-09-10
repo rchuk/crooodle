@@ -3,3 +3,8 @@
 .idea/crooodle.iml
 .idea/encodings.xml
 .idea/jarRepositories.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+
+application-secret.properties
