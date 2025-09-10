@@ -21,10 +21,6 @@ public class RoomEntity {
     private UUID id;
 
     @ManyToOne
-/*    @JoinColumn(
-            name = "room_type_id",
-            foreignKey = @ForeignKey(name = "fk_room_type")
-    )*/
     private RoomTypeEntity type;
 
     @ManyToOne
@@ -35,6 +31,7 @@ public class RoomEntity {
     @Column(nullable = false)
     private String number;
 
+    // will be removed soon...
     @Column(nullable = false)
     private boolean isOccupied;
 

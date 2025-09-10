@@ -3,6 +3,9 @@ backend/target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+backend/src/main/java/org/ukma/spring/crooodle/utils/exceptions/package-info.java
+backend/src/main/java/org/ukma/spring/crooodle/utils/exceptions/handler/package-info.java
+.gitignore
 
 ### STS ###
 .apt_generated

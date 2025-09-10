@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.ukma.spring.crooodle.reservationsvc.ReservationState;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
+import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
 
 import java.util.Date;
 import java.util.UUID;
@@ -21,21 +22,24 @@ public class ReservationEntity {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(
+/*    @JoinColumn(
             name = "room_id",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_room_reservation")
-    )
+    )*/
     private RoomEntity room;
+
+    @ManyToOne
+    private UserEntity user;
 
     @Column(nullable = false)
     private int price;
 
     @Column(nullable = false)
-    private Date checkIn;
+    private Date checkin;
 
     @Column(nullable = false)
-    private Date checkOut;
+    private Date checkout;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

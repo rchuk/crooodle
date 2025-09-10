@@ -3,11 +3,16 @@ package org.ukma.spring.crooodle.reservationsvc;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
+import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationRepo;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomRepo;
+import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
+import org.ukma.spring.crooodle.usersvc.internal.UserRepo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -15,70 +20,164 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class ReservationSvc {
-    private final ReservationRepo reservationRepo;
+    private final ReservationRepo resRepo;
     private final RoomRepo roomRepo;
+    private final HotelRepo hotelRepo;
+    private final UserRepo userRepo;
 
-    UUID create(@NotNull ReservationDto resDto, @NotNull RoomEntity roomEntity){
+    public UUID create(@NotNull ReservationDto resDto){
 
+        RoomEntity room = roomRepo.findById(resDto.roomId()).get();
         var newReservation = ReservationEntity.builder()
-                .room(roomEntity)
+                .room(room)
                 .price(resDto.price())
-                .checkIn(resDto.checkIn())
-                .checkOut(resDto.checkOut())
+                .checkin(resDto.checkIn())
+                .checkout(resDto.checkOut())
                 .state(ReservationState.PENDING)
                 .build();
 
-        newReservation = reservationRepo.save(newReservation);
+        newReservation = resRepo.save(newReservation);
         return newReservation.getId();
     }
 
-    ReservationDto read(@NotNull UUID reservationId){
-        var reservation = reservationRepo.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+    public ReservationDto read(@NotNull UUID resId){
+
+        var reservation = resRepo.findById(resId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
 
         return ReservationDto.builder()
                 .id(reservation.getId())
                 .roomId(reservation.getRoom().getId())
-                .checkIn(reservation.getCheckIn())
-                .checkOut(reservation.getCheckOut())
+                .hotelId(reservation.getRoom().getHotel().getId())
+                .userId(reservation.getUser().getId())
+                .checkIn(reservation.getCheckin())
+                .checkOut(reservation.getCheckout())
                 .state(reservation.getState())
                 .build();
     }
 
-    void update(@NotNull UUID reservationId, @NotNull ReservationDto resDto, @NotNull RoomEntity roomEntity){
-        var updatedReservation = reservationRepo.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+    public List<ReservationDto> readAllByHotel(@NotNull UUID hotelId, @NotNull UUID userId){
 
-        updatedReservation.setRoom(roomEntity);
-        updatedReservation.setPrice(resDto.price());
-        updatedReservation.setCheckIn(resDto.checkIn());
-        updatedReservation.setCheckOut(resDto.checkOut());
+        HotelEntity hotel = hotelRepo.findById(hotelId).get();
+        UserEntity user = userRepo.findById(userId).get();
 
-        reservationRepo.save(updatedReservation);
+        List<RoomEntity> hotelRooms = roomRepo.findAllByHotel(hotel);
+        List<ReservationEntity> reservationsByUser = resRepo.findAllByUser(user);
+
+        List<ReservationEntity> reservationsByHotel = reservationsByUser.stream()
+                .filter(r -> hotelRooms.contains(r.getRoom()))
+                .toList();
+
+        List<ReservationDto> resesDTO = new ArrayList<>();
+
+        for(ReservationEntity re : reservationsByHotel){
+            resesDTO.add(ReservationDto.builder()
+                    .id(re.getId())
+                    .roomId(re.getRoom().getId())
+                    .hotelId(re.getRoom().getHotel().getId())
+                    .userId(re.getUser().getId())
+                    .price(re.getPrice())
+                    .checkIn(re.getCheckin())
+                    .checkOut(re.getCheckout())
+                    .state(re.getState())
+                    .build());
+        }
+
+        return resesDTO;
     }
 
-    void delete(@NotNull UUID resId){
-        if(!reservationRepo.existsById(resId)) throw new IllegalArgumentException("Reservation is not found");
+    public List<ReservationDto> readAllByDates(@NotNull UUID userId, @NotNull Date checkIn, @NotNull Date checkOut){
 
-        reservationRepo.deleteById(resId);
+        UserEntity user = userRepo.findById(userId).get();
+
+        List<ReservationEntity> resesByDates = resRepo.findAllByUserAndCheckinAndCheckout(user, checkIn, checkOut);
+
+        List<ReservationDto> resesDTO = new ArrayList<>();
+        for(ReservationEntity re : resesByDates){
+            resesDTO.add(ReservationDto.builder()
+                    .id(re.getId())
+                    .roomId(re.getRoom().getId())
+                    .hotelId(re.getRoom().getHotel().getId())
+                    .userId(re.getUser().getId())
+                    .price(re.getPrice())
+                    .checkIn(re.getCheckin())
+                    .checkOut(re.getCheckout())
+                    .state(re.getState())
+                    .build());
+        }
+
+        return resesDTO;
     }
 
-    boolean checkReservation(@NotNull UUID resId, @NotNull RoomEntity roomEntity){
+    public List<ReservationDto> readAllByState(@NotNull UUID userId, @NotNull String stateParam){
 
-        var reservation = reservationRepo.findById(resId);
-        Date today = new Date();
+        UserEntity user = userRepo.findById(userId).get();
+        ReservationState state = ReservationState.valueOf(stateParam.toUpperCase());
+
+        List<ReservationEntity> resesByState = resRepo.findAllByUserAndState(user, state);
+
+        List<ReservationDto> resesDTO = new ArrayList<>();
+        for(ReservationEntity re : resesByState){
+            resesDTO.add(ReservationDto.builder()
+                    .id(re.getId())
+                    .roomId(re.getRoom().getId())
+                    .hotelId(re.getRoom().getHotel().getId())
+                    .userId(re.getUser().getId())
+                    .price(re.getPrice())
+                    .checkIn(re.getCheckin())
+                    .checkOut(re.getCheckout())
+                    .state(re.getState())
+                    .build());
+        }
+
+        return resesDTO;
+    }
+
+    public void update(@NotNull UUID reservationId, @NotNull ReservationDto updatedReservation){
+
+        RoomEntity room = resRepo.findById(reservationId).get().getRoom();
+
+        ReservationEntity reservationToUpdate = resRepo.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+
+        reservationToUpdate.setRoom(room);
+        reservationToUpdate.setPrice(reservationToUpdate.getPrice());
+        reservationToUpdate.setCheckin(updatedReservation.checkIn());
+        reservationToUpdate.setCheckout(updatedReservation.checkOut());
+
+        resRepo.save(reservationToUpdate);
+    }
+
+    public void confirm(@NotNull UUID resId){
+        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        updatedReservation.setState(ReservationState.CONFIRMED);
+    }
+
+    public void cancel(@NotNull UUID resId){
+        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        updatedReservation.setState(ReservationState.CANCELLED);
+    }
+
+    public void delete(@NotNull UUID resId){
+        if(!resRepo.existsById(resId)) throw new IllegalArgumentException("Reservation is not found");
+
+        resRepo.deleteById(resId);
+    }
+
+    public boolean checkReservation(@NotNull UUID resId, @NotNull RoomEntity roomEntity){
+
+        var reservation = resRepo.findById(resId);
         boolean isValid;
-        List<ReservationEntity> reservationsForRoom = reservationRepo.findAllByRoom(roomEntity);
+        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoom(roomEntity);
 
         for(ReservationEntity re : reservationsForRoom){
-            Date start = re.getCheckIn(), end = re.getCheckOut();
-            Date resCheckIn = reservation.get().getCheckIn(),
-                resCheckOut = reservation.get().getCheckOut();
+            Date start = re.getCheckin(), end = re.getCheckout();
+            Date resCheckIn = reservation.get().getCheckin(),
+                resCheckOut = reservation.get().getCheckout();
 
             isValid = !(resCheckIn.after(start) && resCheckIn.before(end)) &&
                         !(resCheckOut.after(start) && resCheckOut.before(end));
 
             if(!isValid) return false;
         }
-
         return true;
     }
 
