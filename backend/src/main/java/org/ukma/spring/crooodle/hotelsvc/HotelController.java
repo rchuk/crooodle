@@ -1,11 +1,9 @@
-package org.ukma.spring.crooodle.aggregator;
+package org.ukma.spring.crooodle.hotelsvc;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.ukma.spring.crooodle.hotelsvc.HotelDto;
-import org.ukma.spring.crooodle.hotelsvc.HotelSvc;
-import org.ukma.spring.crooodle.hotelsvc.HotelUpsertDto;
 
 import java.util.UUID;
 
@@ -17,7 +15,7 @@ public class HotelController {
 
     @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
     @PostMapping
-    public UUID create(@RequestBody HotelUpsertDto hotelUpsertDto) {
+    public UUID create(@Valid @RequestBody HotelUpsertDto hotelUpsertDto) {
         return svc.create(hotelUpsertDto);
     }
 
@@ -28,7 +26,7 @@ public class HotelController {
 
     @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
     @PutMapping("/{id}")
-    public void update(@PathVariable UUID id, @RequestBody HotelUpsertDto hotelUpsertDto) {
+    public void update(@PathVariable UUID id, @Valid @RequestBody HotelUpsertDto hotelUpsertDto) {
         svc.update(id, hotelUpsertDto);
     }
 

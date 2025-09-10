@@ -5,13 +5,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
 import org.ukma.spring.crooodle.utils.exceptions.ForbiddenException;
+import org.ukma.spring.crooodle.utils.exceptions.InvalidRequestException;
 import org.ukma.spring.crooodle.utils.exceptions.PublicException;
 
 import java.util.stream.Collectors;
@@ -26,6 +29,11 @@ public class CrooodleExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ExceptionDto> handleEntityNotFoundException(EntityNotFoundException e) {
         return new ResponseEntity<>(ExceptionDto.builder().message(e.getMessage()).build(), getHttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ExceptionDto> handleInvalidRequestException(PublicException e) {
+        return new ResponseEntity<>(ExceptionDto.builder().message(e.getMessage()).build(), getHttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PublicException.class)
@@ -49,6 +57,16 @@ public class CrooodleExceptionHandler {
             .build();
 
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ExceptionDto> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        return new ResponseEntity<>(ExceptionDto.builder().message("HTTP request method not supported").build(), getHttpHeaders(), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return new ResponseEntity<>(ExceptionDto.builder().message("Invalid request").build(), getHttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
