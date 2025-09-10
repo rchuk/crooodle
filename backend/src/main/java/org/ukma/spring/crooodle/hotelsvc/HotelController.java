@@ -13,7 +13,7 @@ import java.util.UUID;
 public class HotelController {
     private final HotelSvc svc;
 
-    @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
+    @PreAuthorize("hasRole('HOTEL_OWNER')")
     @PostMapping
     public UUID create(@Valid @RequestBody HotelUpsertDto hotelUpsertDto) {
         return svc.create(hotelUpsertDto);
@@ -24,13 +24,13 @@ public class HotelController {
         return svc.read(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
+    @PreAuthorize("hasRole('HOTEL_OWNER')")
     @PutMapping("/{id}")
     public void update(@PathVariable UUID id, @Valid @RequestBody HotelUpsertDto hotelUpsertDto) {
         svc.update(id, hotelUpsertDto);
     }
 
-    @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
+    @PreAuthorize("hasRole('HOTEL_OWNER')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable UUID id) {
         svc.delete(id);
