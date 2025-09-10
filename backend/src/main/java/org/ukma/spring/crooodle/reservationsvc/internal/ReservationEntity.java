@@ -22,11 +22,6 @@ public class ReservationEntity {
     private UUID id;
 
     @ManyToOne
-/*    @JoinColumn(
-            name = "room_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_room_reservation")
-    )*/
     private RoomEntity room;
 
     @ManyToOne

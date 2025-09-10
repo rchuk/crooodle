@@ -12,6 +12,8 @@ import java.util.UUID;
 public record RoomTypeDto(
         @NotNull
         UUID id,
+        @NotNull
+        UUID hotelId,
 
         @NotNull
         String name,

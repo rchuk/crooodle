@@ -2,6 +2,7 @@ package org.ukma.spring.crooodle.roomsvc.internal;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 
 import java.util.UUID;
 
@@ -20,6 +21,9 @@ public class RoomTypeEntity {
     @NotBlank
     @Column(nullable = false)
     private String name;
+
+    @ManyToOne
+    private HotelEntity hotel;
 
     @NotBlank
     @Column(nullable = false)

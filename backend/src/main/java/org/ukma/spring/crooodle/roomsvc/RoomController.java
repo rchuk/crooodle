@@ -3,8 +3,6 @@ package org.ukma.spring.crooodle.roomsvc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.ukma.spring.crooodle.roomsvc.RoomDto;
-import org.ukma.spring.crooodle.roomsvc.RoomSvc;
 
 import java.util.List;
 import java.util.UUID;

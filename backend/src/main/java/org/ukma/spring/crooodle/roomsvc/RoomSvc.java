@@ -25,8 +25,8 @@ public class RoomSvc {
 
     public UUID create(@NotNull RoomDto roomDto){
 
-        RoomTypeEntity roomType = typeRepo.findById(roomDto.typeId()).get();
-        HotelEntity hotel = hotelRepo.findById(roomDto.hotelId()).get();
+        RoomTypeEntity roomType = typeRepo.findById(roomDto.typeId()).orElseThrow(() -> new IllegalArgumentException("Room type is not found"));
+        HotelEntity hotel = hotelRepo.findById(roomDto.hotelId()).orElseThrow(() -> new IllegalArgumentException("Hotel is not found"));
 
         var newRoom = RoomEntity.builder()
                 .number(roomDto.number())
@@ -53,7 +53,7 @@ public class RoomSvc {
 
     public List<RoomDto> readAllByHotel(@NotNull UUID hotelId){
 
-        HotelEntity hotel = hotelRepo.findById(hotelId).get();
+        HotelEntity hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new IllegalArgumentException("Hotel is not found"));
         List<RoomEntity> roomsByHotel = roomRepo.findAllByHotel(hotel);
         List<RoomDto> roomsDTO = new ArrayList<>();
 
@@ -70,8 +70,8 @@ public class RoomSvc {
 
     public List<RoomDto> readAllByType(@NotNull UUID hotelId, @NotNull UUID typeId){
 
-        HotelEntity hotel = hotelRepo.findById(hotelId).get();
-        RoomTypeEntity type = typeRepo.findById(typeId).get();
+        HotelEntity hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new IllegalArgumentException("Hotel is not found"));
+        RoomTypeEntity type = typeRepo.findById(typeId).orElseThrow(() -> new IllegalArgumentException("Room type is not found"));
 
         List<RoomEntity> roomsByHotel = roomRepo.findAllByHotelAndType(hotel, type);
         List<RoomDto> roomsDTO = new ArrayList<>();
@@ -90,8 +90,8 @@ public class RoomSvc {
 
     public void update(@NotNull UUID roomId, @NotNull RoomDto roomDto) {
 
-        RoomTypeEntity roomType = typeRepo.findById(roomDto.typeId()).get();
-        HotelEntity hotel = hotelRepo.findById(roomDto.hotelId()).get();
+        RoomTypeEntity roomType = typeRepo.findById(roomDto.typeId()).orElseThrow(() -> new IllegalArgumentException("Room type is not found"));
+        HotelEntity hotel = hotelRepo.findById(roomDto.hotelId()).orElseThrow(() -> new IllegalArgumentException("Hotel is not found"));
 
         var updatedRoom = repo.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Room is not found"));
