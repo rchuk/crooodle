@@ -1,11 +1,12 @@
-package org.ukma.spring.crooodle.notificationsvc;
+package org.ukma.spring.crooodle.notificationsvc.internal;
 
 import org.springframework.stereotype.Component;
+import org.ukma.spring.crooodle.reservationsvc.ReservationEventType;
 
 @Component
 public class EmailTemplateEngine {
 
-    public String generateSubject(NotificationType type) {
+    public String generateSubject(ReservationEventType type) {
         return switch (type) {
             case RESERVATION_CREATED -> "Підтвердження бронювання";
             case RESERVATION_APPROVED -> "Ваше бронювання схвалено";
@@ -13,7 +14,7 @@ public class EmailTemplateEngine {
         };
     }
 
-    public String generateBody(String userName, NotificationType type) {
+    public String generateBody(String userName, ReservationEventType type) {
         return switch (type) {
             case RESERVATION_CREATED ->
                     "Шановний, " + userName + "!\nВи успішно створили бронювання.";
