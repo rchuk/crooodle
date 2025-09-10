@@ -14,6 +14,12 @@ public record RoomDto(
         UUID id,
 
         @NotNull
+        UUID typeId,
+
+        @NotNull
+        UUID hotelId,
+
+        @NotNull
         String number,
 
         @NotNull

@@ -3,10 +3,15 @@ package org.ukma.spring.crooodle.roomsvc;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
+import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomRepo;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomTypeEntity;
+import org.ukma.spring.crooodle.roomsvc.internal.RoomTypeRepo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -14,12 +19,19 @@ import java.util.UUID;
 public class RoomSvc {
 
     private final RoomRepo repo;
+    private final RoomTypeRepo typeRepo;
+    private final HotelRepo hotelRepo;
+    private final RoomRepo roomRepo;
 
-    UUID create(@NotNull RoomDto roomDto, @NotNull RoomTypeEntity roomTypeEntity){
+    public UUID create(@NotNull RoomDto roomDto){
+
+        RoomTypeEntity roomType = typeRepo.findById(roomDto.typeId()).get();
+        HotelEntity hotel = hotelRepo.findById(roomDto.hotelId()).get();
 
         var newRoom = RoomEntity.builder()
                 .number(roomDto.number())
-                .type(roomTypeEntity)
+                .type(roomType)
+                .hotel(hotel)
                 .isOccupied(false)
                 .build();
 
@@ -27,26 +39,69 @@ public class RoomSvc {
         return newRoom.getId();
     }
 
-    RoomDto read(@NotNull UUID roomId){
+    public RoomDto read(@NotNull UUID roomId){
 
-        var room = repo.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room is not found"));
+        RoomEntity room = repo.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room is not found"));
         return RoomDto.builder()
                 .id(room.getId())
                 .number(room.getNumber())
+                .typeId(room.getType().getId())
+                .hotelId(room.getHotel().getId())
                 .isOccupied(room.isOccupied())
                 .build();
     }
 
+    public List<RoomDto> readAllByHotel(@NotNull UUID hotelId){
 
-    void update(@NotNull UUID roomId, @NotNull RoomDto roomDto, @NotNull RoomTypeEntity roomTypeEntity) {
+        HotelEntity hotel = hotelRepo.findById(hotelId).get();
+        List<RoomEntity> roomsByHotel = roomRepo.findAllByHotel(hotel);
+        List<RoomDto> roomsDTO = new ArrayList<>();
+
+        for(RoomEntity re : roomsByHotel){
+            roomsDTO.add(RoomDto.builder()
+                        .id(re.getId())
+                        .number(re.getNumber())
+                        .isOccupied(re.isOccupied())
+                        .build());
+        }
+
+        return roomsDTO;
+    }
+
+    public List<RoomDto> readAllByType(@NotNull UUID hotelId, @NotNull UUID typeId){
+
+        HotelEntity hotel = hotelRepo.findById(hotelId).get();
+        RoomTypeEntity type = typeRepo.findById(typeId).get();
+
+        List<RoomEntity> roomsByHotel = roomRepo.findAllByHotelAndType(hotel, type);
+        List<RoomDto> roomsDTO = new ArrayList<>();
+
+        for(RoomEntity re : roomsByHotel){
+            roomsDTO.add(RoomDto.builder()
+                    .id(re.getId())
+                    .number(re.getNumber())
+                    .isOccupied(re.isOccupied())
+                    .build());
+        }
+
+        return roomsDTO;
+    }
+
+
+    public void update(@NotNull UUID roomId, @NotNull RoomDto roomDto) {
+
+        RoomTypeEntity roomType = typeRepo.findById(roomDto.typeId()).get();
+        HotelEntity hotel = hotelRepo.findById(roomDto.hotelId()).get();
+
         var updatedRoom = repo.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Room is not found"));
         updatedRoom.setNumber(roomDto.number());
-        updatedRoom.setType(roomTypeEntity);
+        updatedRoom.setType(roomType);
+        updatedRoom.setHotel(hotel);
         repo.save(updatedRoom);
     }
 
-    void delete(@NotNull UUID roomId){
+    public void delete(@NotNull UUID roomId){
         if(!repo.existsById(roomId))
             throw new IllegalArgumentException("Room is not found");
 

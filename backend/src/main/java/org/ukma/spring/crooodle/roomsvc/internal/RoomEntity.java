@@ -3,6 +3,7 @@ package org.ukma.spring.crooodle.roomsvc.internal;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 
 import java.util.UUID;
 
@@ -20,11 +21,14 @@ public class RoomEntity {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(
+/*    @JoinColumn(
             name = "room_type_id",
             foreignKey = @ForeignKey(name = "fk_room_type")
-    )
+    )*/
     private RoomTypeEntity type;
+
+    @ManyToOne
+    private HotelEntity hotel;
 
 
     @NotBlank
