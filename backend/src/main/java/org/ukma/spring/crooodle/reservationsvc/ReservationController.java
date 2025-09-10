@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@RequestMapping("/book")
+@RequestMapping("/reservation")
 @RestController
 public class ReservationController {
 
