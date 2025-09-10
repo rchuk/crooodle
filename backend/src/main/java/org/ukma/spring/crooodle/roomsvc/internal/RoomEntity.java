@@ -15,7 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RoomEntity {
 
-
     @Id
     @GeneratedValue
     private UUID id;
