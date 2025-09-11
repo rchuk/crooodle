@@ -52,6 +52,7 @@ public class RoomSvc {
     }
 
     public List<RoomResponseDto> readAllByHotel(@NotNull UUID hotelId) {
+        // TODO: Add pagination
         var hotel = hotelSvc.get(hotelId);
 
         return roomRepo.findAllByType_Hotel(hotel)

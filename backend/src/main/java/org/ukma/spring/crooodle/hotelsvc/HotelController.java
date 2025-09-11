@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -24,6 +25,11 @@ public class HotelController {
     @GetMapping("/{id}")
     public HotelResponseDto read(@PathVariable UUID id) {
         return svc.read(id);
+    }
+
+    @GetMapping
+    public List<HotelResponseDto> readAll() {
+        return svc.readAll();
     }
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")

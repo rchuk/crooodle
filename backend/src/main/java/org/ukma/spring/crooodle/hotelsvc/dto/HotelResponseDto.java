@@ -14,7 +14,9 @@ public record HotelResponseDto(
     @NotNull
     String name,
     @NotNull
-    String address
+    String address,
+    @NotNull
+    long roomCount
 ) {
 
 }

@@ -78,6 +78,7 @@ public class ReservationSvc {
 
     public List<ReservationResponseDto> readAllByRoom(@NotNull UUID roomId, @NotNull ReservationCriteriaDto criteriaDto) {
         // TODO: Use criteria
+        // TODO: Add pagination
 
         return resRepo.findAllByRoomId(roomId).stream()
             .map(this::reservationEntityToDto)

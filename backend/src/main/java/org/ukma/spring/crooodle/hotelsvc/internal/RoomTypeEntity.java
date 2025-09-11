@@ -22,7 +22,8 @@ public class RoomTypeEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "hotel_id", nullable = false)
     private HotelEntity hotel;
 
     @NotBlank

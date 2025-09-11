@@ -12,6 +12,7 @@ import org.ukma.spring.crooodle.usersvc.UserSvc;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
 import org.ukma.spring.crooodle.utils.exceptions.ForbiddenException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -44,6 +45,7 @@ public class HotelSvc {
             .name(hotel.getName())
             .address(hotel.getAddress())
             .ownerId(hotel.getOwnerId())
+            .roomCount(hotel.getRooms().size())
             .build();
     }
 
@@ -63,6 +65,12 @@ public class HotelSvc {
         entity.setName(upsertDto.name());
         entity.setAddress(upsertDto.address());
         repo.save(entity);
+    }
+
+    public List<HotelResponseDto> readAll() {
+        return repo.findAll().stream()
+            .map(this::hotelEntityToDto)
+            .toList();
     }
 
     public void delete(@NotNull UUID id) {
