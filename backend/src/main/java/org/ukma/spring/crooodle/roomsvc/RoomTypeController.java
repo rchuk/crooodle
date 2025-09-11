@@ -3,7 +3,6 @@ package org.ukma.spring.crooodle.roomsvc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.ukma.spring.crooodle.roomsvc.internal.RoomTypeRepo;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,9 +27,9 @@ public class RoomTypeController {
     }
 
     @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
-    @GetMapping("/{id}")
-    public List<RoomTypeDto> readAllByHotel(@PathVariable UUID id){
-        return typeSvc.readAllByHotel(id);
+    @GetMapping("/{hotel_id}")
+    public List<RoomTypeDto> readAllByHotel(@PathVariable UUID hotel_id){
+        return typeSvc.readAllByHotel(hotel_id);
     }
 
     @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")

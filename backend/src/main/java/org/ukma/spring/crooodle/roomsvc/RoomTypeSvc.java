@@ -1,11 +1,10 @@
 package org.ukma.spring.crooodle.roomsvc;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
-import org.ukma.spring.crooodle.reservationsvc.ReservationDto;
-import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomTypeEntity;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomTypeRepo;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;

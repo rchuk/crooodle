@@ -3,9 +3,6 @@ package org.ukma.spring.crooodle.reservationsvc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.ukma.spring.crooodle.reservationsvc.ReservationDto;
-import org.ukma.spring.crooodle.reservationsvc.ReservationSvc;
-import org.ukma.spring.crooodle.roomsvc.RoomSvc;
 
 import java.util.Date;
 import java.util.List;

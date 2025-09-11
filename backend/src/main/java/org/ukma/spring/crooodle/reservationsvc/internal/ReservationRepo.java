@@ -1,6 +1,5 @@
 package org.ukma.spring.crooodle.reservationsvc.internal;
 
-import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.ukma.spring.crooodle.reservationsvc.ReservationState;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
