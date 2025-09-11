@@ -11,6 +11,8 @@ import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomRepo;
 import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
 import org.ukma.spring.crooodle.usersvc.internal.UserRepo;
+import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
+import org.ukma.spring.crooodle.utils.exceptions.ForbiddenException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +29,7 @@ public class ReservationSvc {
 
     public UUID create(@NotNull ReservationDto resDto){
 
-        RoomEntity room = roomRepo.findById(resDto.roomId()).orElseThrow(() -> new IllegalArgumentException("Room not found: "));
+        RoomEntity room = roomRepo.findById(resDto.roomId()).orElseThrow(() -> new EntityNotFoundException(resDto.roomId(), ""));
 
         var newReservation = ReservationEntity.builder()
                 .room(room)
@@ -37,13 +39,16 @@ public class ReservationSvc {
                 .state(ReservationState.PENDING)
                 .build();
 
-        newReservation = resRepo.save(newReservation);
-        return newReservation.getId();
+        if(!checkReservation(resDto.id(), room)) throw new ForbiddenException("This time is already reserved");
+        else{
+            newReservation = resRepo.save(newReservation);
+            return newReservation.getId();
+        }
     }
 
     public ReservationDto read(@NotNull UUID resId){
 
-        var reservation = resRepo.findById(resId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        var reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, ""));
 
         return ReservationDto.builder()
                 .id(reservation.getId())
@@ -58,8 +63,8 @@ public class ReservationSvc {
 
     public List<ReservationDto> readAllByHotel(@NotNull UUID hotelId, @NotNull UUID userId){
 
-        HotelEntity hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new IllegalArgumentException("Hotel not found: "));
-        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found: "));
+        HotelEntity hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new EntityNotFoundException(hotelId, " "));
+        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId, " "));
 
         List<RoomEntity> hotelRooms = roomRepo.findAllByHotel(hotel);
         List<ReservationEntity> reservationsByUser = resRepo.findAllByUser(user);
@@ -73,7 +78,7 @@ public class ReservationSvc {
 
     public List<ReservationDto> readAllByDates(@NotNull UUID userId, @NotNull Date checkIn, @NotNull Date checkOut){
 
-        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found: "));
+        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId, " "));
 
         List<ReservationEntity> resesByDates = resRepo.findAllByUserAndCheckinAndCheckout(user, checkIn, checkOut);
 
@@ -82,7 +87,7 @@ public class ReservationSvc {
 
     public List<ReservationDto> readAllByState(@NotNull UUID userId, @NotNull String stateParam){
 
-        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found: "));
+        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId, " "));
         ReservationState state = ReservationState.valueOf(stateParam.toUpperCase());
 
         List<ReservationEntity> resesByState = resRepo.findAllByUserAndState(user, state);
@@ -110,9 +115,9 @@ public class ReservationSvc {
 
     public void update(@NotNull UUID reservationId, @NotNull ReservationDto updatedReservation){
 
-        RoomEntity room = resRepo.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Room not found: ")).getRoom();
+        RoomEntity room = resRepo.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation not found: ")).getRoom();
 
-        ReservationEntity reservationToUpdate = resRepo.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        ReservationEntity reservationToUpdate = resRepo.findById(reservationId).orElseThrow(() -> new EntityNotFoundException(reservationId, " "));
 
         reservationToUpdate.setRoom(room);
         reservationToUpdate.setPrice(reservationToUpdate.getPrice());
@@ -123,17 +128,17 @@ public class ReservationSvc {
     }
 
     public void confirm(@NotNull UUID resId){
-        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
         updatedReservation.setState(ReservationState.CONFIRMED);
     }
 
     public void cancel(@NotNull UUID resId){
-        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
         updatedReservation.setState(ReservationState.CANCELLED);
     }
 
     public void delete(@NotNull UUID resId){
-        if(!resRepo.existsById(resId)) throw new IllegalArgumentException("Reservation is not found");
+        if(!resRepo.existsById(resId)) throw new EntityNotFoundException(resId, " ");
 
         resRepo.deleteById(resId);
     }
@@ -141,7 +146,6 @@ public class ReservationSvc {
     public boolean checkReservation(@NotNull UUID resId, @NotNull RoomEntity roomEntity){
 
         var reservation = resRepo.findById(resId);
-        boolean isValid;
         List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoom(roomEntity);
 
         for(ReservationEntity re : reservationsForRoom){
@@ -149,10 +153,8 @@ public class ReservationSvc {
             Date resCheckIn = reservation.orElseThrow(() -> new IllegalArgumentException("Reservation not found: ")).getCheckin(),
                 resCheckOut = reservation.orElseThrow(() -> new IllegalArgumentException("Reservation not found: ")).getCheckout();
 
-            isValid = !(resCheckIn.after(start) && resCheckIn.before(end)) &&
-                        !(resCheckOut.after(start) && resCheckOut.before(end));
-
-            if(!isValid) return false;
+            if(!(resCheckIn.after(start) && resCheckIn.before(end))
+            && !(resCheckOut.after(start) && resCheckOut.before(end))) return false;
         }
         return true;
     }

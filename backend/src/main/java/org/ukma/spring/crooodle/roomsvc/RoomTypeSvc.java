@@ -8,6 +8,7 @@ import org.ukma.spring.crooodle.reservationsvc.ReservationDto;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomTypeEntity;
 import org.ukma.spring.crooodle.roomsvc.internal.RoomTypeRepo;
+import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class RoomTypeSvc {
     }
 
     public void delete(@NotNull UUID roomTypeId){
-        if(!typeRepo.existsById(roomTypeId)) throw new IllegalArgumentException("Room type is not found");
+        if(!typeRepo.existsById(roomTypeId)) throw new EntityNotFoundException(roomTypeId, "");
 
         typeRepo.deleteById(roomTypeId);
     }
