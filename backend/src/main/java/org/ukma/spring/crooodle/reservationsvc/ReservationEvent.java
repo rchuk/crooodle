@@ -16,5 +16,5 @@ public record ReservationEvent(
    @NotNull
    UUID roomId
 
-   // TODO: Add hotel or room id
+   // TODO: Add hotel or room id (DONE maybe)
 ) {}

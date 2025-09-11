@@ -1,8 +1,8 @@
-package org.ukma.spring.crooodle.roomsvc.internal;
+package org.ukma.spring.crooodle.hotelsvc.internal;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 
 import java.util.UUID;
 
@@ -12,20 +12,25 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomTypeEntity {
+public class RoomEntity {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    @NotBlank
-    @Column(nullable = false)
-    private String name;
+    @ManyToOne
+    private RoomTypeEntity type;
 
     @ManyToOne
     private HotelEntity hotel;
 
+
     @NotBlank
     @Column(nullable = false)
-    private int price;
+    private String number;
+
+    // will be removed soon...
+    /*@Column(nullable = false)
+    private boolean isOccupied;*/
+
 }

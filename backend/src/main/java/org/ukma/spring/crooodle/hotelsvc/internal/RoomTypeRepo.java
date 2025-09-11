@@ -1,7 +1,6 @@
-package org.ukma.spring.crooodle.roomsvc.internal;
+package org.ukma.spring.crooodle.hotelsvc.internal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 
 import java.util.List;
 import java.util.UUID;

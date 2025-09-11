@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.roomsvc;
+package org.ukma.spring.crooodle.hotelsvc;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
