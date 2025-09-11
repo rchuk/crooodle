@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.roomsvc;
+package org.ukma.spring.crooodle.hotelsvc;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,8 +30,8 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public List<RoomDto> readAllByType(@RequestParam UUID hotelId, @RequestParam UUID roomId){
-        return roomSvc.readAllByType(hotelId, roomId);
+    public List<RoomDto> readAllByHotelAndType(@RequestParam UUID hotelId, @RequestParam UUID roomId){
+        return roomSvc.readAllByHotelAndType(hotelId, roomId);
     }
 
     @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")

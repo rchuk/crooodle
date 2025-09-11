@@ -3,7 +3,7 @@ package org.ukma.spring.crooodle.reservationsvc.internal;
 import jakarta.persistence.*;
 import lombok.*;
 import org.ukma.spring.crooodle.reservationsvc.ReservationState;
-import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
+import org.ukma.spring.crooodle.hotelsvc.internal.RoomEntity;
 import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
 
 import java.util.Date;

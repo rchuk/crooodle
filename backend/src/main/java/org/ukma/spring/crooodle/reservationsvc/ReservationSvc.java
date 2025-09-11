@@ -7,8 +7,9 @@ import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationRepo;
-import org.ukma.spring.crooodle.roomsvc.internal.RoomEntity;
-import org.ukma.spring.crooodle.roomsvc.internal.RoomRepo;
+import org.ukma.spring.crooodle.hotelsvc.RoomSvc;
+import org.ukma.spring.crooodle.hotelsvc.internal.RoomEntity;
+import org.ukma.spring.crooodle.hotelsvc.internal.RoomRepo;
 import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
 import org.ukma.spring.crooodle.usersvc.internal.UserRepo;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class ReservationSvc {
+
     private final ReservationRepo resRepo;
     private final RoomRepo roomRepo;
     private final HotelRepo hotelRepo;
@@ -30,6 +32,7 @@ public class ReservationSvc {
     public UUID create(@NotNull ReservationDto resDto){
 
         RoomEntity room = roomRepo.findById(resDto.roomId()).orElseThrow(() -> new EntityNotFoundException(resDto.roomId(), ""));
+        /*RoomEntity room = roomRepo.findById(resDto.roomId());*/
 
         var newReservation = ReservationEntity.builder()
                 .room(room)
@@ -39,12 +42,14 @@ public class ReservationSvc {
                 .state(ReservationState.PENDING)
                 .build();
 
-        if(!checkReservation(resDto.id(), room)) throw new ForbiddenException("This time is already reserved");
+        if(!checkReservation(resDto.id())) throw new ForbiddenException("This time is already reserved");
         else{
             newReservation = resRepo.save(newReservation);
             return newReservation.getId();
         }
     }
+
+    /*public Room*/
 
     public ReservationDto read(@NotNull UUID resId){
 
@@ -68,7 +73,6 @@ public class ReservationSvc {
 
         List<RoomEntity> hotelRooms = roomRepo.findAllByHotel(hotel);
         List<ReservationEntity> reservationsByUser = resRepo.findAllByUser(user);
-
         List<ReservationEntity> reservationsByHotel = reservationsByUser.stream()
                 .filter(r -> hotelRooms.contains(r.getRoom()))
                 .toList();
@@ -143,18 +147,40 @@ public class ReservationSvc {
         resRepo.deleteById(resId);
     }
 
-    public boolean checkReservation(@NotNull UUID resId, @NotNull RoomEntity roomEntity){
+    public boolean checkReservation(@NotNull UUID resId /*, @NotNull RoomEntity roomEntity*/){
 
-        var reservation = resRepo.findById(resId);
-        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoom(roomEntity);
+        ReservationEntity reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
+        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoom(reservation.getRoom());
 
         for(ReservationEntity re : reservationsForRoom){
             Date start = re.getCheckin(), end = re.getCheckout();
-            Date resCheckIn = reservation.orElseThrow(() -> new IllegalArgumentException("Reservation not found: ")).getCheckin(),
-                resCheckOut = reservation.orElseThrow(() -> new IllegalArgumentException("Reservation not found: ")).getCheckout();
+            Date resCheckIn = reservation.getCheckin(),
+                resCheckOut = reservation.getCheckout();
 
             if(!(resCheckIn.after(start) && resCheckIn.before(end))
             && !(resCheckOut.after(start) && resCheckOut.before(end))) return false;
+        }
+        return true;
+    }
+
+    public List<ReservationEntity> getBooksByRoomAndStateAndCheckin(RoomEntity room, ReservationState state, Date checkinDate){
+        return resRepo.findAllByRoomAndStateAndCheckin(room, state, checkinDate);
+    }
+
+    public boolean existsByRoomAndCheckinAndState(RoomEntity room, Date checkinDate, ReservationState state){
+        return resRepo.existsByRoomAndCheckinAndState(room, checkinDate, state);
+    }
+
+    public boolean isOccupiedNow(@NotNull UUID resId){
+
+        ReservationEntity reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
+        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoom(reservation.getRoom());
+
+        for(ReservationEntity re : reservationsForRoom){
+            Date start = re.getCheckin();
+            Date resCheckIn = reservation.getCheckin();
+
+            if(!(resCheckIn.after(start))) return false;
         }
         return true;
     }
