@@ -21,16 +21,7 @@ public class RoomEntity {
     @ManyToOne
     private RoomTypeEntity type;
 
-    @ManyToOne
-    private HotelEntity hotel;
-
-
     @NotBlank
     @Column(nullable = false)
     private String number;
-
-    // will be removed soon...
-    /*@Column(nullable = false)
-    private boolean isOccupied;*/
-
 }

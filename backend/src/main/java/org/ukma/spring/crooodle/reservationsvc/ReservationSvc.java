@@ -7,7 +7,6 @@ import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationRepo;
-import org.ukma.spring.crooodle.hotelsvc.RoomSvc;
 import org.ukma.spring.crooodle.hotelsvc.internal.RoomEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.RoomRepo;
 import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
@@ -58,7 +57,7 @@ public class ReservationSvc {
         return ReservationDto.builder()
                 .id(reservation.getId())
                 .roomId(reservation.getRoom().getId())
-                .hotelId(reservation.getRoom().getHotel().getId())
+                .hotelId(reservation.getRoom().getType().getHotel().getId())
                 .userId(reservation.getUser().getId())
                 .checkIn(reservation.getCheckin())
                 .checkOut(reservation.getCheckout())
@@ -71,7 +70,7 @@ public class ReservationSvc {
         HotelEntity hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new EntityNotFoundException(hotelId, " "));
         UserEntity user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId, " "));
 
-        List<RoomEntity> hotelRooms = roomRepo.findAllByHotel(hotel);
+        List<RoomEntity> hotelRooms = roomRepo.findAllByType_Hotel(hotel);
         List<ReservationEntity> reservationsByUser = resRepo.findAllByUser(user);
         List<ReservationEntity> reservationsByHotel = reservationsByUser.stream()
                 .filter(r -> hotelRooms.contains(r.getRoom()))
@@ -105,7 +104,7 @@ public class ReservationSvc {
             resesDTO.add(ReservationDto.builder()
                     .id(re.getId())
                     .roomId(re.getRoom().getId())
-                    .hotelId(re.getRoom().getHotel().getId())
+                    .hotelId(re.getRoom().getType().getHotel().getId())
                     .userId(re.getUser().getId())
                     .price(re.getPrice())
                     .checkIn(re.getCheckin())

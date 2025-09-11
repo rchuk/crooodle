@@ -30,8 +30,8 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public List<RoomDto> readAllByHotelAndType(@RequestParam UUID hotelId, @RequestParam UUID roomId){
-        return roomSvc.readAllByHotelAndType(hotelId, roomId);
+    public List<RoomDto> readAllByType(@RequestParam UUID roomId){
+        return roomSvc.readAllByType(roomId);
     }
 
     @PreAuthorize("hasRole('ROLE_HOTEL_OWNER')")
