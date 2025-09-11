@@ -71,11 +71,11 @@ public class RoomTypeSvc {
         typeRepo.deleteById(roomTypeId);
     }
 
-    public RoomTypeResponseDto roomTypeEntityToDto(RoomTypeEntity roomType) {
+    RoomTypeResponseDto roomTypeEntityToDto(RoomTypeEntity roomType) {
         return RoomTypeResponseDto.builder()
             .id(roomType.getId())
             .name(roomType.getName())
-            .hotelId(roomType.getHotel().getId())
+            .hotel(hotelSvc.hotelEntityToDto(roomType.getHotel()))
             .price(roomType.getPrice())
             .build();
     }

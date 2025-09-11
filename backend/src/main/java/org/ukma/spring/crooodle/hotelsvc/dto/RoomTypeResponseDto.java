@@ -10,7 +10,7 @@ public record RoomTypeResponseDto(
     @NotNull
     UUID id,
     @NotNull
-    UUID hotelId,
+    HotelResponseDto hotel,
     @NotNull
     String name,
     @NotNull

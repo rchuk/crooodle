@@ -12,7 +12,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto register(@Valid @RequestBody UserRegisterDto requestDto) {
+    public UserResponseDto register(@Valid @RequestBody UserRegisterDto requestDto) {
         return userSvc.register(requestDto);
     }
 }

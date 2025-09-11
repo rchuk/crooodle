@@ -1,18 +1,17 @@
 package org.ukma.spring.crooodle.reservationsvc;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 
+import java.util.Date;
 import java.util.UUID;
 
-@Builder
-public record ReservationEvent(
+public record ReservationCreateDto(
     @NotNull
-    ReservationEventType type,
+    UUID roomId,
     @NotNull
-    UUID userId,
+    Date checkInDate,
     @NotNull
-    UUID roomId
+    Date checkOutDate
 ) {
 
 }

@@ -10,6 +10,8 @@ public record HotelResponseDto(
     @NotNull
     UUID id,
     @NotNull
+    UUID ownerId,
+    @NotNull
     String name,
     @NotNull
     String address

@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationEntity {
-
     @Id
     @GeneratedValue
     private UUID id;
@@ -29,10 +28,10 @@ public class ReservationEntity {
     private int price;
 
     @Column(nullable = false)
-    private Date checkin;
+    private Date checkInDate;
 
     @Column(nullable = false)
-    private Date checkout;
+    private Date checkOutDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

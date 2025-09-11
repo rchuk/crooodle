@@ -35,12 +35,15 @@ public class HotelSvc {
     }
 
     public HotelResponseDto read(@NotNull UUID id) {
-        var hotel = get(id);
+        return hotelEntityToDto(get(id));
+    }
 
+    HotelResponseDto hotelEntityToDto(HotelEntity hotel) {
         return HotelResponseDto.builder()
             .id(hotel.getId())
             .name(hotel.getName())
             .address(hotel.getAddress())
+            .ownerId(hotel.getOwnerId())
             .build();
     }
 

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.usersvc.internal.RoleRepo;
 import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
 import org.ukma.spring.crooodle.usersvc.internal.UserRepo;
-import org.ukma.spring.crooodle.utils.exceptions.CrooodleException;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
 import org.ukma.spring.crooodle.utils.exceptions.InvalidRequestException;
 
@@ -30,7 +29,7 @@ public class UserSvc implements UserDetailsService {
     }
 
     @Transactional
-    public UserDto register(UserRegisterDto dto) {
+    public UserResponseDto register(UserRegisterDto dto) {
         if (repo.existsByEmail(dto.email()))
             throw new InvalidRequestException("User with the following email already exists");
 
@@ -59,7 +58,7 @@ public class UserSvc implements UserDetailsService {
         }
     }
 
-    public UserDto getCurrentUser() {
+    public UserResponseDto getCurrentUser() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated())
             return null;
@@ -70,20 +69,20 @@ public class UserSvc implements UserDetailsService {
         return null;
     }
 
-    public UserDto getUserByEmail(String email) {
+    public UserResponseDto getUserByEmail(String email) {
         var entity = repo.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(email, "User"));
 
         return userEntityToDto(entity);
     }
 
-    public UserDto getUserById(UUID id) {
+    public UserResponseDto getUserById(UUID id) {
         var entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "User"));
 
         return userEntityToDto(entity);
     }
 
-    public UserDto userEntityToDto(UserEntity entity) {
-        return UserDto.builder()
+    public UserResponseDto userEntityToDto(UserEntity entity) {
+        return UserResponseDto.builder()
             .id(entity.getId())
             .name(entity.getName())
             .email(entity.getEmail())

@@ -4,165 +4,134 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.*;
-import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationRepo;
+import org.ukma.spring.crooodle.usersvc.Role;
+import org.ukma.spring.crooodle.usersvc.UserSvc;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
 import org.ukma.spring.crooodle.utils.exceptions.ForbiddenException;
+import org.ukma.spring.crooodle.utils.exceptions.InvalidRequestException;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class ReservationSvc {
-
     private final ReservationRepo resRepo;
     private final RoomSvc roomSvc;
+    private final UserSvc userSvc;
 
-    public UUID create(@NotNull ReservationDto resDto) {
-        RoomResponseDto roomDto = roomSvc.read(resDto.roomId());
+    public UUID create(@NotNull ReservationCreateDto requestDto) {
+        if (!canCreate())
+            throw new ForbiddenException("Cannot create reservation");
 
-        var newReservation = ReservationEntity.builder()
+        var user = userSvc.getCurrentUser();
+        var roomDto = roomSvc.read(requestDto.roomId());
+        if (resRepo.existsOverlappingReservation(requestDto.roomId(), requestDto.checkInDate(), requestDto.checkOutDate()))
+            throw new InvalidRequestException("The room is already reserved for the specified period");
+
+        var reservation = ReservationEntity.builder()
             .roomId(roomDto.id())
-            .userId(resDto.userId())
-            .price(resDto.price())
-            .checkin(resDto.checkIn())
-            .checkout(resDto.checkOut())
+            .userId(user.id())
+            .price(roomDto.type().price())
+            .checkInDate(requestDto.checkInDate())
+            .checkOutDate(requestDto.checkOutDate())
             .state(ReservationState.PENDING)
             .build();
+        reservation = resRepo.save(reservation);
 
-        if (!checkReservation(resDto.id())) throw new ForbiddenException("This time is already reserved");
-        else {
-            newReservation = resRepo.save(newReservation);
-            return newReservation.getId();
-        }
+        return reservation.getId();
     }
 
-    /*public Room*/
+    public ReservationDetailedResponseDto read(@NotNull UUID id) {
+        var reservation = get(id);
+        if (!canReadDetailed(reservation))
+            throw new ForbiddenException("Cannot read reservation");
 
-    public ReservationDto read(@NotNull UUID resId) {
+        return reservationEntityToDetailedDto(reservation);
+    }
 
-        var reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, ""));
+    ReservationEntity get(UUID id) {
+        return resRepo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Reservation"));
+    }
 
-        return ReservationDto.builder()
+    ReservationResponseDto reservationEntityToDto(ReservationEntity reservation) {
+        return ReservationResponseDto.builder()
             .id(reservation.getId())
-            .roomId(reservation.getRoomId())
-            .userId(reservation.getUserId())
-            .checkIn(reservation.getCheckin())
-            .checkOut(reservation.getCheckout())
+            .room(roomSvc.read(reservation.getRoomId()))
+            .checkInDate(reservation.getCheckInDate())
+            .checkOutDate(reservation.getCheckOutDate())
+            .build();
+    }
+
+    ReservationDetailedResponseDto reservationEntityToDetailedDto(ReservationEntity reservation) {
+        return ReservationDetailedResponseDto.builder()
+            .id(reservation.getId())
+            .room(roomSvc.read(reservation.getRoomId()))
+            .user(userSvc.getUserById(reservation.getUserId()))
+            .checkInDate(reservation.getCheckInDate())
+            .checkOutDate(reservation.getCheckOutDate())
             .state(reservation.getState())
             .build();
     }
 
-    public List<ReservationDto> readAllByHotel(@NotNull UUID hotelId, @NotNull UUID userId) {
-        List<UUID> hotelRoomsId = roomSvc.readAllByHotel(hotelId).stream().map(RoomResponseDto::id).toList();
-        List<ReservationEntity> reservationsByUser = resRepo.findAllByUserId(userId);
-        List<ReservationEntity> reservationsByHotel = reservationsByUser.stream()
-            .filter(res -> hotelRoomsId.contains(res.getRoomId()))
+    public List<ReservationResponseDto> readAllByRoom(@NotNull UUID roomId, @NotNull ReservationCriteriaDto criteriaDto) {
+        // TODO: Use criteria
+
+        return resRepo.findAllByRoomId(roomId).stream()
+            .map(this::reservationEntityToDto)
             .toList();
-
-        return getReservationDtoList(reservationsByHotel);
     }
 
-    public List<ReservationDto> readAllByDates(@NotNull UUID userId, @NotNull Date checkIn, @NotNull Date checkOut) {
-        List<ReservationEntity> resesByDates = resRepo.findAllByUserIdAndCheckinAndCheckout(userId, checkIn, checkOut);
+    public void confirm(@NotNull UUID id) {
+        var reservation = get(id);
+        if (!canConfirm(reservation))
+            throw new ForbiddenException("Cannot confirm reservation");
 
-        return getReservationDtoList(resesByDates);
+        if (reservation.getState() != ReservationState.PENDING)
+            throw new InvalidRequestException("Can confirm only pending reservations");
+
+        reservation.setState(ReservationState.CONFIRMED);
+        resRepo.save(reservation);
     }
 
-    public List<ReservationDto> readAllByState(@NotNull UUID userId, @NotNull String stateParam) {
-        ReservationState state = ReservationState.valueOf(stateParam.toUpperCase());
+    public void cancel(@NotNull UUID id) {
+        var reservation = get(id);
+        if (!canCancel(reservation))
+            throw new ForbiddenException("Can't cancel reservation");
 
-        List<ReservationEntity> resesByState = resRepo.findAllByUserIdAndState(userId, state);
+        if (reservation.getState() != ReservationState.PENDING && reservation.getState() != ReservationState.CONFIRMED)
+            throw new InvalidRequestException("Can cancel only pending or confirmed reservations");
 
-        return getReservationDtoList(resesByState);
+        reservation.setState(ReservationState.CANCELLED);
+        resRepo.save(reservation);
     }
 
-    private List<ReservationDto> getReservationDtoList(List<ReservationEntity> resesByState) {
-        List<ReservationDto> resesDTO = new ArrayList<>();
-        for (ReservationEntity re : resesByState) {
-            resesDTO.add(ReservationDto.builder()
-                .id(re.getId())
-                .roomId(re.getRoomId())
-                .userId(re.getUserId())
-                .price(re.getPrice())
-                .checkIn(re.getCheckin())
-                .checkOut(re.getCheckout())
-                .state(re.getState())
-                .build());
-        }
-
-        return resesDTO;
+    private boolean canCreate() {
+        return userSvc.getCurrentUserRole().equals(Role.ROLE_TRAVELER);
     }
 
-    public void update(@NotNull UUID reservationId, @NotNull ReservationDto updatedReservation) {
-        ReservationEntity reservationToUpdate = resRepo.findById(reservationId).orElseThrow(() -> new EntityNotFoundException(reservationId, " "));
+    private boolean canReadDetailed(ReservationEntity reservation) {
+        var user = userSvc.getCurrentUser();
+        return switch (user.role()) {
+            case ROLE_TRAVELER -> userSvc.getCurrentUser().id().equals(reservation.getUserId());
+            case ROLE_HOTEL_OWNER -> {
+                var room = roomSvc.read(reservation.getRoomId());
 
-        reservationToUpdate.setRoomId(updatedReservation.roomId());
-        reservationToUpdate.setUserId(updatedReservation.userId());
-        reservationToUpdate.setPrice(reservationToUpdate.getPrice());
-        reservationToUpdate.setCheckin(updatedReservation.checkIn());
-        reservationToUpdate.setCheckout(updatedReservation.checkOut());
-        reservationToUpdate.setState(updatedReservation.state());
-
-        resRepo.save(reservationToUpdate);
+                yield userSvc.getCurrentUser().id().equals(room.type().hotel().ownerId());
+            }
+            default -> false;
+        };
     }
 
-    public void confirm(@NotNull UUID resId) {
-        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
-        updatedReservation.setState(ReservationState.CONFIRMED);
+    private boolean canConfirm(ReservationEntity reservation) {
+        var room = roomSvc.read(reservation.getRoomId());
+
+        return userSvc.getCurrentUser().id().equals(room.type().hotel().ownerId());
     }
 
-    public void cancel(@NotNull UUID resId) {
-        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
-        updatedReservation.setState(ReservationState.CANCELLED);
+    private boolean canCancel(ReservationEntity reservation) {
+        return userSvc.getCurrentUser().id().equals(reservation.getUserId());
     }
-
-    public void delete(@NotNull UUID resId) {
-        if (!resRepo.existsById(resId)) throw new EntityNotFoundException(resId, " ");
-
-        resRepo.deleteById(resId);
-    }
-
-    public boolean checkReservation(@NotNull UUID resId /*, @NotNull RoomEntity roomEntity*/) {
-
-        ReservationEntity reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
-        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoomId(reservation.getRoomId());
-
-        for (ReservationEntity re : reservationsForRoom) {
-            Date start = re.getCheckin(), end = re.getCheckout();
-            Date resCheckIn = reservation.getCheckin(),
-                resCheckOut = reservation.getCheckout();
-
-            if (!(resCheckIn.after(start) && resCheckIn.before(end))
-                && !(resCheckOut.after(start) && resCheckOut.before(end))) return false;
-        }
-        return true;
-    }
-
-//    public List<ReservationEntity> getBooksByRoomAndStateAndCheckin(RoomEntity room, ReservationState state, Date checkinDate){
-//        return resRepo.findAllByRoomIdAndStateAndCheckin(room, state, checkinDate);
-//    }
-//
-//    public boolean existsByRoomAndCheckinAndState(RoomEntity room, Date checkinDate, ReservationState state){
-//        return resRepo.existsByRoomIdAndCheckinAndState(room, checkinDate, state);
-//    }
-//
-//    public boolean isOccupiedNow(@NotNull UUID resId){
-//
-//        ReservationEntity reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
-//        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoomId(reservation.getRoom());
-//
-//        for(ReservationEntity re : reservationsForRoom){
-//            Date start = re.getCheckin();
-//            Date resCheckIn = reservation.getCheckin();
-//
-//            if(!(resCheckIn.after(start))) return false;
-//        }
-//        return true;
-//    }
-
 }
