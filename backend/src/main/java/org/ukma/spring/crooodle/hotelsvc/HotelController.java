@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
+import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 
 import java.util.UUID;
 
@@ -20,7 +22,7 @@ public class HotelController {
     }
 
     @GetMapping("/{id}")
-    public HotelDto read(@PathVariable UUID id) {
+    public HotelResponseDto read(@PathVariable UUID id) {
         return svc.read(id);
     }
 

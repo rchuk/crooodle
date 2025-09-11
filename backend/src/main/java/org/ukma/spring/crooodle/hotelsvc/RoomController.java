@@ -1,47 +1,49 @@
 package org.ukma.spring.crooodle.hotelsvc;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
+import org.ukma.spring.crooodle.hotelsvc.dto.RoomUpsertDto;
 
 import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@RequestMapping("/room")
 @RestController
 public class RoomController {
     private final RoomSvc roomSvc;
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
-    @PostMapping
-    public UUID create(@RequestBody RoomDto roomDto) {
-        return roomSvc.create(roomDto);
+    @PostMapping("/hotel/{hotelId}/room")
+    public UUID create(UUID hotelId, @Valid @RequestBody RoomUpsertDto requestDto) {
+        return roomSvc.create(hotelId, requestDto);
     }
 
-    @GetMapping("/{id}")
-    public RoomDto read(@PathVariable UUID id) {
+    @GetMapping("/room/{id}")
+    public RoomResponseDto read(@PathVariable UUID id) {
         return roomSvc.read(id);
     }
 
-    @GetMapping("/rooms/{id}")
-    public List<RoomDto> readAllByHotel(@PathVariable UUID id) {
-        return roomSvc.readAllByHotel(id);
+    @GetMapping("/hotel/{hotelId}/room")
+    public List<RoomResponseDto> readAllByHotel(@PathVariable UUID hotelId) {
+        return roomSvc.readAllByHotel(hotelId);
     }
 
-    @GetMapping("/rooms")
-    public List<RoomDto> readAllByType(@RequestParam UUID roomId) {
-        return roomSvc.readAllByType(roomId);
+    @GetMapping("/room-type/{roomTypeId}/room")
+    public List<RoomResponseDto> readAllByType(@RequestParam UUID roomTypeId) {
+        return roomSvc.readAllByType(roomTypeId);
     }
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
-    @PutMapping("/{id}")
-    public void update(@PathVariable UUID id, @RequestBody RoomDto roomDtoToUpdate) {
+    @PutMapping("/room/{id}")
+    public void update(@PathVariable UUID id, @RequestBody RoomResponseDto roomDtoToUpdate) {
         roomSvc.update(id, roomDtoToUpdate);
     }
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/room/{id}")
     public void delete(@PathVariable UUID id) {
         roomSvc.delete(id);
     }

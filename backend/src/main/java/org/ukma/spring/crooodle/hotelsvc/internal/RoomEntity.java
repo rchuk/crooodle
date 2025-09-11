@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomEntity {
-
     @Id
     @GeneratedValue
     private UUID id;
@@ -23,5 +22,5 @@ public class RoomEntity {
 
     @NotBlank
     @Column(nullable = false)
-    private String number;
+    private String name;
 }

@@ -1,45 +1,46 @@
 package org.ukma.spring.crooodle.hotelsvc;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeResponseDto;
+import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeUpsertDto;
 
 import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@RequestMapping("/roomtype")
 @RestController
 public class RoomTypeController {
-
     private final RoomTypeSvc typeSvc;
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
-    @PostMapping
-    public UUID create(@RequestBody RoomTypeDto typeDto) {
-        return typeSvc.create(typeDto);
+    @PostMapping("/hotel/{hotelId}/room-type")
+    public UUID create(@PathVariable UUID hotelId, @Valid @RequestBody RoomTypeUpsertDto requestDto) {
+        return typeSvc.create(hotelId, requestDto);
     }
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
-    @GetMapping("/{id}")
-    public RoomTypeDto read(@PathVariable UUID id) {
+    @GetMapping("/room-type/{id}")
+    public RoomTypeResponseDto read(@PathVariable UUID id) {
         return typeSvc.read(id);
     }
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
-    @GetMapping("/{hotel_id}")
-    public List<RoomTypeDto> readAllByHotel(@PathVariable UUID hotel_id) {
-        return typeSvc.readAllByHotel(hotel_id);
+    @GetMapping("/hotel/{hotelId}/room-type")
+    public List<RoomTypeResponseDto> readAllByHotel(@PathVariable UUID hotelId) {
+        return typeSvc.readAllByHotel(hotelId);
     }
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
-    @PutMapping("/{id}")
-    public void update(@PathVariable UUID id, @RequestBody RoomTypeDto typeDtoToUpdate) {
-        typeSvc.update(id, typeDtoToUpdate);
+    @PutMapping("/room-type/{id}")
+    public void update(@PathVariable UUID id, @Valid @RequestBody RoomTypeResponseDto requestDto) {
+        typeSvc.update(id, requestDto);
     }
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/room-type/{id}")
     public void delete(@PathVariable UUID id) {
         typeSvc.delete(id);
     }

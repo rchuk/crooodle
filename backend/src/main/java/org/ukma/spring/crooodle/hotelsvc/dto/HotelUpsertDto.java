@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.hotelsvc;
+package org.ukma.spring.crooodle.hotelsvc.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

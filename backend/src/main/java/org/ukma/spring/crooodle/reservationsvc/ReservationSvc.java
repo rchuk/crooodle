@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.*;
+import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationRepo;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
@@ -22,7 +23,7 @@ public class ReservationSvc {
     private final RoomSvc roomSvc;
 
     public UUID create(@NotNull ReservationDto resDto) {
-        RoomDto roomDto = roomSvc.read(resDto.roomId());
+        RoomResponseDto roomDto = roomSvc.read(resDto.roomId());
 
         var newReservation = ReservationEntity.builder()
             .roomId(roomDto.id())
@@ -57,7 +58,7 @@ public class ReservationSvc {
     }
 
     public List<ReservationDto> readAllByHotel(@NotNull UUID hotelId, @NotNull UUID userId) {
-        List<UUID> hotelRoomsId = roomSvc.readAllByHotel(hotelId).stream().map(RoomDto::id).toList();
+        List<UUID> hotelRoomsId = roomSvc.readAllByHotel(hotelId).stream().map(RoomResponseDto::id).toList();
         List<ReservationEntity> reservationsByUser = resRepo.findAllByUserId(userId);
         List<ReservationEntity> reservationsByHotel = reservationsByUser.stream()
             .filter(res -> hotelRoomsId.contains(res.getRoomId()))

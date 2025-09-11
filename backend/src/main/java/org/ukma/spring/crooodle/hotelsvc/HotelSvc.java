@@ -3,6 +3,8 @@ package org.ukma.spring.crooodle.hotelsvc;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
+import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
 import org.ukma.spring.crooodle.usersvc.Role;
@@ -32,12 +34,12 @@ public class HotelSvc {
         return entity.getId();
     }
 
-    public HotelDto read(@NotNull UUID id) {
+    public HotelResponseDto read(@NotNull UUID id) {
         var entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
         if (!canRead(entity))
             throw new ForbiddenException("Cannot read hotel");
 
-        return HotelDto.builder()
+        return HotelResponseDto.builder()
             .id(entity.getId())
             .name(entity.getName())
             .address(entity.getAddress())

@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.hotelsvc;
+package org.ukma.spring.crooodle.hotelsvc.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -6,13 +6,15 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record HotelDto(
+public record RoomTypeResponseDto(
     @NotNull
     UUID id,
     @NotNull
+    UUID hotelId,
+    @NotNull
     String name,
     @NotNull
-    String address
+    int price
 ) {
 
 }
