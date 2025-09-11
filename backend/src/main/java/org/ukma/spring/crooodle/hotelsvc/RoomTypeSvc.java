@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeUpsertDto;
-import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
-import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
 import org.ukma.spring.crooodle.hotelsvc.internal.RoomTypeEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.RoomTypeRepo;
 import org.ukma.spring.crooodle.usersvc.Role;
@@ -14,7 +12,6 @@ import org.ukma.spring.crooodle.usersvc.UserSvc;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
 import org.ukma.spring.crooodle.utils.exceptions.ForbiddenException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,15 +19,14 @@ import java.util.UUID;
 @Service
 public class RoomTypeSvc {
     private final UserSvc userSvc;
-
     private final RoomTypeRepo typeRepo;
-    private final HotelRepo hotelRepo;
+    private final HotelSvc hotelSvc;
 
     public UUID create(UUID hotelId, @NotNull RoomTypeUpsertDto requestDto) {
         if (!canCreate(hotelId))
             throw new ForbiddenException("Cannot create Hotel");
 
-        var hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new EntityNotFoundException(hotelId, "Hotel"));
+        var hotel = hotelSvc.get(hotelId);
         var roomType = RoomTypeEntity.builder()
             .hotel(hotel)
             .name(requestDto.name())
@@ -42,13 +38,15 @@ public class RoomTypeSvc {
     }
 
     public RoomTypeResponseDto read(@NotNull UUID id) {
-        var roomType = typeRepo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Room Type"));
+        return roomTypeEntityToDto(get(id));
+    }
 
-        return roomTypeEntityToDto(roomType);
+    RoomTypeEntity get(@NotNull UUID id) {
+        return typeRepo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Room Type"));
     }
 
     public List<RoomTypeResponseDto> readAllByHotel(@NotNull UUID hotelId) {
-        var hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new EntityNotFoundException(hotelId, "Hotel"));
+        var hotel = hotelSvc.get(hotelId);
 
         return typeRepo.findAllByHotel(hotel).stream()
             .map(this::roomTypeEntityToDto)

@@ -35,15 +35,21 @@ public class HotelSvc {
     }
 
     public HotelResponseDto read(@NotNull UUID id) {
-        var entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
-        if (!canRead(entity))
-            throw new ForbiddenException("Cannot read hotel");
+        var hotel = get(id);
 
         return HotelResponseDto.builder()
-            .id(entity.getId())
-            .name(entity.getName())
-            .address(entity.getAddress())
+            .id(hotel.getId())
+            .name(hotel.getName())
+            .address(hotel.getAddress())
             .build();
+    }
+
+    HotelEntity get(@NotNull UUID id) {
+        var hotel = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
+        if (!canRead(hotel))
+            throw new ForbiddenException("Cannot read hotel");
+
+        return hotel;
     }
 
     public void update(@NotNull UUID id, @NotNull HotelUpsertDto upsertDto) {

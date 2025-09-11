@@ -5,10 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomUpsertDto;
-import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
 import org.ukma.spring.crooodle.hotelsvc.internal.RoomEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.RoomRepo;
-import org.ukma.spring.crooodle.hotelsvc.internal.RoomTypeRepo;
 import org.ukma.spring.crooodle.usersvc.Role;
 import org.ukma.spring.crooodle.usersvc.UserSvc;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
@@ -21,18 +19,15 @@ import java.util.UUID;
 @Service
 public class RoomSvc {
     private final UserSvc userSvc;
-
     private final RoomTypeSvc roomTypeSvc;
-
-    private final RoomTypeRepo typeRepo;
-    private final HotelRepo hotelRepo;
+    private final HotelSvc hotelSvc;
     private final RoomRepo roomRepo;
 
     public UUID create(UUID hotelId, RoomUpsertDto requestDto) {
         if (!canCreate(hotelId))
             throw new ForbiddenException("Can't create hotel");
 
-        var roomType = typeRepo.findById(requestDto.roomTypeId()).orElseThrow(() -> new EntityNotFoundException(requestDto.roomTypeId(), "Room Type"));
+        var roomType = roomTypeSvc.get(requestDto.roomTypeId());
         var room = RoomEntity.builder()
             .name(requestDto.name())
             .type(roomType)
@@ -43,7 +38,7 @@ public class RoomSvc {
     }
 
     public RoomResponseDto read(@NotNull UUID roomId) {
-        var room = roomRepo.findById(roomId).orElseThrow(() -> new EntityNotFoundException(roomId, "Room"));
+        var room = get(roomId);
 
         return RoomResponseDto.builder()
             .id(room.getId())
@@ -52,8 +47,12 @@ public class RoomSvc {
             .build();
     }
 
+    RoomEntity get(@NotNull UUID roomId) {
+        return roomRepo.findById(roomId).orElseThrow(() -> new EntityNotFoundException(roomId, "Room"));
+    }
+
     public List<RoomResponseDto> readAllByHotel(@NotNull UUID hotelId) {
-        var hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new EntityNotFoundException(hotelId, "Hotel"));
+        var hotel = hotelSvc.get(hotelId);
 
         return roomRepo.findAllByType_Hotel(hotel)
             .stream()
@@ -62,7 +61,7 @@ public class RoomSvc {
     }
 
     public List<RoomResponseDto> readAllByType(@NotNull UUID typeId) {
-        var type = typeRepo.findById(typeId).orElseThrow(() -> new EntityNotFoundException(typeId, "Room Type"));
+        var type = roomTypeSvc.get(typeId);
 
         return roomRepo.findAllByType(type)
             .stream()
@@ -71,8 +70,8 @@ public class RoomSvc {
     }
 
     public void update(@NotNull UUID roomId, @NotNull RoomResponseDto roomDto) {
-        var roomType = typeRepo.findById(roomDto.type().id()).orElseThrow(() -> new EntityNotFoundException(roomDto.type().id(), "Room Type"));
-        var room = roomRepo.findById(roomId).orElseThrow(() -> new EntityNotFoundException(roomId, "Room"));
+        var roomType = roomTypeSvc.get(roomId);
+        var room = get(roomId);
         if (!canUpdate(room))
             throw new ForbiddenException("Can't update room");
 
@@ -82,7 +81,7 @@ public class RoomSvc {
     }
 
     public void delete(@NotNull UUID roomId) {
-        var room = roomRepo.findById(roomId).orElseThrow(() -> new EntityNotFoundException(roomId, "Room"));
+        var room = get(roomId);
         if (!canDelete(room))
             throw new ForbiddenException("Can't delete room");
 
