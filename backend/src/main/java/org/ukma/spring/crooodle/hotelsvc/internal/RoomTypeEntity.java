@@ -1,4 +1,5 @@
 package org.ukma.spring.crooodle.hotelsvc.internal;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

@@ -36,7 +36,7 @@ public class UserSvc implements UserDetailsService {
 
         var role = switch (dto.role()) {
             case TRAVELER -> Role.ROLE_TRAVELER;
-            case HOTEL_OWNER ->  Role.ROLE_HOTEL_OWNER;
+            case HOTEL_OWNER -> Role.ROLE_HOTEL_OWNER;
         };
 
         var defaultRole = roleRepo.findByRole(role).orElseThrow();

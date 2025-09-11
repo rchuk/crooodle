@@ -23,10 +23,10 @@ public class HotelSvc {
             throw new ForbiddenException("Only hotel owners can create hotels");
 
         var entity = HotelEntity.builder()
-                .name(upsertDto.name())
-                .address(upsertDto.address())
-                .ownerId(userSvc.getCurrentUser().id())
-                .build();
+            .name(upsertDto.name())
+            .address(upsertDto.address())
+            .ownerId(userSvc.getCurrentUser().id())
+            .build();
         entity = repo.save(entity);
 
         return entity.getId();
@@ -38,10 +38,10 @@ public class HotelSvc {
             throw new ForbiddenException("Cannot read hotel");
 
         return HotelDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .address(entity.getAddress())
-                .build();
+            .id(entity.getId())
+            .name(entity.getName())
+            .address(entity.getAddress())
+            .build();
     }
 
     public void update(@NotNull UUID id, @NotNull HotelUpsertDto upsertDto) {

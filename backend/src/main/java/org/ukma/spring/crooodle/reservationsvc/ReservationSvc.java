@@ -21,20 +21,20 @@ public class ReservationSvc {
     private final ReservationRepo resRepo;
     private final RoomSvc roomSvc;
 
-    public UUID create(@NotNull ReservationDto resDto){
+    public UUID create(@NotNull ReservationDto resDto) {
         RoomDto roomDto = roomSvc.read(resDto.roomId());
 
         var newReservation = ReservationEntity.builder()
-                .roomId(roomDto.id())
-                .userId(resDto.userId())
-                .price(resDto.price())
-                .checkin(resDto.checkIn())
-                .checkout(resDto.checkOut())
-                .state(ReservationState.PENDING)
-                .build();
+            .roomId(roomDto.id())
+            .userId(resDto.userId())
+            .price(resDto.price())
+            .checkin(resDto.checkIn())
+            .checkout(resDto.checkOut())
+            .state(ReservationState.PENDING)
+            .build();
 
-        if(!checkReservation(resDto.id())) throw new ForbiddenException("This time is already reserved");
-        else{
+        if (!checkReservation(resDto.id())) throw new ForbiddenException("This time is already reserved");
+        else {
             newReservation = resRepo.save(newReservation);
             return newReservation.getId();
         }
@@ -42,37 +42,37 @@ public class ReservationSvc {
 
     /*public Room*/
 
-    public ReservationDto read(@NotNull UUID resId){
+    public ReservationDto read(@NotNull UUID resId) {
 
         var reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, ""));
 
         return ReservationDto.builder()
-                .id(reservation.getId())
-                .roomId(reservation.getRoomId())
-                .userId(reservation.getUserId())
-                .checkIn(reservation.getCheckin())
-                .checkOut(reservation.getCheckout())
-                .state(reservation.getState())
-                .build();
+            .id(reservation.getId())
+            .roomId(reservation.getRoomId())
+            .userId(reservation.getUserId())
+            .checkIn(reservation.getCheckin())
+            .checkOut(reservation.getCheckout())
+            .state(reservation.getState())
+            .build();
     }
 
-    public List<ReservationDto> readAllByHotel(@NotNull UUID hotelId, @NotNull UUID userId){
+    public List<ReservationDto> readAllByHotel(@NotNull UUID hotelId, @NotNull UUID userId) {
         List<UUID> hotelRoomsId = roomSvc.readAllByHotel(hotelId).stream().map(RoomDto::id).toList();
         List<ReservationEntity> reservationsByUser = resRepo.findAllByUserId(userId);
         List<ReservationEntity> reservationsByHotel = reservationsByUser.stream()
-                .filter(res -> hotelRoomsId.contains(res.getRoomId()))
-                .toList();
+            .filter(res -> hotelRoomsId.contains(res.getRoomId()))
+            .toList();
 
         return getReservationDtoList(reservationsByHotel);
     }
 
-    public List<ReservationDto> readAllByDates(@NotNull UUID userId, @NotNull Date checkIn, @NotNull Date checkOut){
+    public List<ReservationDto> readAllByDates(@NotNull UUID userId, @NotNull Date checkIn, @NotNull Date checkOut) {
         List<ReservationEntity> resesByDates = resRepo.findAllByUserIdAndCheckinAndCheckout(userId, checkIn, checkOut);
 
         return getReservationDtoList(resesByDates);
     }
 
-    public List<ReservationDto> readAllByState(@NotNull UUID userId, @NotNull String stateParam){
+    public List<ReservationDto> readAllByState(@NotNull UUID userId, @NotNull String stateParam) {
         ReservationState state = ReservationState.valueOf(stateParam.toUpperCase());
 
         List<ReservationEntity> resesByState = resRepo.findAllByUserIdAndState(userId, state);
@@ -82,22 +82,22 @@ public class ReservationSvc {
 
     private List<ReservationDto> getReservationDtoList(List<ReservationEntity> resesByState) {
         List<ReservationDto> resesDTO = new ArrayList<>();
-        for(ReservationEntity re : resesByState){
+        for (ReservationEntity re : resesByState) {
             resesDTO.add(ReservationDto.builder()
-                    .id(re.getId())
-                    .roomId(re.getRoomId())
-                    .userId(re.getUserId())
-                    .price(re.getPrice())
-                    .checkIn(re.getCheckin())
-                    .checkOut(re.getCheckout())
-                    .state(re.getState())
-                    .build());
+                .id(re.getId())
+                .roomId(re.getRoomId())
+                .userId(re.getUserId())
+                .price(re.getPrice())
+                .checkIn(re.getCheckin())
+                .checkOut(re.getCheckout())
+                .state(re.getState())
+                .build());
         }
 
         return resesDTO;
     }
 
-    public void update(@NotNull UUID reservationId, @NotNull ReservationDto updatedReservation){
+    public void update(@NotNull UUID reservationId, @NotNull ReservationDto updatedReservation) {
         ReservationEntity reservationToUpdate = resRepo.findById(reservationId).orElseThrow(() -> new EntityNotFoundException(reservationId, " "));
 
         reservationToUpdate.setRoomId(updatedReservation.roomId());
@@ -110,34 +110,34 @@ public class ReservationSvc {
         resRepo.save(reservationToUpdate);
     }
 
-    public void confirm(@NotNull UUID resId){
+    public void confirm(@NotNull UUID resId) {
         ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
         updatedReservation.setState(ReservationState.CONFIRMED);
     }
 
-    public void cancel(@NotNull UUID resId){
+    public void cancel(@NotNull UUID resId) {
         ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
         updatedReservation.setState(ReservationState.CANCELLED);
     }
 
-    public void delete(@NotNull UUID resId){
-        if(!resRepo.existsById(resId)) throw new EntityNotFoundException(resId, " ");
+    public void delete(@NotNull UUID resId) {
+        if (!resRepo.existsById(resId)) throw new EntityNotFoundException(resId, " ");
 
         resRepo.deleteById(resId);
     }
 
-    public boolean checkReservation(@NotNull UUID resId /*, @NotNull RoomEntity roomEntity*/){
+    public boolean checkReservation(@NotNull UUID resId /*, @NotNull RoomEntity roomEntity*/) {
 
         ReservationEntity reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
         List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoomId(reservation.getRoomId());
 
-        for(ReservationEntity re : reservationsForRoom){
+        for (ReservationEntity re : reservationsForRoom) {
             Date start = re.getCheckin(), end = re.getCheckout();
             Date resCheckIn = reservation.getCheckin(),
                 resCheckOut = reservation.getCheckout();
 
-            if(!(resCheckIn.after(start) && resCheckIn.before(end))
-            && !(resCheckOut.after(start) && resCheckOut.before(end))) return false;
+            if (!(resCheckIn.after(start) && resCheckIn.before(end))
+                && !(resCheckOut.after(start) && resCheckOut.before(end))) return false;
         }
         return true;
     }

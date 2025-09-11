@@ -9,9 +9,14 @@ import java.util.UUID;
 
 public interface ReservationRepo extends JpaRepository<ReservationEntity, UUID> {
     List<ReservationEntity> findAllByRoomId(UUID roomId);
+
     List<ReservationEntity> findAllByRoomIdAndStateAndCheckin(UUID roomId, ReservationState state, Date checkinDate);
+
     List<ReservationEntity> findAllByUserId(UUID userId);
+
     List<ReservationEntity> findAllByUserIdAndCheckinAndCheckout(UUID userId, Date checkIn, Date checkOut);
+
     List<ReservationEntity> findAllByUserIdAndState(UUID userId, ReservationState state);
+
     boolean existsByRoomIdAndCheckinAndState(UUID roomId, Date checkinDate, ReservationState state);
 }

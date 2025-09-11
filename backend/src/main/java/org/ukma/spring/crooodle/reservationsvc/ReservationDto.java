@@ -9,21 +9,21 @@ import java.util.UUID;
 
 @Builder
 public record ReservationDto(
-        @NotNull
-        UUID id,
-        @NotNull
-        UUID roomId,
-        @NotNull
-        UUID userId,
-        @NotNull
-        int price,
-        @NotNull
-        Date checkIn,
-        @NotNull
-        Date checkOut,
+    @NotNull
+    UUID id,
+    @NotNull
+    UUID roomId,
+    @NotNull
+    UUID userId,
+    @NotNull
+    int price,
+    @NotNull
+    Date checkIn,
+    @NotNull
+    Date checkOut,
 
-        @NotNull
-        ReservationState state
+    @NotNull
+    ReservationState state
 ) {
 
 }

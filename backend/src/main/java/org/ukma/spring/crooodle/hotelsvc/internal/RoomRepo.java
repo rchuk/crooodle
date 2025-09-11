@@ -8,5 +8,6 @@ import java.util.UUID;
 public interface RoomRepo extends JpaRepository<RoomEntity, UUID> {
 
     List<RoomEntity> findAllByType_Hotel(HotelEntity hotel);
+
     List<RoomEntity> findAllByType(RoomTypeEntity type);
 }

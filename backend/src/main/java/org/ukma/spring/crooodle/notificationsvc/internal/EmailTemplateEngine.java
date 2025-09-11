@@ -16,12 +16,9 @@ public class EmailTemplateEngine {
 
     public String generateBody(String userName, ReservationEventType type) {
         return switch (type) {
-            case RESERVATION_CREATED ->
-                    "Шановний, " + userName + "!\nВи успішно створили бронювання.";
-            case RESERVATION_APPROVED ->
-                    "Шановний, " + userName + "!\nВаше бронювання схвалено.";
-            case RESERVATION_CANCELLED ->
-                    "Шановний, " + userName + "!\nНа жаль, ваше бронювання було скасовано.";
+            case RESERVATION_CREATED -> "Шановний, " + userName + "!\nВи успішно створили бронювання.";
+            case RESERVATION_APPROVED -> "Шановний, " + userName + "!\nВаше бронювання схвалено.";
+            case RESERVATION_CANCELLED -> "Шановний, " + userName + "!\nНа жаль, ваше бронювання було скасовано.";
         };
     }
 }

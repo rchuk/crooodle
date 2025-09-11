@@ -8,9 +8,9 @@ import org.ukma.spring.crooodle.CrooodleApplication;
 @SpringBootTest
 class CrooodleApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
     @Test
     void modulithStructure() {

@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 public class CrooodleApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CrooodleApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CrooodleApplication.class, args);
+    }
 
 }
