@@ -3,14 +3,9 @@ package org.ukma.spring.crooodle.reservationsvc;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
-import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
+import org.ukma.spring.crooodle.hotelsvc.*;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationRepo;
-import org.ukma.spring.crooodle.hotelsvc.internal.RoomEntity;
-import org.ukma.spring.crooodle.hotelsvc.internal.RoomRepo;
-import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
-import org.ukma.spring.crooodle.usersvc.internal.UserRepo;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
 import org.ukma.spring.crooodle.utils.exceptions.ForbiddenException;
 
@@ -24,17 +19,14 @@ import java.util.UUID;
 public class ReservationSvc {
 
     private final ReservationRepo resRepo;
-    private final RoomRepo roomRepo;
-    private final HotelRepo hotelRepo;
-    private final UserRepo userRepo;
+    private final RoomSvc roomSvc;
 
     public UUID create(@NotNull ReservationDto resDto){
-
-        RoomEntity room = roomRepo.findById(resDto.roomId()).orElseThrow(() -> new EntityNotFoundException(resDto.roomId(), ""));
-        /*RoomEntity room = roomRepo.findById(resDto.roomId());*/
+        RoomDto roomDto = roomSvc.read(resDto.roomId());
 
         var newReservation = ReservationEntity.builder()
-                .room(room)
+                .roomId(roomDto.id())
+                .userId(resDto.userId())
                 .price(resDto.price())
                 .checkin(resDto.checkIn())
                 .checkout(resDto.checkOut())
@@ -56,9 +48,8 @@ public class ReservationSvc {
 
         return ReservationDto.builder()
                 .id(reservation.getId())
-                .roomId(reservation.getRoom().getId())
-                .hotelId(reservation.getRoom().getType().getHotel().getId())
-                .userId(reservation.getUser().getId())
+                .roomId(reservation.getRoomId())
+                .userId(reservation.getUserId())
                 .checkIn(reservation.getCheckin())
                 .checkOut(reservation.getCheckout())
                 .state(reservation.getState())
@@ -66,34 +57,25 @@ public class ReservationSvc {
     }
 
     public List<ReservationDto> readAllByHotel(@NotNull UUID hotelId, @NotNull UUID userId){
-
-        HotelEntity hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new EntityNotFoundException(hotelId, " "));
-        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId, " "));
-
-        List<RoomEntity> hotelRooms = roomRepo.findAllByType_Hotel(hotel);
-        List<ReservationEntity> reservationsByUser = resRepo.findAllByUser(user);
+        List<UUID> hotelRoomsId = roomSvc.readAllByHotel(hotelId).stream().map(RoomDto::id).toList();
+        List<ReservationEntity> reservationsByUser = resRepo.findAllByUserId(userId);
         List<ReservationEntity> reservationsByHotel = reservationsByUser.stream()
-                .filter(r -> hotelRooms.contains(r.getRoom()))
+                .filter(res -> hotelRoomsId.contains(res.getRoomId()))
                 .toList();
 
         return getReservationDtoList(reservationsByHotel);
     }
 
     public List<ReservationDto> readAllByDates(@NotNull UUID userId, @NotNull Date checkIn, @NotNull Date checkOut){
-
-        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId, " "));
-
-        List<ReservationEntity> resesByDates = resRepo.findAllByUserAndCheckinAndCheckout(user, checkIn, checkOut);
+        List<ReservationEntity> resesByDates = resRepo.findAllByUserIdAndCheckinAndCheckout(userId, checkIn, checkOut);
 
         return getReservationDtoList(resesByDates);
     }
 
     public List<ReservationDto> readAllByState(@NotNull UUID userId, @NotNull String stateParam){
-
-        UserEntity user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId, " "));
         ReservationState state = ReservationState.valueOf(stateParam.toUpperCase());
 
-        List<ReservationEntity> resesByState = resRepo.findAllByUserAndState(user, state);
+        List<ReservationEntity> resesByState = resRepo.findAllByUserIdAndState(userId, state);
 
         return getReservationDtoList(resesByState);
     }
@@ -103,9 +85,8 @@ public class ReservationSvc {
         for(ReservationEntity re : resesByState){
             resesDTO.add(ReservationDto.builder()
                     .id(re.getId())
-                    .roomId(re.getRoom().getId())
-                    .hotelId(re.getRoom().getType().getHotel().getId())
-                    .userId(re.getUser().getId())
+                    .roomId(re.getRoomId())
+                    .userId(re.getUserId())
                     .price(re.getPrice())
                     .checkIn(re.getCheckin())
                     .checkOut(re.getCheckout())
@@ -117,15 +98,14 @@ public class ReservationSvc {
     }
 
     public void update(@NotNull UUID reservationId, @NotNull ReservationDto updatedReservation){
-
-        RoomEntity room = resRepo.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation not found: ")).getRoom();
-
         ReservationEntity reservationToUpdate = resRepo.findById(reservationId).orElseThrow(() -> new EntityNotFoundException(reservationId, " "));
 
-        reservationToUpdate.setRoom(room);
+        reservationToUpdate.setRoomId(updatedReservation.roomId());
+        reservationToUpdate.setUserId(updatedReservation.userId());
         reservationToUpdate.setPrice(reservationToUpdate.getPrice());
         reservationToUpdate.setCheckin(updatedReservation.checkIn());
         reservationToUpdate.setCheckout(updatedReservation.checkOut());
+        reservationToUpdate.setState(updatedReservation.state());
 
         resRepo.save(reservationToUpdate);
     }
@@ -149,7 +129,7 @@ public class ReservationSvc {
     public boolean checkReservation(@NotNull UUID resId /*, @NotNull RoomEntity roomEntity*/){
 
         ReservationEntity reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
-        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoom(reservation.getRoom());
+        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoomId(reservation.getRoomId());
 
         for(ReservationEntity re : reservationsForRoom){
             Date start = re.getCheckin(), end = re.getCheckout();
@@ -162,26 +142,26 @@ public class ReservationSvc {
         return true;
     }
 
-    public List<ReservationEntity> getBooksByRoomAndStateAndCheckin(RoomEntity room, ReservationState state, Date checkinDate){
-        return resRepo.findAllByRoomAndStateAndCheckin(room, state, checkinDate);
-    }
-
-    public boolean existsByRoomAndCheckinAndState(RoomEntity room, Date checkinDate, ReservationState state){
-        return resRepo.existsByRoomAndCheckinAndState(room, checkinDate, state);
-    }
-
-    public boolean isOccupiedNow(@NotNull UUID resId){
-
-        ReservationEntity reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
-        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoom(reservation.getRoom());
-
-        for(ReservationEntity re : reservationsForRoom){
-            Date start = re.getCheckin();
-            Date resCheckIn = reservation.getCheckin();
-
-            if(!(resCheckIn.after(start))) return false;
-        }
-        return true;
-    }
+//    public List<ReservationEntity> getBooksByRoomAndStateAndCheckin(RoomEntity room, ReservationState state, Date checkinDate){
+//        return resRepo.findAllByRoomIdAndStateAndCheckin(room, state, checkinDate);
+//    }
+//
+//    public boolean existsByRoomAndCheckinAndState(RoomEntity room, Date checkinDate, ReservationState state){
+//        return resRepo.existsByRoomIdAndCheckinAndState(room, checkinDate, state);
+//    }
+//
+//    public boolean isOccupiedNow(@NotNull UUID resId){
+//
+//        ReservationEntity reservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
+//        List<ReservationEntity> reservationsForRoom = resRepo.findAllByRoomId(reservation.getRoom());
+//
+//        for(ReservationEntity re : reservationsForRoom){
+//            Date start = re.getCheckin();
+//            Date resCheckIn = reservation.getCheckin();
+//
+//            if(!(resCheckIn.after(start))) return false;
+//        }
+//        return true;
+//    }
 
 }

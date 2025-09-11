@@ -14,8 +14,6 @@ public record ReservationDto(
         @NotNull
         UUID roomId,
         @NotNull
-        UUID hotelId,
-        @NotNull
         UUID userId,
         @NotNull
         int price,

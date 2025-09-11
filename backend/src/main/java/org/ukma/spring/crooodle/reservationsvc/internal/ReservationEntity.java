@@ -3,8 +3,6 @@ package org.ukma.spring.crooodle.reservationsvc.internal;
 import jakarta.persistence.*;
 import lombok.*;
 import org.ukma.spring.crooodle.reservationsvc.ReservationState;
-import org.ukma.spring.crooodle.hotelsvc.internal.RoomEntity;
-import org.ukma.spring.crooodle.usersvc.internal.UserEntity;
 
 import java.util.Date;
 import java.util.UUID;
@@ -21,11 +19,11 @@ public class ReservationEntity {
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
-    private RoomEntity room;
+    @Column(nullable = false)
+    private UUID roomId;
 
-    @ManyToOne
-    private UserEntity user;
+    @Column(nullable = false)
+    private UUID userId;
 
     @Column(nullable = false)
     private int price;
