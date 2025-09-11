@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>24</java.version>
 		<spring-modulith.version>1.4.1</spring-modulith.version>
+		<lombok.version>1.18.38</lombok.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -110,7 +111,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>6.2.10</version>
+        </dependency>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
