@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final UserSvc userSvc;
 
+    // TODO: Replace with actual main page
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void home() {
+
+    }
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto register(@Valid @RequestBody UserRegisterDto requestDto) {

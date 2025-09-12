@@ -32,7 +32,7 @@ public class RoomTypeSvc {
             .name(requestDto.name())
             .price(requestDto.price())
             .build();
-        roomType = typeRepo.save(roomType);
+        roomType = typeRepo.saveAndFlush(roomType);
 
         return roomType.getId();
     }
@@ -60,7 +60,7 @@ public class RoomTypeSvc {
 
         roomType.setName(roomTypeDto.name());
         roomType.setPrice(roomTypeDto.price());
-        typeRepo.save(roomType);
+        typeRepo.saveAndFlush(roomType);
     }
 
     public void delete(@NotNull UUID roomTypeId) {

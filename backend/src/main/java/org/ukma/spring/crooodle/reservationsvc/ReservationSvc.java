@@ -28,13 +28,13 @@ public class ReservationSvc {
 
     private final ApplicationEventPublisher eventPub;
 
-    public UUID create(@NotNull ReservationCreateDto requestDto) {
+    public UUID create(UUID roomId, @NotNull ReservationCreateDto requestDto) {
         if (!canCreate())
             throw new ForbiddenException("Cannot create reservation");
 
         var user = userSvc.getCurrentUser();
-        var roomDto = roomSvc.read(requestDto.roomId());
-        if (resRepo.existsOverlappingReservation(requestDto.roomId(), requestDto.checkInDate(), requestDto.checkOutDate()))
+        var roomDto = roomSvc.read(roomId);
+        if (resRepo.existsOverlappingReservation(roomId, requestDto.checkInDate(), requestDto.checkOutDate()))
             throw new InvalidRequestException("The room is already reserved for the specified period");
 
         var reservation = ReservationEntity.builder()
@@ -45,7 +45,7 @@ public class ReservationSvc {
             .checkOutDate(requestDto.checkOutDate())
             .state(ReservationState.PENDING)
             .build();
-        reservation = resRepo.save(reservation);
+        reservation = resRepo.saveAndFlush(reservation);
 
         eventPub.publishEvent(ReservationCreatedEvent.builder()
             .userId(reservation.getUserId())
@@ -106,7 +106,7 @@ public class ReservationSvc {
             throw new InvalidRequestException("Can confirm only pending reservations");
 
         reservation.setState(ReservationState.CONFIRMED);
-        resRepo.save(reservation);
+        resRepo.saveAndFlush(reservation);
 
         eventPub.publishEvent(ReservationConfirmedEvent.builder()
             .userId(reservation.getUserId())
@@ -124,7 +124,7 @@ public class ReservationSvc {
             throw new InvalidRequestException("Can cancel only pending or confirmed reservations");
 
         reservation.setState(ReservationState.CANCELLED);
-        resRepo.save(reservation);
+        resRepo.saveAndFlush(reservation);
 
         eventPub.publishEvent(ReservationCanceledEvent.builder()
             .userId(reservation.getUserId())

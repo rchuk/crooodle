@@ -32,7 +32,7 @@ public class RoomSvc {
             .name(requestDto.name())
             .type(roomType)
             .build();
-        room = roomRepo.save(room);
+        room = roomRepo.saveAndFlush(room);
 
         return room.getId();
     }
@@ -78,7 +78,7 @@ public class RoomSvc {
 
         room.setName(roomDto.name());
         room.setType(roomType);
-        roomRepo.save(room);
+        roomRepo.saveAndFlush(room);
     }
 
     public void delete(@NotNull UUID roomId) {

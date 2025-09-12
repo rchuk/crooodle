@@ -45,7 +45,7 @@ public class UserSvc implements UserDetailsService {
             .passwordHash(passwordEncoder.encode(dto.password()))
             .role(defaultRole)
             .build();
-        entity = repo.save(entity);
+        entity = repo.saveAndFlush(entity);
 
         return userEntityToDto(entity);
     }

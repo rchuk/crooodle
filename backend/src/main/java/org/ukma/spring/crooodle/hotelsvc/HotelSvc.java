@@ -7,6 +7,7 @@ import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelRepo;
+import org.ukma.spring.crooodle.hotelsvc.internal.RoomRepo;
 import org.ukma.spring.crooodle.usersvc.Role;
 import org.ukma.spring.crooodle.usersvc.UserSvc;
 import org.ukma.spring.crooodle.utils.exceptions.EntityNotFoundException;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class HotelSvc {
     private final UserSvc userSvc;
     private final HotelRepo repo;
+    private final RoomRepo roomRepo;
 
     public UUID create(@NotNull HotelUpsertDto upsertDto) {
         if (!canCreate(upsertDto))
@@ -30,7 +32,7 @@ public class HotelSvc {
             .address(upsertDto.address())
             .ownerId(userSvc.getCurrentUser().id())
             .build();
-        entity = repo.save(entity);
+        entity = repo.saveAndFlush(entity);
 
         return entity.getId();
     }
@@ -45,7 +47,7 @@ public class HotelSvc {
             .name(hotel.getName())
             .address(hotel.getAddress())
             .ownerId(hotel.getOwnerId())
-            .roomCount(hotel.getRooms().size())
+            .roomCount(roomRepo.countAllByType_Hotel(hotel))
             .build();
     }
 
@@ -64,7 +66,7 @@ public class HotelSvc {
 
         entity.setName(upsertDto.name());
         entity.setAddress(upsertDto.address());
-        repo.save(entity);
+        repo.saveAndFlush(entity);
     }
 
     public List<HotelResponseDto> readAll() {

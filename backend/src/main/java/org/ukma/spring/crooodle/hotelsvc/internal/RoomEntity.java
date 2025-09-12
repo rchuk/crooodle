@@ -21,11 +21,11 @@ public class RoomEntity {
     @JoinColumn(name = "room_type_id", nullable = false)
     private RoomTypeEntity type;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "hotel_id", nullable = false)
-    private HotelEntity hotel;
-
     @NotBlank
     @Column(nullable = false)
     private String name;
+
+    public HotelEntity getHotel() {
+        return type.getHotel();
+    }
 }

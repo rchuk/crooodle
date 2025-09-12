@@ -26,7 +26,6 @@ public class RoomTypeEntity {
     @JoinColumn(name = "hotel_id", nullable = false)
     private HotelEntity hotel;
 
-    @NotBlank
     @Column(nullable = false)
     private int price;
 }

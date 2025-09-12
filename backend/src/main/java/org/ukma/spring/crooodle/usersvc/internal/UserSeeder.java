@@ -41,7 +41,7 @@ public class UserSeeder implements ApplicationRunner {
                 .name("[Super Administrator]")
                 .role(role)
                 .build();
-            userRepo.save(user);
+            userRepo.saveAndFlush(user);
         }
     }
 
@@ -52,6 +52,7 @@ public class UserSeeder implements ApplicationRunner {
         };
 
         List.of(Role.values()).forEach(seedRole);
+        roleRepo.flush();
     }
 }
 

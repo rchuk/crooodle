@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.reservationsvc;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,8 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('TRAVELER')")
     @PostMapping("/room/{roomId}/reservation")
-    public UUID create(@RequestBody ReservationCreateDto requestDto) {
-        return resSvc.create(requestDto);
+    public UUID create(@PathVariable UUID roomId, @Valid @RequestBody ReservationCreateDto requestDto) {
+        return resSvc.create(roomId, requestDto);
     }
 
     @PreAuthorize("hasRole('TRAVELER') || hasRole('HOTEL_OWNER')")
@@ -33,7 +34,7 @@ public class ReservationController {
     */
 
     @GetMapping("/room/{roomId}/reservation")
-    public List<ReservationResponseDto> readAllByRoom(@PathVariable UUID roomId, @RequestBody ReservationCriteriaDto requestDto) {
+    public List<ReservationResponseDto> readAllByRoom(@PathVariable UUID roomId, @RequestBody(required = false) ReservationCriteriaDto requestDto) {
         return resSvc.readAllByRoom(roomId, requestDto);
     }
 

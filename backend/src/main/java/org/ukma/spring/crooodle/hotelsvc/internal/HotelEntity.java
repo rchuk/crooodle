@@ -34,9 +34,5 @@ public class HotelEntity {
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<RoomEntity> rooms = new ArrayList<>();
-
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<RoomTypeEntity> room_types = new ArrayList<>();
 }

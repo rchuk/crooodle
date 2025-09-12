@@ -10,4 +10,5 @@ public interface RoomRepo extends JpaRepository<RoomEntity, UUID> {
     List<RoomEntity> findAllByType_Hotel(HotelEntity hotel);
 
     List<RoomEntity> findAllByType(RoomTypeEntity type);
+    long countAllByType_Hotel(HotelEntity hotel);
 }
