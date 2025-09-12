@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.internal.RoomEntity;
@@ -26,6 +27,7 @@ public class RoomSvc {
 
     private final ApplicationEventPublisher eventPub;
 
+    @Transactional
     public UUID create(UUID hotelId, RoomUpsertDto requestDto) {
         if (!canCreate(hotelId))
             throw new ForbiddenException("Can't create hotel");
@@ -73,6 +75,7 @@ public class RoomSvc {
             .toList();
     }
 
+    @Transactional
     public void update(@NotNull UUID roomId, @NotNull RoomResponseDto roomDto) {
         var roomType = roomTypeSvc.get(roomId);
         var room = get(roomId);
@@ -84,6 +87,7 @@ public class RoomSvc {
         roomRepo.saveAndFlush(room);
     }
 
+    @Transactional
     public void delete(@NotNull UUID roomId) {
         var room = get(roomId);
         if (!canDelete(room))

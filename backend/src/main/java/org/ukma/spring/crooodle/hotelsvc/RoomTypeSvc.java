@@ -3,6 +3,7 @@ package org.ukma.spring.crooodle.hotelsvc;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.internal.RoomTypeEntity;
@@ -53,6 +54,7 @@ public class RoomTypeSvc {
             .toList();
     }
 
+    @Transactional
     public void update(@NotNull UUID roomTypeId, @NotNull RoomTypeResponseDto roomTypeDto) {
         var roomType = typeRepo.findById(roomTypeId).orElseThrow(() -> new EntityNotFoundException(roomTypeId, "Room Type"));
         if (!canUpdate(roomType))
@@ -63,6 +65,7 @@ public class RoomTypeSvc {
         typeRepo.saveAndFlush(roomType);
     }
 
+    @Transactional
     public void delete(@NotNull UUID roomTypeId) {
         var roomType = typeRepo.findById(roomTypeId).orElseThrow(() -> new EntityNotFoundException(roomTypeId, "Room Type"));
         if (!canDelete(roomType))

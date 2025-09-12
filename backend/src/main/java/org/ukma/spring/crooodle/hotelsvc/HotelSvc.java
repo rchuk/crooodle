@@ -3,6 +3,7 @@ package org.ukma.spring.crooodle.hotelsvc;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.internal.HotelEntity;
@@ -59,6 +60,7 @@ public class HotelSvc {
         return hotel;
     }
 
+    @Transactional
     public void update(@NotNull UUID id, @NotNull HotelUpsertDto upsertDto) {
         var entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
         if (!canUpdate(entity, upsertDto))
@@ -75,6 +77,7 @@ public class HotelSvc {
             .toList();
     }
 
+    @Transactional
     public void delete(@NotNull UUID id) {
         var hotel = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
         if (!canDelete(hotel))

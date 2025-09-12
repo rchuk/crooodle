@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.notificationsvc.internal;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,6 +22,9 @@ public class EmailNotificationSvc implements NotificationSvc {
 
     private final UserSvc userSvc;
 
+    @Value("${spring.mail.username}")
+    String senderUsername;
+
     @Override
     public void sendReservationCreatedNotification(ReservationCreatedEvent event) {
         sendReservationNotification(event, ReservationEventType.RESERVATION_CREATED);
@@ -40,6 +44,7 @@ public class EmailNotificationSvc implements NotificationSvc {
         var user = userSvc.getUserById(event.getUserId());
 
         var message = new SimpleMailMessage();
+        message.setFrom(senderUsername);
         message.setTo(user.email());
         message.setSubject(templateEngine.generateSubject(type));
         message.setText(templateEngine.generateBody(user.name(), type));

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.*;
 import org.ukma.spring.crooodle.reservationsvc.event.ReservationCanceledEvent;
 import org.ukma.spring.crooodle.reservationsvc.event.ReservationConfirmedEvent;
@@ -36,6 +37,7 @@ public class ReservationSvc {
         resRepo.save(reservation);
     }
 
+    @Transactional
     public UUID create(UUID roomId, @NotNull ReservationCreateDto requestDto) {
         if (!canCreate())
             throw new ForbiddenException("Cannot create reservation");
@@ -105,6 +107,7 @@ public class ReservationSvc {
             .toList();
     }
 
+    @Transactional
     public void confirm(@NotNull UUID id) {
         var reservation = get(id);
         if (!canConfirm(reservation))
@@ -123,6 +126,7 @@ public class ReservationSvc {
         );
     }
 
+    @Transactional
     public void cancel(@NotNull UUID id) {
         var reservation = get(id);
         if (!canCancel(reservation))
