@@ -115,6 +115,11 @@ public class ReservationSvc {
         updatedReservation.setState(ReservationState.CONFIRMED);
     }
 
+    public void settle(@NotNull UUID resId){
+        ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
+        updatedReservation.setState(ReservationState.SETTLED);
+    }
+
     public void cancel(@NotNull UUID resId){
         ReservationEntity updatedReservation = resRepo.findById(resId).orElseThrow(() -> new EntityNotFoundException(resId, " "));
         updatedReservation.setState(ReservationState.CANCELLED);
