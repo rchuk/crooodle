@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.reservationsvc;
+package org.ukma.spring.crooodle.notificationsvc.internal;
 
 public enum ReservationEventType {
     RESERVATION_CREATED,

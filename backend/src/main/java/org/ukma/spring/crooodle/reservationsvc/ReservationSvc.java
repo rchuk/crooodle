@@ -2,8 +2,12 @@ package org.ukma.spring.crooodle.reservationsvc;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.*;
+import org.ukma.spring.crooodle.reservationsvc.event.ReservationCanceledEvent;
+import org.ukma.spring.crooodle.reservationsvc.event.ReservationConfirmedEvent;
+import org.ukma.spring.crooodle.reservationsvc.event.ReservationCreatedEvent;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.internal.ReservationRepo;
 import org.ukma.spring.crooodle.usersvc.Role;
@@ -21,6 +25,8 @@ public class ReservationSvc {
     private final ReservationRepo resRepo;
     private final RoomSvc roomSvc;
     private final UserSvc userSvc;
+
+    private final ApplicationEventPublisher eventPub;
 
     public UUID create(@NotNull ReservationCreateDto requestDto) {
         if (!canCreate())
@@ -40,6 +46,12 @@ public class ReservationSvc {
             .state(ReservationState.PENDING)
             .build();
         reservation = resRepo.save(reservation);
+
+        eventPub.publishEvent(ReservationCreatedEvent.builder()
+            .userId(reservation.getUserId())
+            .roomId(reservation.getRoomId())
+            .build()
+        );
 
         return reservation.getId();
     }
@@ -95,6 +107,12 @@ public class ReservationSvc {
 
         reservation.setState(ReservationState.CONFIRMED);
         resRepo.save(reservation);
+
+        eventPub.publishEvent(ReservationConfirmedEvent.builder()
+            .userId(reservation.getUserId())
+            .roomId(reservation.getRoomId())
+            .build()
+        );
     }
 
     public void cancel(@NotNull UUID id) {
@@ -107,6 +125,12 @@ public class ReservationSvc {
 
         reservation.setState(ReservationState.CANCELLED);
         resRepo.save(reservation);
+
+        eventPub.publishEvent(ReservationCanceledEvent.builder()
+            .userId(reservation.getUserId())
+            .roomId(reservation.getRoomId())
+            .build()
+        );
     }
 
     private boolean canCreate() {

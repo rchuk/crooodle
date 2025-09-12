@@ -1,7 +1,6 @@
 package org.ukma.spring.crooodle.notificationsvc.internal;
 
 import org.springframework.stereotype.Component;
-import org.ukma.spring.crooodle.reservationsvc.ReservationEventType;
 
 @Component
 public class EmailTemplateEngine {
