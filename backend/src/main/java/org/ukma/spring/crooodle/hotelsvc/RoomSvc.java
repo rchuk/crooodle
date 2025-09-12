@@ -2,6 +2,7 @@ package org.ukma.spring.crooodle.hotelsvc;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomUpsertDto;
@@ -22,6 +23,8 @@ public class RoomSvc {
     private final RoomTypeSvc roomTypeSvc;
     private final HotelSvc hotelSvc;
     private final RoomRepo roomRepo;
+
+    private final ApplicationEventPublisher eventPub;
 
     public UUID create(UUID hotelId, RoomUpsertDto requestDto) {
         if (!canCreate(hotelId))
@@ -87,6 +90,7 @@ public class RoomSvc {
             throw new ForbiddenException("Can't delete room");
 
         roomRepo.deleteById(roomId);
+        eventPub.publishEvent(RoomDeletedEvent.builder().roomId(roomId).build());
     }
 
     public RoomResponseDto roomEntityToDto(RoomEntity entity) {

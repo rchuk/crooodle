@@ -3,6 +3,7 @@ package org.ukma.spring.crooodle.reservationsvc;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.hotelsvc.*;
 import org.ukma.spring.crooodle.reservationsvc.event.ReservationCanceledEvent;
@@ -27,6 +28,13 @@ public class ReservationSvc {
     private final UserSvc userSvc;
 
     private final ApplicationEventPublisher eventPub;
+
+    @ApplicationModuleListener
+    public void onRoomDeletedEvent(RoomDeletedEvent event) {
+        var reservation = get(event.roomId());
+        reservation.setState(ReservationState.CANCELLED_BY_HOTEL_OWNER);
+        resRepo.save(reservation);
+    }
 
     public UUID create(UUID roomId, @NotNull ReservationCreateDto requestDto) {
         if (!canCreate())
@@ -123,7 +131,12 @@ public class ReservationSvc {
         if (reservation.getState() != ReservationState.PENDING && reservation.getState() != ReservationState.CONFIRMED)
             throw new InvalidRequestException("Can cancel only pending or confirmed reservations");
 
-        reservation.setState(ReservationState.CANCELLED);
+        var role = userSvc.getCurrentUserRole();
+        reservation.setState(switch (role) {
+            case ROLE_TRAVELER -> ReservationState.CANCELLED_BY_USER;
+            case ROLE_HOTEL_OWNER -> ReservationState.CANCELLED_BY_HOTEL_OWNER;
+            default -> throw new IllegalStateException("Unexpected value: " + role);
+        });
         resRepo.saveAndFlush(reservation);
 
         eventPub.publishEvent(ReservationCanceledEvent.builder()
@@ -157,6 +170,6 @@ public class ReservationSvc {
     }
 
     private boolean canCancel(ReservationEntity reservation) {
-        return userSvc.getCurrentUser().id().equals(reservation.getUserId());
+        return canConfirm(reservation) || userSvc.getCurrentUser().id().equals(reservation.getUserId());
     }
 }
