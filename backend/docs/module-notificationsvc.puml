@@ -14,6 +14,7 @@ Container_Boundary("CrooodleApplication.CrooodleApplication_boundary", "Crooodle
   Component(CrooodleApplication.CrooodleApplication.Notificationsvc, "Notificationsvc", $techn="Module", $descr="", $tags="", $link="")
 }
 
+Rel(CrooodleApplication.CrooodleApplication.Reservationsvc, CrooodleApplication.CrooodleApplication.Usersvc, "uses", $techn="", $tags="", $link="")
 Rel(CrooodleApplication.CrooodleApplication.Notificationsvc, CrooodleApplication.CrooodleApplication.Reservationsvc, "listens to", $techn="", $tags="", $link="")
 Rel(CrooodleApplication.CrooodleApplication.Notificationsvc, CrooodleApplication.CrooodleApplication.Usersvc, "uses", $techn="", $tags="", $link="")
 
