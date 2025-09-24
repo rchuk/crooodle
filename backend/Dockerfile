@@ -11,6 +11,8 @@ FROM amazoncorretto:24.0.2-alpine AS run
 
 WORKDIR /app
 
+RUN apk add --no-cache curl
+
 RUN addgroup --system spring && adduser --system --ingroup spring spring
 USER spring:spring
 
