@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class CrooodleExceptionHandler {
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ExceptionDto> handleForbiddenException(EntityNotFoundException e) {
+    public ResponseEntity<ExceptionDto> handleForbiddenException(ForbiddenException e) {
         return new ResponseEntity<>(ExceptionDto.builder().message(e.getMessage()).build(), getHttpHeaders(), HttpStatus.FORBIDDEN);
     }
 
@@ -57,7 +57,7 @@ public class CrooodleExceptionHandler {
             .errors(errors)
             .build();
 
-        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(dto, getHttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -70,9 +70,14 @@ public class CrooodleExceptionHandler {
         return new ResponseEntity<>(ExceptionDto.builder().message("Invalid request").build(), getHttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<ExceptionDto> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
-        return new ResponseEntity<>(ExceptionDto.builder().message("Access denied").build(), getHttpHeaders(), HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler({ AuthorizationDeniedException.class,
+        org.springframework.security.access.AccessDeniedException.class })
+    public ResponseEntity<ExceptionDto> handleAccessDenied(Exception e) {
+        return new ResponseEntity<>(
+            ExceptionDto.builder().message("Access denied").build(),
+            getHttpHeaders(),
+            HttpStatus.FORBIDDEN
+        );
     }
 
     @ExceptionHandler
