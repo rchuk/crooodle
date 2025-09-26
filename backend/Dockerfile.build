@@ -1,0 +1,11 @@
+FROM maven:3.9.11-amazoncorretto-24-debian AS build
+
+WORKDIR /app
+COPY pom.xml .
+RUN mvn -B -DskipTests dependency:go-offline
+
+COPY src ./src
+RUN mvn -B -DskipTests package
+
+FROM scratch AS export
+COPY --from=build /app/target/*.jar /app.jar

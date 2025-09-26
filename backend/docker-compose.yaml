@@ -5,7 +5,7 @@ services:
         condition: service_healthy
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.run
     ports:
       - "8080:8080"
     healthcheck:
