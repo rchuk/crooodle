@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.ukma.spring.crooodle</groupId>
+  <artifactId>crooodle</artifactId>
+  <version>${revision}</version>
+  <packaging>pom</packaging>
+  <name>Crooodle Project</name>
+  <description>Base project for all Crooodle microservices</description>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.5.5</version>
+    <relativePath/>
+  </parent>
+
+  <properties>
+    <revision>1.0.0-SNAPSHOT</revision>
+    <java.version>24</java.version>
+    <lombok.version>1.18.42</lombok.version>
+    <spring-cloud.version>2025.0.0</spring-cloud.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.14.0</version>
+          <configuration>
+            <release>${java.version}</release>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.5.4</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.5.4</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <modules>
+    <module>parents/client-parent</module>
+    <module>parents/dto-parent</module>
+    <module>parents/svc-parent</module>
+
+    <module>hotel-svc/client</module>
+    <module>hotel-svc/dto</module>
+    <module>hotel-svc/svc</module>
+
+    <module>user-svc/client</module>
+    <module>user-svc/dto</module>
+    <module>user-svc/svc</module>
+
+<!--    <module>reservation-svc/client</module>-->
+<!--    <module>reservation-svc/dto</module>-->
+<!--    <module>reservation-svc/svc</module>-->
+
+<!--    <module>notification-svc/client</module>-->
+<!--    <module>notification-svc/dto</module>-->
+<!--    <module>notification-svc/svc</module>-->
+  </modules>
+</project>

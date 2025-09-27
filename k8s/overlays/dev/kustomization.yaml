@@ -1,0 +1,8 @@
+namespace: crooodle-dev
+
+resources:
+  - namespace.yaml
+  - ../../base/ingress
+  - ../../base/rbac
+  - ../../base/user-svc
+  - ../../base/hotel-svc
