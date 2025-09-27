@@ -7,10 +7,12 @@ ARG MODULE_PATH
 WORKDIR /app
 
 COPY --parents pom.xml **/pom.xml ./
-RUN mvn -q -ntp -B -pl ${MODULE_PATH} -am dependency:go-offline -f services/pom.xml
+RUN --mount=type=cache,dst=/root/.m2 \
+    mvn -q -ntp -B -pl ${MODULE_PATH} -am dependency:go-offline -f services/pom.xml
 
 COPY . .
-RUN mvn -B -DskipTests package -pl ${MODULE_PATH} -am -f services/pom.xml
+RUN --mount=type=cache,dst=/root/.m2 \
+    mvn -B -DskipTests package -pl ${MODULE_PATH} -am -f services/pom.xml
 
 FROM amazoncorretto:24.0.2-alpine AS run
 
