@@ -10,7 +10,7 @@ COPY --parents pom.xml **/pom.xml ./
 RUN --mount=type=cache,dst=/root/.m2 \
     mvn -q -ntp -B -pl ${MODULE_PATH} -am dependency:go-offline -f services/pom.xml
 
-COPY . .
+COPY services ./services
 RUN --mount=type=cache,dst=/root/.m2 \
     mvn -B -DskipTests package -pl ${MODULE_PATH} -am -f services/pom.xml
 

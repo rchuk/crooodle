@@ -1,4 +1,6 @@
 resources:
   - deployment.yaml
   - service.yaml
-
+  - pvc.yaml
+  - db-secret.yaml
+  - db.yaml
