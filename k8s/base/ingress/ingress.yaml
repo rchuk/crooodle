@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: crooodle-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.localtest.me
+      http:
+        paths:
+          - path: /user(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: user-svc
+                port: { number: 80 }
+          - path: /hotel(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: hotel-svc
+                port: { number: 80 }
