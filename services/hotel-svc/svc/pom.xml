@@ -11,6 +11,11 @@
   </parent>
 
   <dependencies>
+		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>hotel-svc-dto</artifactId>
+			<version>${revision}</version>
+		</dependency>
     <dependency>
       <groupId>org.ukma.spring.crooodle</groupId>
       <artifactId>user-svc-client</artifactId>
@@ -18,7 +23,7 @@
     </dependency>
 		<dependency>
 			<groupId>org.ukma.spring.crooodle</groupId>
-			<artifactId>hotel-svc-dto</artifactId>
+			<artifactId>user-svc-dto</artifactId>
 			<version>${revision}</version>
 		</dependency>
 	</dependencies>
