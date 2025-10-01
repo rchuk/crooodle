@@ -4,7 +4,7 @@
 
   <groupId>org.ukma.spring.crooodle</groupId>
   <artifactId>crooodle</artifactId>
-  <version>${revision}</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Crooodle Project</name>
   <description>Base project for all Crooodle microservices</description>
@@ -85,7 +85,8 @@
 
     <module>user-svc/client</module>
     <module>user-svc/dto</module>
-    <module>user-svc/svc</module>
+		<module>user-svc/support</module>
+		<module>user-svc/svc</module>
 
 <!--    <module>reservation-svc/client</module>-->
 <!--    <module>reservation-svc/dto</module>-->

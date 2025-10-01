@@ -6,12 +6,24 @@
   <parent>
     <groupId>org.ukma.spring.crooodle</groupId>
     <artifactId>dto-parent</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../../parents/dto-parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>user-svc-dto</artifactId>
-  <version>${revision}</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>User Service DTO</name>
   <packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+		</dependency>
+	</dependencies>
 </project>
