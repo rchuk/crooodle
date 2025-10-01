@@ -13,5 +13,13 @@
   <artifactId>hotel-svc-client</artifactId>
   <version>${revision}</version>
   <name>Hotel Service Client</name>
-  <packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>hotel-svc-dto</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<packaging>jar</packaging>
 </project>
