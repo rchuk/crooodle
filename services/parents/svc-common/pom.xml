@@ -5,24 +5,14 @@
 
   <parent>
     <groupId>org.ukma.spring.crooodle</groupId>
-    <artifactId>dto-parent</artifactId>
+    <artifactId>crooodle</artifactId>
     <version>${revision}</version>
-    <relativePath>../../parents/dto-parent/pom.xml</relativePath>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <artifactId>user-svc-dto</artifactId>
+  <artifactId>svc-common</artifactId>
   <version>${revision}</version>
-  <name>User Service DTO</name>
   <packaging>jar</packaging>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.validation</groupId>
-			<artifactId>jakarta.validation-api</artifactId>
-		</dependency>
-	</dependencies>
+  <name>Common - Service</name>
+  <description>Common code for all service modules</description>
 </project>

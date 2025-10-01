@@ -1,12 +1,12 @@
-create table if not exists role_entity (
-                                         id   serial primary key,
-                                         role varchar(100) unique not null
-  );
+CREATE TABLE role_entity(
+  id SERIAL PRIMARY KEY,
+  role varchar(100) UNIQUE NOT NULL
+);
 
-create table if not exists user_entity (
-                                         id uuid primary key default gen_random_uuid(),
-  name varchar(200) not null,
-  email varchar(320) unique not null,
-  password_hash varchar(256) not null,
-  role_id int not null references role_entity(id)
-  );
+CREATE TABLE user_entity(
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name varchar(200) NOT NULL,
+  email varchar(320) UNIQUE NOT NULL,
+  password_hash varchar(256) NOT NULL,
+  role_id int NOT NULL REFERENCES role_entity(id)
+);

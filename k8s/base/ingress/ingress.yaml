@@ -11,13 +11,13 @@ spec:
     - host: api.localtest.me
       http:
         paths:
-          - path: /user(/|$)(.*)
+          - path: /user/api(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: user-svc
                 port: { number: 80 }
-          - path: /hotel(/|$)(.*)
+          - path: /hotel/api(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:

@@ -1,8 +1,7 @@
-spring:
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-  jpa:
-    hibernate.ddl-auto: update
-  main.banner-mode: off
+auth:
+  admin:
+    username: admin
+    password: admin
+  keys:
+    private: classpath:/keys/private_key.pem
+    public: classpath:/keys/public_key.pem
