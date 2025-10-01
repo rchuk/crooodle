@@ -6,15 +6,27 @@
   <parent>
     <groupId>org.ukma.spring.crooodle</groupId>
     <artifactId>client-parent</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../../parents/client-parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>user-svc-client</artifactId>
-  <version>${revision}</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>User Service Client</name>
   <packaging>jar</packaging>
 	<properties>
 		<svc.mainClass>org.ukma.spring.crooodle.hotelsvc.HotelSvc</svc.mainClass>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>user-svc-dto</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+	</dependencies>
 </project>
