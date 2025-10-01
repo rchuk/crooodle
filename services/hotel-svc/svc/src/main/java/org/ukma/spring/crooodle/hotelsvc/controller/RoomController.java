@@ -18,7 +18,7 @@ public class RoomController {
 
     @PreAuthorize("hasRole('HOTEL_OWNER')")
     @PostMapping("/hotel/{hotelId}/room")
-    public UUID create(UUID hotelId, @Valid @RequestBody RoomUpsertDto requestDto) {
+    public UUID create(@PathVariable UUID hotelId, @Valid @RequestBody RoomUpsertDto requestDto) {
         return roomSvc.create(hotelId, requestDto);
     }
 
@@ -33,7 +33,7 @@ public class RoomController {
     }
 
     @GetMapping("/room-type/{roomTypeId}/room")
-    public List<RoomResponseDto> readAllByType(@RequestParam UUID roomTypeId) {
+    public List<RoomResponseDto> readAllByType(@PathVariable UUID roomTypeId) {
         return roomSvc.readAllByType(roomTypeId);
     }
 
