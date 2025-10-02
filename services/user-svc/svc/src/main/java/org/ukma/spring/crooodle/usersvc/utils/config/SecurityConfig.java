@@ -58,42 +58,33 @@ public class SecurityConfig {
 	Resource publicKeyPem;
 
 	@Bean @Order(1)
-	SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
-		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-			.oidc(Customizer.withDefaults());
-		http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
-		http.cors(Customizer.withDefaults())
-			.csrf(csrf -> csrf.ignoringRequestMatchers("/oauth2/token", "/oauth2/introspection"));
+	SecurityFilterChain authorizationServer(HttpSecurity http) throws Exception {
+		var as = OAuth2AuthorizationServerConfigurer.authorizationServer();
+		var endpoints = as.getEndpointsMatcher();
 
+		http.securityMatcher(endpoints)
+			.with(as, c -> c.oidc(Customizer.withDefaults()))
+			.oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()))
+			.csrf(csrf -> csrf.ignoringRequestMatchers(endpoints));
 		return http.build();
 	}
 
 	@Bean @Order(2)
-	SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain app(HttpSecurity http) throws Exception {
 		http
-			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/actuator/health").permitAll()
-				.anyRequest().permitAll()
+			.authorizeHttpRequests(auth ->
+				auth.anyRequest().permitAll()
 			)
-			.formLogin(Customizer.withDefaults())
-			.cors(Customizer.withDefaults())
-			.csrf(AbstractHttpConfigurer::disable);
+			.formLogin(form -> form
+				.defaultSuccessUrl("/api/me", false)
+				.permitAll()
+			)
+			.logout(Customizer.withDefaults())
+			.oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()))
+			.csrf(csrf -> csrf.ignoringRequestMatchers("/login", "/api/**"))
+			.cors(Customizer.withDefaults());
 
 		return http.build();
-	}
-
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		var cfg = new CorsConfiguration();
-		cfg.setAllowedOrigins(List.of("http://localhost:8080"));
-		cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-		cfg.setAllowedHeaders(List.of("*"));
-		cfg.setAllowCredentials(true);
-
-		var source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", cfg);
-
-		return source;
 	}
 
 	@Bean

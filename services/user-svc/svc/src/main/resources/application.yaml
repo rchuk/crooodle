@@ -5,3 +5,15 @@ auth:
   keys:
     private: classpath:/keys/private_key.pem
     public: classpath:/keys/public_key.pem
+
+server:
+  forward-headers-strategy: framework
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: /dev
+      prefix: stdout
+      buffered: false
+      suffix:
+      file-date-format:
+

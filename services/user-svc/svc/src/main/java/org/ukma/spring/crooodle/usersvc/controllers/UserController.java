@@ -2,23 +2,17 @@ package org.ukma.spring.crooodle.usersvc.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.ukma.spring.crooodle.usersvc.dto.Role;
 import org.ukma.spring.crooodle.usersvc.services.UserService;
 import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/internal")
-public class InternalUserController {
+@RequestMapping("/api")
+public class UserController {
 	private final UserService userService;
 
-	@GetMapping("/current-user")
-	public UserResponseDto getCurrentUser() {
+	@GetMapping("/me")
+	public UserResponseDto getMe() {
 		return userService.getCurrentUser();
-	}
-
-	@GetMapping("/current-user/role")
-	public Role getCurrentUserRole() {
-		return userService.getCurrentUserRole();
 	}
 }
