@@ -1,0 +1,2 @@
+CREATE DATABASE user_svc;
+CREATE DATABASE hotel_svc;

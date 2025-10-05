@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./compose-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  user-svc:
+    build:
+      context: .
+      dockerfile: services/user-svc/svc/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_svc
+      SPRING_DATASOURCE_USERNAME: ${PG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${PG_PASSWORD}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      HOTEL_SVC_URL: http://hotel-svc:8080
+      HOTEL_SVC_API_KEY: ${INTERNAL_API_KEY}
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      hotel-svc:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health/readiness || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+
+  hotel-svc:
+    build:
+      context: .
+      dockerfile: services/hotel-svc/svc/Dockerfile
+    environment:
+      MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: "true"
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info"
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: "always"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/hotel_svc"
+      SPRING_DATASOURCE_USERNAME: "${PG_USER}"
+      SPRING_DATASOURCE_PASSWORD: "${PG_PASSWORD}"
+      INTERNAL_API_KEY: "${INTERNAL_API_KEY}"
+      USER_SVC_URL: "http://user-svc:8080"
+    ports:
+      - "8082:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health/readiness || exit 1" ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  pgdata:
