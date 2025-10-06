@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.hotelsvc.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,17 +8,23 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+	private final ApiKeyFilter apiKeyFilter;
+
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http, ApiKeyFilter apiKeyFilter) throws Exception {
-		return http
-			.csrf(csrf -> csrf.disable())
-			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/actuator/health/**", "/actuator/liveness", "/actuator/readiness").permitAll()
-				.anyRequest().authenticated()
-			)
-			.addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
-			.build();
+	SecurityFilterChain security(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable());
+
+		http.authorizeHttpRequests(auth -> auth
+			.requestMatchers("/", "/api/**", "/actuator/**").permitAll()
+			.requestMatchers("/internal/**").hasRole("INTERNAL")
+			.anyRequest().permitAll()
+		);
+
+		http.addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
 	}
 }

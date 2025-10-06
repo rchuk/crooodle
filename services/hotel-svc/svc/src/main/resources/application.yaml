@@ -1,3 +1,19 @@
+usersvc:
+  base-url: ${USER_SVC_URL:http://localhost:8081}
+  api-key:  ${USER_SVC_API_KEY:${INTERNAL_API_KEY:dev-secret-change-me}}
+
+resilience4j:
+  retry:
+    instances:
+      usersvc:
+        maxAttempts: 3
+        waitDuration: 300ms
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retry-exceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - org.springframework.web.client.ResourceAccessException
+
 server:
   port: 8080
 
