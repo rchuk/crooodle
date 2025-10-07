@@ -7,8 +7,10 @@ import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
 
 @FeignClient(name = "user-svc")
 public interface UserSvcClient {
-    @GetMapping("/test")
-    String test();
-		UserResponseDto getCurrentUser();
-		Role getCurrentUserRole();
+	@GetMapping("/internal/api/test")
+	String test();
+	@GetMapping("/internal/api/db-test")
+	String dbTest();
+	UserResponseDto getCurrentUser();
+	Role getCurrentUserRole();
 }

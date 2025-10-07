@@ -9,22 +9,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
-public class TestController {
+@RequestMapping("/internal/api")
+public class InternalTestController {
 	private final JdbcTemplate jdbc;
 
 	@GetMapping("/test")
 	String test() {
-		return "[public] user-svc";
+		return "[internal] user-svc";
 	}
 
 	@GetMapping("/db-test")
 	String dbTest() {
 		try {
 			Integer one = jdbc.queryForObject("SELECT 1", Integer.class);
-			return "[public] user-svc DB OK: " + one;
+			return "[internal] user-svc DB OK: " + one;
 		} catch (Exception e) {
-			return "[public] user-svc DB ERROR: " + e.getClass().getSimpleName() + " - " + e.getMessage();
+			return "[internal] user-svc DB ERROR: " + e.getClass().getSimpleName() + " - " + e.getMessage();
 		}
 	}
 }
