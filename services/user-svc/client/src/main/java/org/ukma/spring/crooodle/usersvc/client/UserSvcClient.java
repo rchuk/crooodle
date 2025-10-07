@@ -11,6 +11,8 @@ public interface UserSvcClient {
 	String test();
 	@GetMapping("/internal/api/db-test")
 	String dbTest();
+	@GetMapping("/me")
 	UserResponseDto getCurrentUser();
+	@GetMapping("/me/role")
 	Role getCurrentUserRole();
 }
