@@ -26,6 +26,11 @@
 			<artifactId>user-svc-dto</artifactId>
 			<version>${revision}</version>
 		</dependency>
+      <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <scope>runtime</scope>
+      </dependency>
 	</dependencies>
 
   <artifactId>hotel-svc</artifactId>
