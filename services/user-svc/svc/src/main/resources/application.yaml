@@ -1,3 +1,11 @@
+server.port=8080
+spring.datasource.url=jdbc:postgresql://user-svc-db:5432/user_svc
+spring.datasource.username=${DB_USER:user_svc_user}
+spring.datasource.password=${DB_PASS:password123}
+spring.jpa.hibernate.ddl-auto=update
+management.endpoint.health.probes.enabled=true
+management.endpoints.web.exposure.include=health
+
 auth.keys.private=classpath:/keys/private_key.pem
 auth.keys.public=classpath:/keys/public_key.pem
 
