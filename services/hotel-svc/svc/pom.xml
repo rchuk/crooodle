@@ -33,6 +33,6 @@
   <name>Hotel Service</name>
   <packaging>jar</packaging>
 	<properties>
-		<svc.mainClass>org.ukma.spring.crooodle.hotelsvc.HotelSvc</svc.mainClass>
+		<svc.mainClass>org.ukma.spring.crooodle.hotelsvc.HotelService</svc.mainClass>
 	</properties>
 </project>
