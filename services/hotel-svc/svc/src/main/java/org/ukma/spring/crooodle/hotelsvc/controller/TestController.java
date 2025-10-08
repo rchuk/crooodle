@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.controller.hotelsvc;
+package org.ukma.spring.crooodle.hotelsvc.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

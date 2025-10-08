@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.controller.usersvc;
+package org.ukma.spring.crooodle.usersvc.controller;
 
 
 import lombok.RequiredArgsConstructor;
