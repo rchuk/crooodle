@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.usersvc;
+package org.ukma.spring.crooodle.usersvc.controller;
 
 
 import lombok.RequiredArgsConstructor;
@@ -9,22 +9,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/internal/api")
-public class InternalTestController {
+@RequestMapping("/api")
+public class TestController {
 	private final JdbcTemplate jdbc;
 
 	@GetMapping("/test")
 	String test() {
-		return "[internal] user-svc";
+		return "[public] user-svc";
 	}
 
 	@GetMapping("/db-test")
 	String dbTest() {
 		try {
 			Integer one = jdbc.queryForObject("SELECT 1", Integer.class);
-			return "[internal] user-svc DB OK: " + one;
+			return "[public] user-svc DB OK: " + one;
 		} catch (Exception e) {
-			return "[internal] user-svc DB ERROR: " + e.getClass().getSimpleName() + " - " + e.getMessage();
+			return "[public] user-svc DB ERROR: " + e.getClass().getSimpleName() + " - " + e.getMessage();
 		}
 	}
 }

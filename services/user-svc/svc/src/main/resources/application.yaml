@@ -1,0 +1,36 @@
+hotelsvc:
+  base-url: ${HOTEL_SVC_URL:http://localhost:8082}
+  api-key:  ${HOTEL_SVC_API_KEY:${INTERNAL_API_KEY:dev-secret-change-me}}
+
+resilience4j:
+  retry:
+    instances:
+      hotelsvc:
+        maxAttempts: 3
+        waitDuration: 300ms
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retry-exceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - org.springframework.web.client.ResourceAccessException
+
+app:
+  internal:
+    api-key: ${INTERNAL_API_KEY:dev-secret-change-me}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: "readinessState,db,ping"
+        liveness:
+          include: "livenessState"
+
