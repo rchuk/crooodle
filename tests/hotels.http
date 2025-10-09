@@ -1,14 +1,13 @@
-@hotelId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
+@hotelId = 9327bac6-7c8a-40db-8e2b-96f0d2fd169b
 
 ### CREATE
 POST http://localhost/hotel
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDgwNzIsImV4cCI6MTc2MDA1MTY3Miwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI3YmZkNjFkYy01ZjA5LTRlNWUtYWUwYS01MWViZGIxMTNlZDcifQ.1CB7tK5Q5qzdL5rAMJuYLipDe0l7hDY2K-YayC09uecd-TuP8CpMOw90u619BxmAGBPKerFX1ro4-kBo-1ks0A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDkxMjIsImV4cCI6MTc2MDA1MjcyMiwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI3YmZkNjFkYy01ZjA5LTRlNWUtYWUwYS01MWViZGIxMTNlZDcifQ.-CQhGzqGwqxTAkXREX3FFJp48wHg3SpRUbq8j_dZVfgZknPXgbI7B2GzgyEHhn-AIUxYmwLr_235pTW75ND1EQ
 
 {
   "name": "Hotel Sunshine",
   "address": "123 Main St, Kyiv",
-  "ownerId": "{{hotelId}}",
   "roomCount": 50
 }
 
@@ -16,7 +15,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb
 
 GET http://localhost/hotel/{{hotelId}}
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDgwNzIsImV4cCI6MTc2MDA1MTY3Miwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI3YmZkNjFkYy01ZjA5LTRlNWUtYWUwYS01MWViZGIxMTNlZDcifQ.1CB7tK5Q5qzdL5rAMJuYLipDe0l7hDY2K-YayC09uecd-TuP8CpMOw90u619BxmAGBPKerFX1ro4-kBo-1ks0A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDkxMjIsImV4cCI6MTc2MDA1MjcyMiwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI3YmZkNjFkYy01ZjA5LTRlNWUtYWUwYS01MWViZGIxMTNlZDcifQ.-CQhGzqGwqxTAkXREX3FFJp48wHg3SpRUbq8j_dZVfgZknPXgbI7B2GzgyEHhn-AIUxYmwLr_235pTW75ND1EQ
 
 ###
 

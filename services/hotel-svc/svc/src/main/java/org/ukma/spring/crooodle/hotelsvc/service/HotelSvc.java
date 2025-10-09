@@ -171,6 +171,7 @@ public class HotelSvc {
 			.name(hotel.getName())
 			.address(hotel.getAddress())
 			.ownerId(hotel.getOwnerId())
+			.ownerName(userSvc.getUser(hotel.getOwnerId()).name())
 			.roomCount(roomRepo.countAllByType_Hotel(hotel))
 			.build();
 	}
