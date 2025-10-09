@@ -8,7 +8,7 @@ Content-Type: application/json
   "name": "Myhailo Lebiha",
   "email": "mishalebiga@gmail.com",
   "password": "leb1Gay",
-  "role": 0
+  "role": "TRAVELER"
 }
 
 ### REGISTER
@@ -20,7 +20,7 @@ Content-Type: application/json
   "name": "Hlomozdat Dmytro",
   "email": "hlomosoma@gmail.com",
   "password": "dKf42ijsdf",
-  "role": 1
+  "role": "HOTEL_OWNER"
 }
 
 ### LOGIN

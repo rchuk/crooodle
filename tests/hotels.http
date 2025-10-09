@@ -3,6 +3,7 @@
 ### CREATE
 POST http://localhost/hotel
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDgwNzIsImV4cCI6MTc2MDA1MTY3Miwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI3YmZkNjFkYy01ZjA5LTRlNWUtYWUwYS01MWViZGIxMTNlZDcifQ.1CB7tK5Q5qzdL5rAMJuYLipDe0l7hDY2K-YayC09uecd-TuP8CpMOw90u619BxmAGBPKerFX1ro4-kBo-1ks0A
 
 {
   "name": "Hotel Sunshine",
@@ -15,6 +16,7 @@ Content-Type: application/json
 
 GET http://localhost/hotel/{{hotelId}}
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDgwNzIsImV4cCI6MTc2MDA1MTY3Miwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI3YmZkNjFkYy01ZjA5LTRlNWUtYWUwYS01MWViZGIxMTNlZDcifQ.1CB7tK5Q5qzdL5rAMJuYLipDe0l7hDY2K-YayC09uecd-TuP8CpMOw90u619BxmAGBPKerFX1ro4-kBo-1ks0A
 
 ###
 

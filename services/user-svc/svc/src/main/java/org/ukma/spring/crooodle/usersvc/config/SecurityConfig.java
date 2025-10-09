@@ -18,6 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.ukma.spring.crooodle.usersvc.repository.UserRepo;
+import org.ukma.spring.crooodle.usersvc.service.JwtService;
+import org.ukma.spring.crooodle.usersvc.util.JwtAuthFilter;
 
 import java.util.List;
 
@@ -32,11 +35,18 @@ public class SecurityConfig {
     Resource publicKeyPem;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-				http.csrf(AbstractHttpConfigurer::disable);
-
-        return http.build();
+    SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwt, UserRepo users) throws Exception {
+				return http
+					.csrf(AbstractHttpConfigurer::disable)
+					.sessionManagement(sm -> sm.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
+					.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/register", "/login", "/health").permitAll()
+						.requestMatchers("/me", "/me/role").authenticated()
+						.anyRequest().permitAll()
+					)
+					.addFilterBefore(new JwtAuthFilter(jwt, users),
+						org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
+					.build();
     }
 
     @Bean

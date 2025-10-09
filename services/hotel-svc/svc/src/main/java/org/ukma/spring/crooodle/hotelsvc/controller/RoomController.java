@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomUpsertDto;
@@ -19,7 +18,6 @@ import java.util.UUID;
 public class RoomController {
     private final RoomSvc roomSvc;
 
-    @PreAuthorize("hasRole('HOTEL_OWNER')")
     @PostMapping("/hotel/{hotelId}/room")
     public UUID create(@PathVariable UUID hotelId, @Valid @RequestBody RoomUpsertDto requestDto) {
         return roomSvc.create(hotelId, requestDto);
@@ -111,14 +109,12 @@ public class RoomController {
 		}
 
 		// ----- UPDATE -----
-    @PreAuthorize("hasRole('HOTEL_OWNER')")
     @PutMapping("/room/{id}")
     public void update(@PathVariable UUID id, @RequestBody RoomResponseDto roomDtoToUpdate) {
         roomSvc.update(id, roomDtoToUpdate);
     }
 
 	// ----- DELETE -----
-    @PreAuthorize("hasRole('HOTEL_OWNER')")
     @DeleteMapping("/room/{id}")
     public void delete(@PathVariable UUID id) {
         roomSvc.delete(id);

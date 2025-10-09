@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.hotelsvc.service.HotelSvc;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
@@ -20,7 +19,6 @@ import java.util.UUID;
 public class HotelController {
 	private final HotelSvc svc;
 
-	@PreAuthorize("hasRole('HOTEL_OWNER')")
 	@PostMapping
 	public UUID create(@Valid @RequestBody HotelUpsertDto hotelUpsertDto) {
 		return svc.create(hotelUpsertDto);
@@ -73,14 +71,12 @@ public class HotelController {
 	}
 
 	// ----- UPDATE -----
-	@PreAuthorize("hasRole('HOTEL_OWNER')")
 	@PutMapping("/{id}")
 	public void update(@PathVariable UUID id, @Valid @RequestBody HotelUpsertDto hotelUpsertDto) {
 		svc.update(id, hotelUpsertDto);
 	}
 
 	// ----- DELETE -----
-	@PreAuthorize("hasRole('HOTEL_OWNER')")
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable UUID id) {
 		svc.delete(id);
