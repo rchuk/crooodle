@@ -1,7 +1,7 @@
 @userId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
 
 ### REGISTER
-POST http://localhost/user/register
+POST http://localhost/register
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ### REGISTER
 
-POST http://localhost/user/register
+POST http://localhost/register
 Content-Type: application/json
 
 {
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ### LOGIN
 
-POST http://localhost/user/login
+POST http://localhost/login
 Content-Type: application/json
 
 {
@@ -35,7 +35,7 @@ Content-Type: application/json
 
 ### LOGIN (USER NOT FOUND)
 
-POST http://localhost/user/login
+POST http://localhost/login
 Content-Type: application/json
 
 {
@@ -45,7 +45,7 @@ Content-Type: application/json
 
 ### LOGIN (WRONG PASSWORD)
 
-POST http://localhost/user/login
+POST http://localhost/login
 Content-Type: application/json
 
 {
