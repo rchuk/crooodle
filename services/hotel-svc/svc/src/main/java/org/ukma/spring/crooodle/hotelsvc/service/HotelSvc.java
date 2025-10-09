@@ -175,9 +175,26 @@ public class HotelSvc {
 			.build();
 	}
 
-    private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
-        return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
-    }
+	private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
+		return true;
+	}
+
+	private boolean canUpdate(HotelEntity hotel, HotelUpsertDto ignored_upsertDto) {
+		return true;
+	}
+
+	private boolean canRead(HotelEntity ignored_hotel) {
+		return true;
+	}
+
+	private boolean canDelete(HotelEntity hotel) {
+		return true;
+	}
+
+	/*
+   private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
+   		return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
+   }
 
     private boolean canUpdate(HotelEntity hotel, HotelUpsertDto ignored_upsertDto) {
         if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
@@ -196,6 +213,7 @@ public class HotelSvc {
 
         return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
     }
+		*/
 
 	private String escapeHTML(String s) {
 		if (s == null) return "";
