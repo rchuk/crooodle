@@ -1,0 +1,66 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - user-svc
+      - hotel-svc
+
+  user-svc-db:
+    image: postgres:18
+    env_file:
+      - .user-svc-db.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - userdb_data:/var/lib/postgresql/data
+
+  hotel-svc-db:
+    image: postgres:18
+    env_file:
+      - .hotel-svc-db.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - hoteldb_data:/var/lib/postgresql/data
+
+  user-svc:
+    build:
+      context: .
+      dockerfile: ./services/module.Dockerfile
+      args:
+        MODULE_PATH: user-svc/svc
+    env_file:
+      - .user-svc.env
+    depends_on:
+      user-svc-db:
+        condition: service_healthy
+    ports:
+      - "8080"
+
+  hotel-svc:
+    build:
+      context: .
+      dockerfile: ./services/module.Dockerfile
+      args:
+        MODULE_PATH: hotel-svc/svc
+    env_file:
+      - .hotel-svc.env
+    depends_on:
+      hotel-svc-db:
+        condition: service_healthy
+    ports:
+      - "8080"
+
+volumes:
+  userdb_data:
+  hoteldb_data:
