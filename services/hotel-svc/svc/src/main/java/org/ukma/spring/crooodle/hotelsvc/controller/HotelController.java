@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("hotels")
+@RequestMapping("/hotel")
 public class HotelController {
 	private final HotelSvc svc;
 

@@ -39,7 +39,6 @@ services:
       dockerfile: ./services/module.Dockerfile
       args:
         MODULE_PATH: user-svc/svc
-    image: user-svc:latest
     env_file:
       - .user-svc.env
     depends_on:
@@ -54,7 +53,6 @@ services:
       dockerfile: ./services/module.Dockerfile
       args:
         MODULE_PATH: hotel-svc/svc
-    image: hotel-svc:latest
     env_file:
       - .hotel-svc.env
     depends_on:

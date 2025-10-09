@@ -1,7 +1,7 @@
 @userId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
 
 ### REGISTER
-POST http://localhost/users/register
+POST http://localhost/user/register
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ### REGISTER
 
-POST http://localhost/users/register
+POST http://localhost/user/register
 Content-Type: application/json
 
 {
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ### LOGIN
 
-POST http://localhost/users/login
+POST http://localhost/user/login
 Content-Type: application/json
 
 {
@@ -35,7 +35,7 @@ Content-Type: application/json
 
 ### LOGIN (USER NOT FOUND)
 
-POST http://localhost/users/login
+POST http://localhost/user/login
 Content-Type: application/json
 
 {
@@ -45,7 +45,7 @@ Content-Type: application/json
 
 ### LOGIN (WRONG PASSWORD)
 
-POST http://localhost/users/login
+POST http://localhost/user/login
 Content-Type: application/json
 
 {
@@ -55,35 +55,35 @@ Content-Type: application/json
 
 ### READ BY ID
 
-GET http://localhost/users/{{userId}}
+GET http://localhost/user/{{userId}}
 Accept: application/json
 
 ###
 
-GET http://localhost/users/{{userId}}/html
+GET http://localhost/user/{{userId}}/html
 Accept: text/html
 
 ###
 
-GET http://localhost/users/{{userId}}/csv
+GET http://localhost/user/{{userId}}/csv
 Accept: text/csv
 
 ### READ BY EMAIL
 
-GET http://localhost/users/email/hlomosoma@gmail.com
+GET http://localhost/user/email/hlomosoma@gmail.com
 Accept: application/json
 
 ### READ ALL
 
-GET http://localhost/users
+GET http://localhost/user
 Accept: application/json
 
 ###
 
-GET http://localhost/users/html
+GET http://localhost/user/html
 Accept: text/html
 
 ###
 
-GET http://localhost/users/csv
+GET http://localhost/user/csv
 Accept: text/csv

@@ -1,7 +1,7 @@
 @hotelId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
 
 ### CREATE
-POST http://localhost/hotels
+POST http://localhost/hotel
 Content-Type: application/json
 
 {
@@ -13,37 +13,37 @@ Content-Type: application/json
 
 ### READ
 
-GET http://localhost/hotels/{{hotelId}}
+GET http://localhost/hotel/{{hotelId}}
 Accept: application/json
 
 ###
 
-GET http://localhost/hotels/{{hotelId}}/html
+GET http://localhost/hotel/{{hotelId}}/html
 Accept: text/html
 
 ###
 
-GET http://localhost/hotels/{{hotelId}}/csv
+GET http://localhost/hotel/{{hotelId}}/csv
 Accept: text/csv
 
 ### READ ALL
 
-GET http://localhost/hotels
+GET http://localhost/hotel
 Accept: application/json
 
 ###
 
-GET http://localhost/hotels/html
+GET http://localhost/hotel/html
 Accept: text/html
 
 ###
 
-GET http://localhost/hotels/csv
+GET http://localhost/hotel/csv
 Accept: text/csv
 
 ### UPDATE
 
-PUT http://localhost/hotels/{{hotelId}}
+PUT http://localhost/hotel/{{hotelId}}
 Content-Type: application/json
 
 {
@@ -55,4 +55,4 @@ Content-Type: application/json
 
 ### DELETE
 
-DELETE http://localhost/hotels/{{hotelId}}
+DELETE http://localhost/hotel/{{hotelId}}
