@@ -150,7 +150,7 @@ public class RoomSvc {
 		var type = roomTypeSvc.get(typeId);
 		var hotel = hotelSvc.get(hotelId);
 
-		return roomRepo.findAllByHotelAndType(hotel, type)
+		return roomRepo.findAllByType_HotelIdAndType(hotel.getId(), type)
 			.stream()
 			.map(this::roomEntityToDto)
 			.toList();
