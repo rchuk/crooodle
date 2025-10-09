@@ -1,0 +1,89 @@
+@userId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+### REGISTER
+POST http://localhost/users/register
+Content-Type: application/json
+
+{
+  "name": "Myhailo Lebiha",
+  "email": "mishalebiga@gmail.com",
+  "password": "leb1Gay",
+  "role": 0
+}
+
+### REGISTER
+
+POST http://localhost/users/register
+Content-Type: application/json
+
+{
+  "name": "Hlomozdat Dmytro",
+  "email": "hlomosoma@gmail.com",
+  "password": "dKf42ijsdf",
+  "role": 1
+}
+
+### LOGIN
+
+POST http://localhost/users/login
+Content-Type: application/json
+
+{
+  "email": "hlomosoma@gmail.com",
+  "password": "dKf42ijsdf"
+}
+
+### LOGIN (USER NOT FOUND)
+
+POST http://localhost/users/login
+Content-Type: application/json
+
+{
+  "email": "hlom23s3ma@gmail.com",
+  "password": "dKf42ijsdf"
+}
+
+### LOGIN (WRONG PASSWORD)
+
+POST http://localhost/users/login
+Content-Type: application/json
+
+{
+  "email": "hlomosoma@gmail.com",
+  "password": "dKf234"
+}
+
+### READ BY ID
+
+GET http://localhost/users/{{userId}}
+Accept: application/json
+
+###
+
+GET http://localhost/users/{{userId}}/html
+Accept: text/html
+
+###
+
+GET http://localhost/users/{{userId}}/csv
+Accept: text/csv
+
+### READ BY EMAIL
+
+GET http://localhost/users/email/hlomosoma@gmail.com
+Accept: application/json
+
+### READ ALL
+
+GET http://localhost/users
+Accept: application/json
+
+###
+
+GET http://localhost/users/html
+Accept: text/html
+
+###
+
+GET http://localhost/users/csv
+Accept: text/csv
