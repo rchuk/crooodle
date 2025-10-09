@@ -39,4 +39,7 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 	</dependencies>
+	<properties>
+		<svc.mainClass>org.ukma.spring.crooodle.usersvc.UserService</svc.mainClass>
+	</properties>
 </project>
