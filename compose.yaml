@@ -8,6 +8,7 @@ services:
     depends_on:
       - user-svc
       - hotel-svc
+
   user-svc-db:
     image: postgres:18
     env_file:

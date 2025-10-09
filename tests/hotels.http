@@ -1,0 +1,58 @@
+@hotelId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+### CREATE
+POST http://localhost/hotels
+Content-Type: application/json
+
+{
+  "name": "Hotel Sunshine",
+  "address": "123 Main St, Kyiv",
+  "ownerId": "{{hotelId}}",
+  "roomCount": 50
+}
+
+### READ
+
+GET http://localhost/hotels/{{hotelId}}
+Accept: application/json
+
+###
+
+GET http://localhost/hotels/{{hotelId}}/html
+Accept: text/html
+
+###
+
+GET http://localhost/hotels/{{hotelId}}/csv
+Accept: text/csv
+
+### READ ALL
+
+GET http://localhost/hotels
+Accept: application/json
+
+###
+
+GET http://localhost/hotels/html
+Accept: text/html
+
+###
+
+GET http://localhost/hotels/csv
+Accept: text/csv
+
+### UPDATE
+
+PUT http://localhost/hotels/{{hotelId}}
+Content-Type: application/json
+
+{
+  "name": "Hotel Sunshine Updated",
+  "address": "456 Second St, Kyiv",
+  "ownerId": "{{hotelId}}",
+  "roomCount": 60
+}
+
+### DELETE
+
+DELETE http://localhost/hotels/{{hotelId}}
