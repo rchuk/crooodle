@@ -43,7 +43,7 @@ public class UserController {
 
 	// ----- READ -----
 	@GetMapping("/{id}")
-	public UserResponseDto getById(@PathVariable UUID id){
+	public UserResponseDto getUser(@PathVariable UUID id){
 		return userSvc.getUserById(id);
 	}
 
@@ -69,5 +69,7 @@ public class UserController {
 	public UserResponseDto getUserByEmail(@PathVariable String email){
 		return userSvc.getUserByEmail(email);
 	}
+
+
 
 }

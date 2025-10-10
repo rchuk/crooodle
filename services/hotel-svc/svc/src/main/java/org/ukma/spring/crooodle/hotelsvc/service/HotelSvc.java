@@ -2,6 +2,10 @@ package org.ukma.spring.crooodle.hotelsvc.service;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
@@ -19,12 +23,14 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
+@EnableRetry
 public class HotelSvc {
     private final UserSvcClient userSvc;
     private final HotelRepo repo;
     private final RoomRepo roomRepo;
 
-    public UUID create(@NotNull HotelUpsertDto upsertDto) {
+		@Retryable(backoff = @Backoff(delay = 2000))
+		public UUID create(@NotNull HotelUpsertDto upsertDto) {
         if (!canCreate(upsertDto))
             throw new ForbiddenException("Only hotel owners can create hotels");
 
@@ -42,6 +48,14 @@ public class HotelSvc {
     public HotelResponseDto read(@NotNull UUID id) {
         return hotelEntityToDto(get(id));
     }
+
+	HotelEntity get(@NotNull UUID id) {
+		var hotel = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
+		if (!canRead(hotel))
+			throw new ForbiddenException("Cannot read hotel");
+
+		return hotel;
+	}
 
 	public String readToHTML(@NotNull UUID id) {
 		var dto = read(id);
@@ -89,14 +103,6 @@ public class HotelSvc {
 
 		return csv.getBytes(StandardCharsets.UTF_8);
 	}
-
-    HotelEntity get(@NotNull UUID id) {
-        var hotel = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
-        if (!canRead(hotel))
-            throw new ForbiddenException("Cannot read hotel");
-
-        return hotel;
-    }
 
 	// -------------- READ ALL --------------
     public List<HotelResponseDto> readAll() {
@@ -165,32 +171,54 @@ public class HotelSvc {
     }
 
 	// -------------- HELPERS --------------
+
+	@Retryable(
+		value = {EntityNotFoundException.class},
+		backoff = @Backoff(delay = 2000)
+	)
 	HotelResponseDto hotelEntityToDto(HotelEntity hotel) {
+		var user = userSvc.getUser(hotel.getOwnerId());
+		if (user == null) {
+			throw new EntityNotFoundException(hotel.getOwnerId(), "User");
+		}
+
 		return HotelResponseDto.builder()
 			.id(hotel.getId())
 			.name(hotel.getName())
-			.address(hotel.getAddress())
 			.ownerId(hotel.getOwnerId())
-			.ownerName(userSvc.getUser(hotel.getOwnerId()).name())
-			.roomCount(roomRepo.countAllByType_Hotel(hotel))
+			.ownerName(user.name())
+			.address(hotel.getAddress())
 			.build();
 	}
 
-   private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
-   		return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
-   }
+	@Recover
+	public HotelResponseDto recover(EntityNotFoundException e, HotelEntity hotel){
+		return HotelResponseDto.builder()
+			.id(hotel.getId())
+			.name(hotel.getName())
+			.ownerId(userSvc.getCurrentUser().id())
+			.ownerName(userSvc.getCurrentUser().name())
+			.address(hotel.getAddress())
+			.build();
+	}
 
-    private boolean canUpdate(HotelEntity hotel, HotelUpsertDto ignored_upsertDto) {
+	@Retryable(backoff = @Backoff(delay = 2000))
+	private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
+			return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
+	}
+	@Retryable(backoff = @Backoff(delay = 2000))
+	private boolean canUpdate(HotelEntity hotel, HotelUpsertDto ignored_upsertDto) {
         if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
             return false;
 
         return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
-    }
+	}
 
     private boolean canRead(HotelEntity ignored_hotel) {
         return true;
     }
 
+	@Retryable(backoff = @Backoff(delay = 2000))
     private boolean canDelete(HotelEntity hotel) {
         if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
             return false;
