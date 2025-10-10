@@ -3,8 +3,6 @@ package org.ukma.spring.crooodle.hotelsvc.service;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +12,8 @@ import org.ukma.spring.crooodle.hotelsvc.entity.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.repository.HotelRepo;
 import org.ukma.spring.crooodle.hotelsvc.repository.RoomRepo;
 import org.ukma.spring.crooodle.usersvc.dto.Role;
-import org.ukma.spring.crooodle.usersvc.client.UserSvcClient;
 import org.ukma.spring.crooodle.hotelsvc.exception.EntityNotFoundException;
 import org.ukma.spring.crooodle.hotelsvc.exception.ForbiddenException;
-import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -25,9 +21,8 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-@EnableRetry
 public class HotelSvc {
-	private final UserSvcClient userSvc;
+	private final UserClientSvc userSvc;
 	private final HotelRepo repo;
 	private final RoomRepo roomRepo;
 
@@ -38,7 +33,7 @@ public class HotelSvc {
 		var entity = HotelEntity.builder()
 			.name(upsertDto.name())
 			.address(upsertDto.address())
-			.ownerId(getCurrentUser().id())
+			.ownerId(userSvc.getCurrentUser().id())
 			.build();
 		entity = repo.saveAndFlush(entity);
 
@@ -174,7 +169,7 @@ public class HotelSvc {
 	// -------------- HELPERS --------------
 
 	HotelResponseDto hotelEntityToDto(HotelEntity hotel) {
-		var user = getUser(hotel.getOwnerId());
+		var user = userSvc.getUser(hotel.getOwnerId());
 		if (user == null) {
 			throw new EntityNotFoundException(hotel.getOwnerId(), "User");
 		}
@@ -189,14 +184,14 @@ public class HotelSvc {
 	}
 
 	private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
-		return getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
+		return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
 	}
 
 	private boolean canUpdate(HotelEntity hotel, HotelUpsertDto ignored_upsertDto) {
-		if (!getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
+		if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
 			return false;
 
-		return hotel.getOwnerId().equals(getCurrentUser().id());
+		return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
 	}
 
 	private boolean canRead(HotelEntity ignored_hotel) {
@@ -205,34 +200,10 @@ public class HotelSvc {
 
 	@Retryable(backoff = @Backoff(delay = 2000))
 	private boolean canDelete(HotelEntity hotel) {
-		if (!getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
+		if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
 			return false;
 
-		return hotel.getOwnerId().equals(getCurrentUser().id());
-	}
-
-	@Retryable(backoff = @Backoff(delay = 2000))
-	private Role getCurrentUserRole() {
-			return userSvc.getCurrentUserRole();
-	}
-
-	@Retryable(backoff = @Backoff(delay = 2000))
-	private UserResponseDto getCurrentUser() {
-		return userSvc.getCurrentUser();
-	}
-
-	@Retryable(
-		retryFor = { RuntimeException.class },
-		maxAttempts = 1,
-		backoff = @Backoff(delay = 2000)
-	)
-	private UserResponseDto getUser(UUID id) {
-		return userSvc.getUser(id);
-	}
-
-	@Recover
-	private UserResponseDto recover(RuntimeException ex, UUID id) {
-		return new UserResponseDto(id, "Unknown User", "[Missing]", Role.ROLE_HOTEL_OWNER);
+		return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
 	}
 
 	private String escapeHTML(String s) {
