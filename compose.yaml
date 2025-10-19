@@ -41,6 +41,12 @@ services:
         MODULE_PATH: user-svc/svc
     env_file:
       - .user-svc.env
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
     depends_on:
       user-svc-db:
         condition: service_healthy
@@ -55,6 +61,12 @@ services:
         MODULE_PATH: hotel-svc/svc
     env_file:
       - .hotel-svc.env
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "--silent", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
     depends_on:
       hotel-svc-db:
         condition: service_healthy
