@@ -73,6 +73,21 @@ services:
     ports:
       - "8080"
 
+  admin-svc:
+    build:
+      context: .
+      dockerfile: ./services/module.Dockerfile
+      args:
+        MODULE_PATH: admin-svc
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "--silent", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    ports:
+      - "55666:8080"
+
 volumes:
   userdb_data:
   hoteldb_data:
