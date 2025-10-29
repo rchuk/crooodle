@@ -65,7 +65,7 @@ public class UserController {
 			.body(csvBytes);
 	}
 
-	@GetMapping("/{email}")
+	@GetMapping("email/{email}")
 	public UserResponseDto getUserByEmail(@PathVariable String email){
 		return userSvc.getUserByEmail(email);
 	}

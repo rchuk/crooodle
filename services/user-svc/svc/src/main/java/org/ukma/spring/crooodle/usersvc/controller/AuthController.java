@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.usersvc.dto.*;
 import org.ukma.spring.crooodle.usersvc.entity.UserEntity;
+import org.ukma.spring.crooodle.usersvc.messaging.UserProducer;
 import org.ukma.spring.crooodle.usersvc.service.JwtService;
 import org.ukma.spring.crooodle.usersvc.service.UserSvc;
 
@@ -19,6 +20,7 @@ public class AuthController {
 	private final UserSvc userSvc;
 	private final AuthenticationManager auth;
 	private final JwtService jwt;
+	private final UserProducer userProducer;
 
 	// TODO: Replace with actual main page
     @GetMapping
@@ -32,7 +34,7 @@ public class AuthController {
 		var result = auth.authenticate(new UsernamePasswordAuthenticationToken(req.email(), req.password()));
 		var principal = (UserEntity)result.getPrincipal();
 		var token = jwt.issue(principal.getEmail(), principal.getRole().getRole().name(), Map.of("uid", principal.getId().toString()));
-
+		userProducer.sendLoggedInEvent(req.email());
 		return LoginResponseDto.builder().token(token).build();
 	}
 

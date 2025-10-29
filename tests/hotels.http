@@ -1,9 +1,9 @@
-@hotelId = 9327bac6-7c8a-40db-8e2b-96f0d2fd169b
-
+@hotelId = c0a2f88c-7c75-46a7-825a-8d97294a0f43
+@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjE3NjU3MDAsImV4cCI6MTc2MTc2OTMwMCwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI0Mzg1ODQ3ZS1jODc1LTQyYzgtODE3Zi00YjQwOGI5YjQ5MGQifQ.Jw1mCGcbz0Or27vcuzj9XGOT2-tzqykP6z6ETy6_spFur_4mqCYDVmajIeJVGuo8yBFefyeGqzA6in0Uw0i4IA
 ### CREATE
 POST http://localhost/hotel
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDkxMjIsImV4cCI6MTc2MDA1MjcyMiwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI3YmZkNjFkYy01ZjA5LTRlNWUtYWUwYS01MWViZGIxMTNlZDcifQ.-CQhGzqGwqxTAkXREX3FFJp48wHg3SpRUbq8j_dZVfgZknPXgbI7B2GzgyEHhn-AIUxYmwLr_235pTW75ND1EQ
+Authorization: Bearer {{token}}
 
 {
   "name": "Hotel Sunshine",

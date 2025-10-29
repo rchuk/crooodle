@@ -1,4 +1,4 @@
-@userId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
+@userId = 4385847e-c875-42c8-817f-4b408b9b490d
 
 ### REGISTER
 POST http://localhost/register

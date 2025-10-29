@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.entity.HotelEntity;
+import org.ukma.spring.crooodle.hotelsvc.messaging.HotelProducer;
 import org.ukma.spring.crooodle.hotelsvc.repository.HotelRepo;
 import org.ukma.spring.crooodle.hotelsvc.repository.RoomRepo;
 import org.ukma.spring.crooodle.usersvc.dto.Role;
@@ -28,6 +29,7 @@ public class HotelSvc {
     private final UserSvcClient userSvc;
     private final HotelRepo repo;
     private final RoomRepo roomRepo;
+		private final HotelProducer hotelProducer;
 
 		@Retryable(backoff = @Backoff(delay = 2000))
 		public UUID create(@NotNull HotelUpsertDto upsertDto) {
@@ -41,6 +43,7 @@ public class HotelSvc {
             .build();
         entity = repo.saveAndFlush(entity);
 
+				hotelProducer.sendHotelCreatedEvent(entity.getId());
         return entity.getId();
     }
 
@@ -158,6 +161,9 @@ public class HotelSvc {
 		entity.setName(upsertDto.name());
 		entity.setAddress(upsertDto.address());
 		repo.saveAndFlush(entity);
+
+		hotelProducer.sendHotelUpdatedEvent(entity.getId());
+
 	}
 
 	// -------------- DELETE --------------
@@ -168,6 +174,7 @@ public class HotelSvc {
             throw new ForbiddenException("Cannot delete Hotel");
 
         repo.deleteById(id);
+				hotelProducer.sendHotelDeletedEvent(id);
     }
 
 	// -------------- HELPERS --------------

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.usersvc.dto.Role;
 import org.ukma.spring.crooodle.usersvc.dto.UserRegisterDto;
 import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
+import org.ukma.spring.crooodle.usersvc.messaging.UserProducer;
 import org.ukma.spring.crooodle.usersvc.repository.RoleRepo;
 import org.ukma.spring.crooodle.usersvc.entity.UserEntity;
 import org.ukma.spring.crooodle.usersvc.repository.UserRepo;
@@ -27,6 +28,7 @@ public class UserSvc implements UserDetailsService {
     private final UserRepo repo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
+		private final UserProducer userProducer;
 
 	// -------------- AUTHENTICATION --------------
     @Override
@@ -53,6 +55,7 @@ public class UserSvc implements UserDetailsService {
             .build();
         entity = repo.saveAndFlush(entity);
 
+				userProducer.sendRegisteredEvent(entity.getEmail());
         return userEntityToDto(entity);
     }
 
