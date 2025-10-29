@@ -43,7 +43,7 @@ public class UserController {
 
 	// ----- READ -----
 	@GetMapping("/{id}")
-	public UserResponseDto getUser(@PathVariable UUID id){
+	public UserResponseDto getById(@PathVariable UUID id){
 		return userSvc.getUserById(id);
 	}
 

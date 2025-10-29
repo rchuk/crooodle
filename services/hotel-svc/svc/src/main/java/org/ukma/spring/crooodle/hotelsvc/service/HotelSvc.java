@@ -3,8 +3,6 @@ package org.ukma.spring.crooodle.hotelsvc.service;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,45 +10,45 @@ import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.entity.HotelEntity;
 import org.ukma.spring.crooodle.hotelsvc.messaging.HotelProducer;
+import org.ukma.spring.crooodle.hotelsvc.messaging.HotelProducer;
 import org.ukma.spring.crooodle.hotelsvc.repository.HotelRepo;
 import org.ukma.spring.crooodle.hotelsvc.repository.RoomRepo;
 import org.ukma.spring.crooodle.usersvc.dto.Role;
-import org.ukma.spring.crooodle.usersvc.client.UserSvcClient;
 import org.ukma.spring.crooodle.hotelsvc.exception.EntityNotFoundException;
 import org.ukma.spring.crooodle.hotelsvc.exception.ForbiddenException;
+
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-@EnableRetry
 public class HotelSvc {
-    private final UserSvcClient userSvc;
-    private final HotelRepo repo;
-    private final RoomRepo roomRepo;
-		private final HotelProducer hotelProducer;
 
-		@Retryable(backoff = @Backoff(delay = 2000))
-		public UUID create(@NotNull HotelUpsertDto upsertDto) {
-        if (!canCreate(upsertDto))
-            throw new ForbiddenException("Only hotel owners can create hotels");
+	private final HotelProducer hotelProducer;
+	private final UserClientSvc userSvc;
+	private final HotelRepo repo;
+	private final RoomRepo roomRepo;
 
-        var entity = HotelEntity.builder()
-            .name(upsertDto.name())
-            .address(upsertDto.address())
-            .ownerId(userSvc.getCurrentUser().id())
-            .build();
-        entity = repo.saveAndFlush(entity);
+	public UUID create(@NotNull HotelUpsertDto upsertDto) {
+		if (!canCreate(upsertDto))
+			throw new ForbiddenException("Only hotel owners can create hotels");
 
-				hotelProducer.sendHotelCreatedEvent(entity.getId());
-        return entity.getId();
-    }
+		var entity = HotelEntity.builder()
+			.name(upsertDto.name())
+			.address(upsertDto.address())
+			.ownerId(userSvc.getCurrentUser().id())
+			.build();
+		entity = repo.saveAndFlush(entity);
+
+		hotelProducer.sendHotelCreatedEvent(entity.getId());
+		return entity.getId();
+	}
 
 	// -------------- READ --------------
-    public HotelResponseDto read(@NotNull UUID id) {
-        return hotelEntityToDto(get(id));
-    }
+	public HotelResponseDto read(@NotNull UUID id) {
+		return hotelEntityToDto(get(id));
+	}
 
 	HotelEntity get(@NotNull UUID id) {
 		var hotel = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
@@ -63,56 +61,56 @@ public class HotelSvc {
 	public String readToHTML(@NotNull UUID id) {
 		var dto = read(id);
 
-        return "<!doctype html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "  <meta charset=\"utf-8\">\n" +
-                "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n" +
-                "  <title>Hotel " + escapeHTML(dto.name()) + "</title>\n" +
-                "  <style>\n" +
-                "    body{font-family:Arial,Helvetica,sans-serif;padding:20px}\n" +
-                "    .card{max-width:600px;border:1px solid #ddd;padding:16px;border-radius:8px}\n" +
-                "    .row{margin:8px 0}\n" +
-                "    .label{font-weight:600;color:#444;width:130px;display:inline-block}\n" +
-                "  </style>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "  <div class=\"card\">\n" +
-                "    <h2>Hotel Details</h2>\n" +
-                "    <div class=\"row\"><span class=\"label\">ID:</span>" +
-                escapeHTML(dto.id().toString()) + "</div>\n" +
-                "    <div class=\"row\"><span class=\"label\">Owner ID:</span>" +
-                escapeHTML(dto.ownerId().toString()) + "</div>\n" +
-                "    <div class=\"row\"><span class=\"label\">Name:</span>" +
-                escapeHTML(dto.name()) + "</div>\n" +
-                "    <div class=\"row\"><span class=\"label\">Address:</span>" +
-                escapeHTML(dto.address()) + "</div>\n" +
-                "    <div class=\"row\"><span class=\"label\">Room Count:</span>" +
-                dto.roomCount() + "</div>\n" +
-                "  </div>\n" +
-                "</body>\n" +
-                "</html>";
+		return "<!doctype html>\n" +
+			"<html lang=\"en\">\n" +
+			"<head>\n" +
+			"  <meta charset=\"utf-8\">\n" +
+			"  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n" +
+			"  <title>Hotel " + escapeHTML(dto.name()) + "</title>\n" +
+			"  <style>\n" +
+			"    body{font-family:Arial,Helvetica,sans-serif;padding:20px}\n" +
+			"    .card{max-width:600px;border:1px solid #ddd;padding:16px;border-radius:8px}\n" +
+			"    .row{margin:8px 0}\n" +
+			"    .label{font-weight:600;color:#444;width:130px;display:inline-block}\n" +
+			"  </style>\n" +
+			"</head>\n" +
+			"<body>\n" +
+			"  <div class=\"card\">\n" +
+			"    <h2>Hotel Details</h2>\n" +
+			"    <div class=\"row\"><span class=\"label\">ID:</span>" +
+			escapeHTML(dto.id().toString()) + "</div>\n" +
+			"    <div class=\"row\"><span class=\"label\">Owner ID:</span>" +
+			escapeHTML(dto.ownerId().toString()) + "</div>\n" +
+			"    <div class=\"row\"><span class=\"label\">Name:</span>" +
+			escapeHTML(dto.name()) + "</div>\n" +
+			"    <div class=\"row\"><span class=\"label\">Address:</span>" +
+			escapeHTML(dto.address()) + "</div>\n" +
+			"    <div class=\"row\"><span class=\"label\">Room Count:</span>" +
+			dto.roomCount() + "</div>\n" +
+			"  </div>\n" +
+			"</body>\n" +
+			"</html>";
 	}
 
 	public byte[] readToCSV(@NotNull UUID id) {
 		var dto = read(id);
 
-        String csv = "id,ownerId,name,address,roomCount\n" +
-                dto.id() + ',' +
-                escapeCSV(dto.ownerId().toString()) + ',' +
-                escapeCSV(dto.name()) + ',' +
-                escapeCSV(dto.address()) + ',' +
-                dto.roomCount() + '\n';
+		String csv = "id,ownerId,name,address,roomCount\n" +
+			dto.id() + ',' +
+			escapeCSV(dto.ownerId().toString()) + ',' +
+			escapeCSV(dto.name()) + ',' +
+			escapeCSV(dto.address()) + ',' +
+			dto.roomCount() + '\n';
 
 		return csv.getBytes(StandardCharsets.UTF_8);
 	}
 
 	// -------------- READ ALL --------------
-    public List<HotelResponseDto> readAll() {
-        return repo.findAll().stream()
-            .map(this::hotelEntityToDto)
-            .toList();
-    }
+	public List<HotelResponseDto> readAll() {
+		return repo.findAll().stream()
+			.map(this::hotelEntityToDto)
+			.toList();
+	}
 
 	public String readAllToHTML() {
 		var hotels = readAll();
@@ -167,11 +165,11 @@ public class HotelSvc {
 	}
 
 	// -------------- DELETE --------------
-    @Transactional
-    public void delete(@NotNull UUID id) {
-        var hotel = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
-        if (!canDelete(hotel))
-            throw new ForbiddenException("Cannot delete Hotel");
+	@Transactional
+	public void delete(@NotNull UUID id) {
+		var hotel = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
+		if (!canDelete(hotel))
+			throw new ForbiddenException("Cannot delete Hotel");
 
         repo.deleteById(id);
 				hotelProducer.sendHotelDeletedEvent(id);
@@ -179,10 +177,6 @@ public class HotelSvc {
 
 	// -------------- HELPERS --------------
 
-	@Retryable(
-		value = {EntityNotFoundException.class},
-		backoff = @Backoff(delay = 2000)
-	)
 	HotelResponseDto hotelEntityToDto(HotelEntity hotel) {
 		var user = userSvc.getUser(hotel.getOwnerId());
 		if (user == null) {
@@ -198,40 +192,28 @@ public class HotelSvc {
 			.build();
 	}
 
-	@Recover
-	public HotelResponseDto recover(EntityNotFoundException e, HotelEntity hotel){
-		return HotelResponseDto.builder()
-			.id(hotel.getId())
-			.name(hotel.getName())
-			.ownerId(userSvc.getCurrentUser().id())
-			.ownerName(userSvc.getCurrentUser().name())
-			.address(hotel.getAddress())
-			.build();
-	}
-
-	@Retryable(backoff = @Backoff(delay = 2000))
 	private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
-			return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
+		return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
 	}
-	@Retryable(backoff = @Backoff(delay = 2000))
+
 	private boolean canUpdate(HotelEntity hotel, HotelUpsertDto ignored_upsertDto) {
-        if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
-            return false;
+		if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
+			return false;
 
-        return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
+		return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
 	}
 
-    private boolean canRead(HotelEntity ignored_hotel) {
-        return true;
-    }
+	private boolean canRead(HotelEntity ignored_hotel) {
+		return true;
+	}
 
 	@Retryable(backoff = @Backoff(delay = 2000))
-    private boolean canDelete(HotelEntity hotel) {
-        if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
-            return false;
+	private boolean canDelete(HotelEntity hotel) {
+		if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
+			return false;
 
-        return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
-    }
+		return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
+	}
 
 	private String escapeHTML(String s) {
 		if (s == null) return "";
