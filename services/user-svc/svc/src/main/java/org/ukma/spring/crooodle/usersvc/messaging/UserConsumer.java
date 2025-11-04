@@ -8,30 +8,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserConsumer {
 
-	@JmsListener(destination = "${user.queue.name}")
-	public void receiveMessage(UserMessage event) {
-		log.info("USER CONSUMER: Received User Event: " + event);
+	@JmsListener(
+		destination = "${hotel.queue.name}",
+		selector = "eventType = 'REGISTERED'")
+	public void receiveRegisteredMessages(UserMessage event) {
+		log.info("{}-user CONSUMER: A new user is registered by {}", event.getTimestamp(), event.getEmail());
 	}
 
 	@JmsListener(
 		destination = "${user.queue.name}",
-		selector = "eventType = 'created'")
-	public void receiveCreatedMessages(UserMessage event) {
-		log.info("USER CONSUMER: Received User Event: " + event);
+		selector = "eventType = 'LOGGED_IN'")
+	public void receiveLoggedInMessages(UserMessage event) {
+		log.info("{}-USER CONSUMER: User {} is logged in", event.getTimestamp(), event.getEmail());
 	}
 
 	@JmsListener(
 		destination = "${user.queue.name}",
-		selector = "eventType = 'update'")
-	public void receiveUpdateMessages(UserMessage event) {
-		log.info("USER CONSUMER: Received User Event: " + event);
-	}
-
-	@JmsListener(
-		destination = "${user.queue.name}",
-		selector = "eventType = 'removed'")
-	public void receiveRemovedMessages(UserMessage event) {
-		log.info("USER CONSUMER: Received User Event: " + event);
+		selector = "eventType = 'LOGGED_OUT'")
+	public void receiveLoggedOutMessages(UserMessage event) {
+		log.info("{}-USER CONSUMER: User {} is logged out", event.getTimestamp(), event.getEmail());
 	}
 
 }

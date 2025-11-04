@@ -3,10 +3,10 @@ package org.ukma.spring.crooodle.hotelsvc.messaging;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum HotelMessageType {
-	@JsonProperty("created")
+	@JsonProperty("CREATED")
 	CREATED,
-	@JsonProperty("updated")
+	@JsonProperty("UPDATED")
 	UPDATED,
-	@JsonProperty("removed")
+	@JsonProperty("REMOVED")
 	REMOVED
 }
