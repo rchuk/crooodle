@@ -13,5 +13,11 @@
   <artifactId>user-svc-dto</artifactId>
   <version>${revision}</version>
   <name>User Service DTO</name>
-  <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+    </dependencies>
+    <packaging>jar</packaging>
 </project>

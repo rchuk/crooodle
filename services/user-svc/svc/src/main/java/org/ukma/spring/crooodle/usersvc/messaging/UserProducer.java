@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
+import org.ukma.spring.crooodle.usersvc.messaging.UserMessage;
+import org.ukma.spring.crooodle.usersvc.messaging.UserMessageType;
 
 import java.time.Instant;
 import java.time.ZoneOffset;

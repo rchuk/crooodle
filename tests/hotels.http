@@ -1,15 +1,15 @@
-@hotelId = 3a696a3b-edf0-4935-8527-350677aff12f
+@hotelId = 268bf136-0d49-4eeb-bfd6-ee67da362cc4
 @ownerId = 4ca21f3a-2020-4187-8509-176e5597d4f8
-@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjIyODQ5MzIsImV4cCI6MTc2MjI4ODUzMiwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI0Y2EyMWYzYS0yMDIwLTQxODctODUwOS0xNzZlNTU5N2Q0ZjgifQ.hwWZxB_k-ObMDpmitsFDtlQx43jkiEiLZ1cjsnRYHPW5nP33KIMMaZ1JW7ul0hGKdjOoV_Pem_26Y-Qwdffdxw
+@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjIzNjk2MjMsImV4cCI6MTc2MjM3MzIyMywicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI0Y2EyMWYzYS0yMDIwLTQxODctODUwOS0xNzZlNTU5N2Q0ZjgifQ.daLVUQPHuv4WToPC7oDxSQfUk4o4IwQS2WHuvRuJy4zoemgxa7x6NCcvwyaL48MkFsakE-z_ArWvZIwVLe3m9A
 ### CREATE
 POST http://localhost/hotel
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Continental",
-  "address": "131 Park av., New York",
-  "roomCount": 50
+  "name": "Kozachok",
+  "address": "15 may St. 121, Kyiv",
+  "roomCount": 60
 }
 
 ### READ

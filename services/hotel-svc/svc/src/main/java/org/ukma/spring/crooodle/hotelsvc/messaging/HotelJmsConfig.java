@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.jms.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
@@ -26,10 +27,29 @@ public class HotelJmsConfig {
 		return converter;
 	}
 
-	@Bean(name = "hotelJmsTemplate")
-	public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory, @Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
+	@Bean(name = "p2pHotelJmsTemplate")
+	public JmsTemplate p2pJmsTemplate(ConnectionFactory connectionFactory, @Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
 		JmsTemplate template = new JmsTemplate(connectionFactory);
 		template.setMessageConverter(messageConverter);
 		return template;
 	}
+
+	@Bean(name = "pubSubHotelJmsTemplate")
+	public JmsTemplate pubSubJmsTemplate(ConnectionFactory connectionFactory, @Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
+		JmsTemplate template = new JmsTemplate(connectionFactory);
+		template.setMessageConverter(messageConverter);
+		template.setPubSubDomain(true);
+		return template;
+	}
+
+	@Bean(name = "hotelTopicListenerFactory")
+	public DefaultJmsListenerContainerFactory topicListenerFactory(ConnectionFactory connectionFactory,
+																																 @Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
+		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+		factory.setConnectionFactory(connectionFactory);
+		factory.setMessageConverter(messageConverter);
+		factory.setPubSubDomain(true);
+		return factory;
+	}
+
 }

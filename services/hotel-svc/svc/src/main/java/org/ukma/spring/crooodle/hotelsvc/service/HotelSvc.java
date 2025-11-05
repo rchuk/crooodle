@@ -2,6 +2,8 @@ package org.ukma.spring.crooodle.hotelsvc.service;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -9,8 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.entity.HotelEntity;
-import org.ukma.spring.crooodle.hotelsvc.messaging.HotelProducer;
-import org.ukma.spring.crooodle.hotelsvc.messaging.HotelProducer;
+import org.ukma.spring.crooodle.hotelsvc.messaging.HotelMessage;
+import org.ukma.spring.crooodle.hotelsvc.messaging.p2p.HotelProducer;
+import org.ukma.spring.crooodle.hotelsvc.messaging.pubsub.HotelPublisher;
 import org.ukma.spring.crooodle.hotelsvc.repository.HotelRepo;
 import org.ukma.spring.crooodle.hotelsvc.repository.RoomRepo;
 import org.ukma.spring.crooodle.usersvc.dto.Role;
@@ -21,11 +24,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class HotelSvc {
 
 	private final HotelProducer hotelProducer;
+	private final HotelPublisher hotelPublisher;
 	private final UserClientSvc userSvc;
 	private final HotelRepo repo;
 	private final RoomRepo roomRepo;
@@ -42,6 +47,7 @@ public class HotelSvc {
 		entity = repo.saveAndFlush(entity);
 
 		hotelProducer.sendHotelCreatedEvent(entity.getId());
+		hotelPublisher.sendHotelCreatedEvent(entity.getId());
 		return entity.getId();
 	}
 
@@ -161,6 +167,7 @@ public class HotelSvc {
 		repo.saveAndFlush(entity);
 
 		hotelProducer.sendHotelUpdatedEvent(entity.getId());
+		hotelPublisher.sendHotelUpdatedEvent(entity.getId());
 
 	}
 
@@ -171,9 +178,16 @@ public class HotelSvc {
 		if (!canDelete(hotel))
 			throw new ForbiddenException("Cannot delete Hotel");
 
-        repo.deleteById(id);
-				hotelProducer.sendHotelDeletedEvent(id);
-    }
+		repo.deleteById(id);
+		hotelProducer.sendHotelDeletedEvent(id);
+		hotelPublisher.sendHotelDeletedEvent(id);
+	}
+
+	// -------------- MESSAGING --------------
+	@JmsListener(destination = "hotel.topic", containerFactory = "hotelTopicListenerFactory")
+	public void receiveFromTopic(HotelMessage msg) {
+		log.info("{}-HOTEL SERVICE SUBSCRIBER: message received: {}", msg.getTimestamp(), msg);
+	}
 
 	// -------------- HELPERS --------------
 

@@ -13,5 +13,12 @@
   <artifactId>hotel-svc-dto</artifactId>
   <version>${revision}</version>
   <name>Hotel Service DTO</name>
-  <packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<packaging>jar</packaging>
 </project>

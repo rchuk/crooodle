@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.hotelsvc.messaging;
 
 import lombok.*;
+import org.ukma.spring.crooodle.hotelsvc.messaging.HotelMessageType;
 
 import java.io.Serial;
 import java.io.Serializable;

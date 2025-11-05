@@ -1,12 +1,12 @@
-package org.ukma.spring.crooodle.hotelsvc.messaging;
+package org.ukma.spring.crooodle.hotelsvc.messaging.pubsub;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.activemq.ScheduledMessage;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
+import org.ukma.spring.crooodle.hotelsvc.messaging.HotelMessage;
+import org.ukma.spring.crooodle.hotelsvc.messaging.HotelMessageType;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -15,14 +15,13 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-public class HotelProducer {
-
+public class HotelPublisher {
 	private final JmsTemplate jmsTemplate;
 
-	@Value("${hotel.queue.name:hotel.events}")
-	private String hotelQueueName;
+	@Value("${hotel.topic.name:hotel.topic}")
+	private String hotelTopic;
 
-	public HotelProducer(@Qualifier("hotelJmsTemplate") JmsTemplate jmsTemplate) {
+	public HotelPublisher(@Qualifier("pubSubHotelJmsTemplate") JmsTemplate jmsTemplate) {
 		this.jmsTemplate = jmsTemplate;
 	}
 
@@ -37,7 +36,6 @@ public class HotelProducer {
 	public void sendHotelDeletedEvent(UUID hotelId) {
 		sendEvent(hotelId, HotelMessageType.REMOVED);
 	}
-
 	private void sendEvent(UUID hotelId, HotelMessageType type) {
 		var event = HotelMessage.builder()
 			.hotelId(hotelId)
@@ -45,9 +43,9 @@ public class HotelProducer {
 			.timestamp(Instant.now())
 			.build();
 
-		log.info("HOTEL PRODUCER: Sending JMS message to queue '{}': {}", hotelQueueName, event);
+		log.info("HOTEL PUBLISHER: Sending JMS message to topic '{}': {}", hotelTopic, event);
 
-		jmsTemplate.convertAndSend(hotelQueueName, event, message -> {
+		jmsTemplate.convertAndSend(hotelTopic, event, message -> {
 			message.setStringProperty("eventType", type.name());
 			String date = event.getTimestamp()
 				.atZone(ZoneOffset.UTC)
