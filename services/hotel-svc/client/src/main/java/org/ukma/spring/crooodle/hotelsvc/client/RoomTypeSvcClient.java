@@ -8,7 +8,7 @@ import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeUpsertDto;
 import java.util.List;
 import java.util.UUID;
 
-@FeignClient(name = "hotel-svc")
+@FeignClient(name = "room-type-svc")
 public interface RoomTypeSvcClient {
 	@PostMapping("/hotel/{hotelId}/room-type")
 	UUID create(@PathVariable("hotelId") UUID hotelId,
