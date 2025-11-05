@@ -8,6 +8,7 @@ services:
     depends_on:
       - user-svc
       - hotel-svc
+      - reservation-svc
 
   user-svc-db:
     image: postgres:18
@@ -32,6 +33,18 @@ services:
       retries: 30
     volumes:
       - hoteldb_data:/var/lib/postgresql/data
+
+  reservation-svc-db:
+    image: postgres:18
+    env_file:
+      - .reservation-svc-db.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - reservation_data:/var/lib/postgresql/data
 
   user-svc:
     build:
@@ -61,6 +74,21 @@ services:
     ports:
       - "8080"
 
+  reservation-svc:
+    build:
+      context: .
+      dockerfile: ./services/module.Dockerfile
+      args:
+        MODULE_PATH: reservation-svc/svc
+    env_file:
+      - .reservation-svc.env
+    depends_on:
+      reservation-svc-db:
+        condition: service_healthy
+    ports:
+      - "8080"
+
 volumes:
   userdb_data:
   hoteldb_data:
+  reservation_data:
