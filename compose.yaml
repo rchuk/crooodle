@@ -54,7 +54,7 @@ services:
       timeout: 3s
       retries: 30
     volumes:
-      - reservation_data:/var/lib/postgresql/data
+      - reservation_data:/var/lib/postgresql
 
   user-svc:
     build:

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.usersvc.dto.Role;
 import org.ukma.spring.crooodle.usersvc.dto.UserRegisterDto;
 import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
-import org.ukma.spring.crooodle.usersvc.messaging.UserProducer;
+import org.ukma.spring.crooodle.usersvc.messaging.p2p.UserProducer;
 import org.ukma.spring.crooodle.usersvc.repository.RoleRepo;
 import org.ukma.spring.crooodle.usersvc.entity.UserEntity;
 import org.ukma.spring.crooodle.usersvc.repository.UserRepo;

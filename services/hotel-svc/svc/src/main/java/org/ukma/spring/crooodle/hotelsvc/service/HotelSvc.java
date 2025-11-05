@@ -186,7 +186,7 @@ public class HotelSvc {
 	// -------------- MESSAGING --------------
 	@JmsListener(destination = "hotel.topic", containerFactory = "hotelTopicListenerFactory")
 	public void receiveFromTopic(HotelMessage msg) {
-		log.info("{}-HOTEL SERVICE SUBSCRIBER: message received: {}", msg.getTimestamp(), msg);
+		log.info("HOTEL SERVICE SUBSCRIBER-{}: message received: {}", msg.getTimestamp(), msg);
 	}
 
 	// -------------- HELPERS --------------

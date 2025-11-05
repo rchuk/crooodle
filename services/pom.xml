@@ -83,7 +83,6 @@
     <module>parents/client-parent</module>
     <module>parents/dto-parent</module>
     <module>parents/svc-parent</module>
-		<module>parents/svc-common</module>
 
     <module>hotel-svc/client</module>
     <module>hotel-svc/dto</module>
@@ -96,6 +95,8 @@
     <module>reservation-svc/client</module>
     <module>reservation-svc/dto</module>
     <module>reservation-svc/svc</module>
+
+		<module>svc-common</module>
 
 <!--    <module>notification-svc/client</module>-->
 <!--    <module>notification-svc/dto</module>-->

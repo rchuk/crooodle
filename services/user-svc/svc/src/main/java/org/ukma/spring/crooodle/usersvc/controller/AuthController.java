@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.usersvc.dto.*;
 import org.ukma.spring.crooodle.usersvc.entity.UserEntity;
-import org.ukma.spring.crooodle.usersvc.messaging.UserProducer;
+import org.ukma.spring.crooodle.usersvc.messaging.p2p.UserProducer;
 import org.ukma.spring.crooodle.usersvc.service.JwtService;
 import org.ukma.spring.crooodle.usersvc.service.UserSvc;
 
