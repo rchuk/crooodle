@@ -21,6 +21,11 @@
 	</properties>
 
   <dependencies>
+		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>svc-common</artifactId>
+			<version>${revision}</version>
+		</dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
