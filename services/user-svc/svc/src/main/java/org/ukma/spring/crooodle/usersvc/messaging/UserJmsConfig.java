@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.jms.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
@@ -14,22 +15,54 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UserJmsConfig {
 
-	@Bean(name = "userJmsMessageConverter")
-	public MessageConverter jacksonJmsMessageConverter(ObjectMapper om) {
+		@Bean(name = "userJmsMessageConverter")
+		public MessageConverter jacksonJmsMessageConverter(ObjectMapper om) {
 
-		om.registerModule(new JavaTimeModule());
+			om.registerModule(new JavaTimeModule());
 
-		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-		converter.setTargetType(MessageType.TEXT);
-		converter.setTypeIdPropertyName("_type");
-		converter.setObjectMapper(om);
-		return converter;
-	}
+			MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+			converter.setTargetType(MessageType.TEXT);
+			converter.setTypeIdPropertyName("_type");
+			converter.setObjectMapper(om);
+			return converter;
+		}
 
-	@Bean(name = "userJmsTemplate")
-	public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory, @Qualifier("userJmsMessageConverter") MessageConverter messageConverter) {
-		JmsTemplate template = new JmsTemplate(connectionFactory);
-		template.setMessageConverter(messageConverter);
-		return template;
-	}
+		@Bean(name = "p2pUserJmsTemplate")
+		public JmsTemplate p2pJmsTemplate(@Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory,
+																			@Qualifier("userJmsMessageConverter")MessageConverter messageConverter) {
+			JmsTemplate template = new JmsTemplate(connectionFactory);
+			template.setMessageConverter(messageConverter);
+			return template;
+		}
+
+		@Bean(name = "pubSubUserJmsTemplate")
+			public JmsTemplate pubSubJmsTemplate(@Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory,
+																					 @Qualifier("userJmsMessageConverter")MessageConverter messageConverter) {
+				JmsTemplate template = new JmsTemplate(connectionFactory);
+				template.setMessageConverter(messageConverter);
+				template.setPubSubDomain(true);
+				return template;
+			}
+
+		@Bean(name = "userQueueListenerFactory")
+		public DefaultJmsListenerContainerFactory queueListenerFactory(
+			@Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory,
+			@Qualifier("userJmsMessageConverter") MessageConverter messageConverter) {
+
+			DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+			factory.setConnectionFactory(connectionFactory);
+			factory.setMessageConverter(messageConverter);
+			factory.setPubSubDomain(false);
+			return factory;
+		}
+
+		@Bean(name = "userTopicListenerFactory")
+		public DefaultJmsListenerContainerFactory topicListenerFactory(@Qualifier("jmsConnectionFactory")ConnectionFactory connectionFactory,
+																																	 @Qualifier("userJmsMessageConverter")MessageConverter messageConverter) {
+			DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+			factory.setConnectionFactory(connectionFactory);
+			factory.setMessageConverter(messageConverter);
+			factory.setPubSubDomain(true);
+			return factory;
+		}
 }

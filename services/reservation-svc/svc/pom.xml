@@ -31,6 +31,10 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.ukma.spring.crooodle</groupId>
 			<artifactId>hotel-svc-client</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
@@ -40,6 +44,23 @@
 			<artifactId>user-svc-client</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>jakarta.jms</groupId>
+			<artifactId>jakarta.jms-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-activemq</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-broker</artifactId>
+		</dependency>
+
 	</dependencies>
 	<properties>
 		<svc.mainClass>org.ukma.spring.crooodle.reservationsvc.ReservationService</svc.mainClass>

@@ -1,12 +1,12 @@
-@userId = 4385847e-c875-42c8-817f-4b408b9b490d
+@userId = 4d504972-04ad-42b2-8545-f2da120c66f7
 
 ### REGISTER
 POST http://localhost/register
 Content-Type: application/json
 
 {
-  "name": "Myhailo Lebiha",
-  "email": "mishalebiga@gmail.com",
+  "name": "Duma Opus",
+  "email": "dumaopus@gmail.com",
   "password": "leb1Gayyy",
   "role": "TRAVELER"
 }
@@ -21,6 +21,16 @@ Content-Type: application/json
   "email": "hlomosoma@gmail.com",
   "password": "dKf42ijsdf",
   "role": "HOTEL_OWNER"
+}
+
+### LOGIN
+
+POST http://localhost/login
+Content-Type: application/json
+
+{
+  "email": "dumaopus@gmail.com",
+  "password": "leb1Gayyy"
 }
 
 ### LOGIN

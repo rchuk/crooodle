@@ -99,6 +99,8 @@ services:
     depends_on:
       reservation-svc-db:
         condition: service_healthy
+      activemq:
+        condition: service_healthy
     ports:
       - "8080"
 

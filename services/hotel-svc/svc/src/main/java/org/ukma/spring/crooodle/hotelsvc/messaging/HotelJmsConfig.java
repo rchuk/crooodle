@@ -28,14 +28,16 @@ public class HotelJmsConfig {
 	}
 
 	@Bean(name = "p2pHotelJmsTemplate")
-	public JmsTemplate p2pJmsTemplate(ConnectionFactory connectionFactory, @Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
+	public JmsTemplate p2pJmsTemplate(@Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory,
+																		@Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
 		JmsTemplate template = new JmsTemplate(connectionFactory);
 		template.setMessageConverter(messageConverter);
 		return template;
 	}
 
 	@Bean(name = "pubSubHotelJmsTemplate")
-	public JmsTemplate pubSubJmsTemplate(ConnectionFactory connectionFactory, @Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
+	public JmsTemplate pubSubJmsTemplate(@Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory,
+																			 @Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
 		JmsTemplate template = new JmsTemplate(connectionFactory);
 		template.setMessageConverter(messageConverter);
 		template.setPubSubDomain(true);
@@ -43,7 +45,7 @@ public class HotelJmsConfig {
 	}
 
 	@Bean(name = "hotelTopicListenerFactory")
-	public DefaultJmsListenerContainerFactory topicListenerFactory(ConnectionFactory connectionFactory,
+	public DefaultJmsListenerContainerFactory topicListenerFactory(@Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory,
 																																 @Qualifier("hotelJmsMessageConverter")MessageConverter messageConverter) {
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		factory.setConnectionFactory(connectionFactory);

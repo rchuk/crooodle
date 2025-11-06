@@ -11,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.entity.HotelEntity;
-import org.ukma.spring.crooodle.hotelsvc.messaging.HotelMessage;
-import org.ukma.spring.crooodle.hotelsvc.messaging.p2p.HotelProducer;
+import org.ukma.spring.crooodle.svc.messaging.HotelMessage;
 import org.ukma.spring.crooodle.hotelsvc.messaging.pubsub.HotelPublisher;
 import org.ukma.spring.crooodle.hotelsvc.repository.HotelRepo;
 import org.ukma.spring.crooodle.hotelsvc.repository.RoomRepo;
@@ -29,7 +28,6 @@ import java.util.UUID;
 @Service
 public class HotelSvc {
 
-	private final HotelProducer hotelProducer;
 	private final HotelPublisher hotelPublisher;
 	private final UserClientSvc userSvc;
 	private final HotelRepo repo;
@@ -46,7 +44,6 @@ public class HotelSvc {
 			.build();
 		entity = repo.saveAndFlush(entity);
 
-		hotelProducer.sendHotelCreatedEvent(entity.getId());
 		hotelPublisher.sendHotelCreatedEvent(entity.getId());
 		return entity.getId();
 	}
@@ -166,7 +163,6 @@ public class HotelSvc {
 		entity.setAddress(upsertDto.address());
 		repo.saveAndFlush(entity);
 
-		hotelProducer.sendHotelUpdatedEvent(entity.getId());
 		hotelPublisher.sendHotelUpdatedEvent(entity.getId());
 
 	}
@@ -179,14 +175,7 @@ public class HotelSvc {
 			throw new ForbiddenException("Cannot delete Hotel");
 
 		repo.deleteById(id);
-		hotelProducer.sendHotelDeletedEvent(id);
 		hotelPublisher.sendHotelDeletedEvent(id);
-	}
-
-	// -------------- MESSAGING --------------
-	@JmsListener(destination = "hotel.topic", containerFactory = "hotelTopicListenerFactory")
-	public void receiveFromTopic(HotelMessage msg) {
-		log.info("HOTEL SERVICE SUBSCRIBER-{}: message received: {}", msg.getTimestamp(), msg);
 	}
 
 	// -------------- HELPERS --------------

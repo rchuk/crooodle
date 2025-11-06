@@ -2,16 +2,19 @@ package org.ukma.spring.crooodle.reservationsvc.service;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.client.RoomSvcClient;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomDeletedEvent;
 import org.ukma.spring.crooodle.reservationsvc.dto.*;
 import org.ukma.spring.crooodle.reservationsvc.entity.ReservationEntity;
+import org.ukma.spring.crooodle.reservationsvc.messaging.p2p.ResProducer;
 import org.ukma.spring.crooodle.reservationsvc.repository.ReservationRepo;
+import org.ukma.spring.crooodle.svc.messaging.ReservationMessageType;
 import org.ukma.spring.crooodle.usersvc.dto.Role;
 import org.ukma.spring.crooodle.usersvc.client.UserSvcClient;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.ukma.spring.crooodle.reservationsvc.exception.EntityNotFoundException;
 import org.ukma.spring.crooodle.reservationsvc.exception.ForbiddenException;
 import org.ukma.spring.crooodle.reservationsvc.exception.InvalidRequestException;
@@ -25,9 +28,11 @@ public class ReservationSvc {
     // TODO: Replace event mechanism
     private final ReservationRepo resRepo;
     private final RoomSvcClient roomSvc;
+//	  private final HotelSvcClient hotelSvc;
+		private final ResProducer resProducer;
     private final UserSvcClient userSvc;
-
-    private final ApplicationEventPublisher eventPub;
+		private final JavaMailSender jms;
+//		private final ApplicationEventPublisher eventPub;
 
     public void onRoomDeletedEvent(RoomDeletedEvent event) {
         var reservation = get(event.roomId());
@@ -55,11 +60,29 @@ public class ReservationSvc {
             .build();
         reservation = resRepo.saveAndFlush(reservation);
 
-        eventPub.publishEvent(ReservationCreatedEvent.builder()
-            .userId(reservation.getUserId())
-            .roomId(reservation.getRoomId())
-            .build()
-        );
+
+			String room = roomDto.name();
+			var hotel = roomDto.type().hotel().name();
+			var checkIn = reservation.getCheckInDate();
+			var checkOut = reservation.getCheckOutDate();
+			int price = reservation.getPrice();
+
+			resProducer.sendPendingEvent(reservation.getId());
+
+        String resInfo = hotel + "\n" +
+                room + "\n" +
+                checkIn + "\n" +
+                checkOut + "\n" +
+                price + " ₴";
+
+			String clientEmail = user.email();
+			sendCreationEmail(clientEmail, resInfo);
+
+//        eventPub.publishEvent(ReservationCreatedEvent.builder()
+//            .userId(reservation.getUserId())
+//            .roomId(reservation.getRoomId())
+//            .build()
+//        );
 
         return reservation.getId();
     }
@@ -113,16 +136,31 @@ public class ReservationSvc {
 
         if (reservation.getState() != ReservationState.PENDING)
             throw new InvalidRequestException("Can confirm only pending reservations");
-
-        reservation.setState(ReservationState.CONFIRMED);
         resRepo.saveAndFlush(reservation);
 
-        eventPub.publishEvent(ReservationConfirmedEvent.builder()
-            .userId(reservation.getUserId())
-            .roomId(reservation.getRoomId())
-            .build()
-        );
+				reservation.setState(ReservationState.CONFIRMED);
+				resProducer.sendConfirmedEvent(reservation.getId());
+
+//        eventPub.publishEvent(ReservationConfirmedEvent.builder()
+//            .userId(reservation.getUserId())
+//            .roomId(reservation.getRoomId())
+//            .build()
+//        );
     }
+
+	@Transactional
+	public void settle(@NotNull UUID id) {
+		var reservation = get(id);
+		if (!canConfirm(reservation))
+			throw new ForbiddenException("Cannot confirm reservation");
+
+		if (reservation.getState() != ReservationState.CONFIRMED)
+			throw new InvalidRequestException("User can be settled only with confirmed reservations");
+		resRepo.saveAndFlush(reservation);
+
+		reservation.setState(ReservationState.SETTLED);
+		resProducer.sendSettledEvent(reservation.getId());
+	}
 
     @Transactional
     public void cancel(@NotNull UUID id) {
@@ -141,11 +179,10 @@ public class ReservationSvc {
         });
         resRepo.saveAndFlush(reservation);
 
-        eventPub.publishEvent(ReservationCanceledEvent.builder()
-            .userId(reservation.getUserId())
-            .roomId(reservation.getRoomId())
-            .build()
-        );
+			switch (reservation.getState()){
+				case CANCELLED_BY_USER -> resProducer.sendCancelledEvent(reservation.getId(), ReservationMessageType.CANCELLED_BY_USER);
+				case CANCELLED_BY_HOTEL_OWNER -> resProducer.sendCancelledEvent(reservation.getId(), ReservationMessageType.CANCELLED_BY_HOTEL_OWNER);
+			}
     }
 
     private boolean canCreate() {
@@ -174,4 +211,32 @@ public class ReservationSvc {
     private boolean canCancel(ReservationEntity reservation) {
         return canConfirm(reservation) || userSvc.getCurrentUser().id().equals(reservation.getUserId());
     }
+
+		private void sendCreationEmail(String recipient, String resInfo){
+
+			String body = String.format("""
+								Hi, this is the Crooodle team!
+
+								FYI, your reservation has been already created!\s
+
+								Your reservation:
+								"%s"
+
+								Please settle the payment and confirmation.
+
+								Looking forward for your arrival!
+
+								Sincerely,
+								Crooodle team
+				""", resInfo);
+
+			SimpleMailMessage msg = new SimpleMailMessage();
+			msg.setFrom("vasylshlapak14@gmail.com");
+			msg.setTo(recipient);
+			msg.setSubject("Your reservation is created and waiting for confirmation!");
+			msg.setText(body);
+
+			jms.send(msg);
+
+		}
 }

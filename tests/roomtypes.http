@@ -1,16 +1,18 @@
-@hotelId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
-@roomTypeId = 2a1f4e80-5c6d-4f1a-88b3-9f1234567890
+@hotelId = 590ccf27-708c-4d7c-a40d-ba109586357a
+@roomTypeId = eb5d5fce-d8e0-4587-b085-dcfc7cc1d70d
+@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjI0NTgzMjMsImV4cCI6MTc2MjQ2MTkyMywicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI0ZDUwNDk3Mi0wNGFkLTQyYjItODU0NS1mMmRhMTIwYzY2ZjcifQ.wVFszjM8oyJ6p8xHEdIW4zBeG2WoXCCI7cGfsVCi6fIjiNJrkLutPSRSrlhkngeO1DCyFBG1Iu8PpCvTc2yaqA
 
 ### CREATE
 
 POST http://localhost/hotel/{{hotelId}}/room-type
 Content-Type: application/json
-Authorization: Bearer <JWT_TOKEN>
+Authorization: Bearer {{token}}
 
 {
   "name": "Deluxe Suite",
   "description": "Spacious suite with sea view",
-  "capacity": 3
+  "capacity": 3,
+  "price" : 1500
 }
 
 ### READ
@@ -27,6 +29,7 @@ Accept: application/json
 
 PUT http://localhost/room-type/{{roomTypeId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "id": "{{roomTypeId}}",
@@ -38,4 +41,4 @@ Content-Type: application/json
 ### DELETE
 
 DELETE http://localhost/room-type/{{roomTypeId}}
-Authorization: Bearer <JWT_TOKEN>
+Authorization: Bearer {{token}}

@@ -65,7 +65,17 @@
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-    </dependencies>
+				<dependency>
+					<groupId>org.ukma.spring.crooodle</groupId>
+					<artifactId>reservation-svc-dto</artifactId>
+					<version>${revision}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.ukma.spring.crooodle</groupId>
+					<artifactId>svc-common</artifactId>
+					<version>${revision}</version>
+				</dependency>
+	</dependencies>
 	<properties>
 		<svc.mainClass>org.ukma.spring.crooodle.usersvc.UserService</svc.mainClass>
 	</properties>

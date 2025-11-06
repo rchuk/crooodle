@@ -35,11 +35,11 @@
       <artifactId>spring-cloud-starter-openfeign</artifactId>
       <version>4.3.0</version>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-kubernetes-client-loadbalancer</artifactId>
-      <version>3.3.0</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.springframework.cloud</groupId>-->
+<!--      <artifactId>spring-cloud-starter-kubernetes-client-loadbalancer</artifactId>-->
+<!--      <version>3.3.0</version>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>

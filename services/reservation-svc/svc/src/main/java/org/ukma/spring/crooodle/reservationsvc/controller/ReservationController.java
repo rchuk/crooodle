@@ -49,6 +49,12 @@ public class ReservationController {
         resSvc.confirm(id);
     }
 
+	@PreAuthorize("hasRole('HOTEL_OWNER')")
+	@PostMapping("/reservation/{id}/settle")
+	public void settle(@PathVariable UUID id) {
+		resSvc.settle(id);
+	}
+
     @PreAuthorize("hasRole('TRAVELER') || hasRole('HOTEL_OWNER')")
     @PostMapping("/reservation/{id}/cancel")
     public void cancel(@PathVariable UUID id) {

@@ -1,13 +1,14 @@
-@hotelId = 2d4cb9ff-1015-459b-aebf-8a0197103af3
-@ownerId = 4ca21f3a-2020-4187-8509-176e5597d4f8
-@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjIzODA3MjQsImV4cCI6MTc2MjM4NDMyNCwicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI0Y2EyMWYzYS0yMDIwLTQxODctODUwOS0xNzZlNTU5N2Q0ZjgifQ.KM7e7xwfdY6A1mWpqswLnogLbZEBVZ9K5cZItoFdOvnK000ajtxTdNhCMohVA7Zl8_88wZNszvr0rabvhbYQvA
+@hotelId = 590ccf27-708c-4d7c-a40d-ba109586357a
+@ownerId = 4d504972-04ad-42b2-8545-f2da120c66f7
+@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjI0NjY5MzMsImV4cCI6MTc2MjQ3MDUzMywicm9sZSI6IlJPTEVfSE9URUxfT1dORVIiLCJ1aWQiOiI0ZDUwNDk3Mi0wNGFkLTQyYjItODU0NS1mMmRhMTIwYzY2ZjcifQ.7_d6JCUaVlR4YjRIrD9w37O_S2ynY-BccMC8IG0QLBBDzkwDbm40MUjqr_FehfTSLaMpdA3R5ZBcm2wBww4JyQ
+
 ### CREATE
 POST http://localhost/hotel
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Kozachok",
+  "name": "Paramount",
   "address": "15 may St. 121, Kyiv",
   "roomCount": 60
 }

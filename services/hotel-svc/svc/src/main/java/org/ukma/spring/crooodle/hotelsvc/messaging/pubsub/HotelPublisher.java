@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import org.ukma.spring.crooodle.hotelsvc.messaging.HotelMessage;
-import org.ukma.spring.crooodle.hotelsvc.messaging.HotelMessageType;
+import org.ukma.spring.crooodle.svc.messaging.HotelMessage;
+import org.ukma.spring.crooodle.svc.messaging.HotelMessageType;
 
 import java.time.Instant;
 import java.time.ZoneOffset;

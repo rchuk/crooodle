@@ -248,7 +248,6 @@ public class RoomSvc {
 		return csv.toString().getBytes(StandardCharsets.UTF_8);
 	}
 
-	@org.jetbrains.annotations.NotNull
 	private String getString(List<RoomResponseDto> rooms, StringBuilder html) {
 		for (var r : rooms) {
 			html.append("<tr>")

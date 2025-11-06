@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.hotelsvc.messaging;
+package org.ukma.spring.crooodle.svc.messaging;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
