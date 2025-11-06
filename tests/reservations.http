@@ -1,0 +1,13 @@
+@checkIn = "2025-16-10T00:00:00Z"
+@checkOut = "2025-17-10T00:00:00Z"
+@roomId = a7648c18-4cfa-47f9-946d-5ecfe48c583b
+@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6ImR1bWFvcHVzQGdtYWlsLmNvbSIsImlhdCI6MTc2MjQ2MTgyOSwiZXhwIjoxNzYyNDY1NDI5LCJyb2xlIjoiUk9MRV9UUkFWRUxFUiIsInVpZCI6Ijc2OTA1NGY4LWFhMzgtNGVhMS1iZTFjLTM0YmYwZmQ3YTM1NSJ9.lQxhgxHd3a4S8kxVjIC1ubv_0qVDd11V2Qr9zz46Wzl1cRWEC9CfAU9kFUDwcJ9s6kJpdQFvbBWNAUMMCRpBgQ
+
+POST http://localhost/room/{{roomId}}/reservation
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "checkInDate" : {{checkIn}},
+  "checkOutDate" : {{checkOut}}
+}
