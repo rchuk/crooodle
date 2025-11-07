@@ -1,0 +1,253 @@
+{
+  "uid": "lab7",
+  "title": "Lab 7",
+  "tags": [],
+  "timezone": "",
+  "schemaVersion": 42,
+  "version": 1,
+  "refresh": "5s",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "preload": false,
+
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "name": "Annotations & Alerts",
+        "type": "dashboard",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" }
+      }
+    ]
+  },
+
+  "templating": {
+    "list": [
+      {
+        "type": "query",
+        "name": "application",
+        "label": "application",
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": false,
+        "query": "label_values(http_server_requests_seconds_count, application)",
+        "refresh": 2,
+        "sort": 1,
+        "current": { "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "af3eht4zv4xz4f" }
+      }
+    ]
+  },
+
+  "time": { "from": "now-30m", "to": "now" },
+
+  "panels": [
+    {
+      "id": 1,
+      "title": "Request rate (req/s)",
+      "type": "timeseries",
+      "pluginVersion": "12.2.1",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "af3eht4zv4xz4f" },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "instant": false,
+          "editorMode": "code",
+          "legendFormat": "{{application}} {{method}} {{uri}}",
+          "expr": "sum by (application, uri, method) (\n  rate(http_server_requests_seconds_count{application=~\"$application\"}[1m])\n)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "min": 0,
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "pointSize": 5,
+            "spanNulls": false,
+            "stacking": { "mode": "none", "group": "A" },
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "thresholdsStyle": { "mode": "off" },
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 80 }]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": [] },
+        "tooltip": { "mode": "single", "sort": "none", "hideZeros": false }
+      }
+    },
+
+    {
+      "id": 2,
+      "title": "p95 latency (seconds)",
+      "type": "timeseries",
+      "pluginVersion": "12.2.1",
+      "gridPos": { "x": 0, "y": 8, "w": 24, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "af3eht4zv4xz4f" },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "instant": false,
+          "editorMode": "code",
+          "legendFormat": "{{application}} {{method}} {{uri}}",
+          "expr": "histogram_quantile(\n  0.95,\n  sum by (le, application, uri, method) (\n    rate(http_server_requests_seconds_bucket{application=~\"$application\"}[5m])\n  )\n)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "pointSize": 5,
+            "spanNulls": false,
+            "stacking": { "mode": "none", "group": "A" },
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "thresholdsStyle": { "mode": "off" },
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 80 }]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": [] },
+        "tooltip": { "mode": "single", "sort": "none", "hideZeros": false }
+      }
+    },
+
+    {
+      "id": 3,
+      "title": "Error rate (5xx per second)",
+      "type": "timeseries",
+      "pluginVersion": "12.2.1",
+      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "af3eht4zv4xz4f" },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "instant": false,
+          "editorMode": "code",
+          "legendFormat": "{{application}} {{method}} {{uri}}",
+          "expr": "sum by (application, method, uri) (\n  rate(http_server_requests_seconds_count{application=~\"$application\", status=~\"5..\"}[1m])\n) or vector(0)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "min": 0,
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "pointSize": 5,
+            "spanNulls": false,
+            "stacking": { "mode": "none", "group": "A" },
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "thresholdsStyle": { "mode": "off" },
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 80 }]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": [] },
+        "tooltip": { "mode": "single", "sort": "none", "hideZeros": false }
+      }
+    },
+
+    {
+      "id": 4,
+      "title": "Non-2xx error rate",
+      "type": "timeseries",
+      "pluginVersion": "12.2.1",
+      "gridPos": { "x": 0, "y": 24, "w": 24, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "af3eht4zv4xz4f" },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "instant": false,
+          "editorMode": "code",
+          "legendFormat": "{{status}} {{application}} {{method}} {{uri}}",
+          "expr": "sum by (status, application, method, uri) (\n  rate(http_server_requests_seconds_count{application=~\"$application\", status!~\"2..\"}[1m])\n)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "showPoints": "auto",
+            "pointSize": 5,
+            "spanNulls": false,
+            "stacking": { "mode": "none", "group": "A" },
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "thresholdsStyle": { "mode": "off" },
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 80 }]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": [] },
+        "tooltip": { "mode": "single", "sort": "none", "hideZeros": false }
+      }
+    }
+  ]
+}

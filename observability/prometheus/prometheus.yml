@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 10s
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'user-svc'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['user-svc:8080']
+
+  - job_name: 'hotel-svc'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['hotel-svc:8080']

@@ -19,7 +19,7 @@ services:
       timeout: 3s
       retries: 30
     volumes:
-      - userdb_data:/var/lib/postgresql/data
+      - userdb_data:/var/lib/postgresql
 
   hotel-svc-db:
     image: postgres:18
@@ -31,7 +31,7 @@ services:
       timeout: 3s
       retries: 30
     volumes:
-      - hoteldb_data:/var/lib/postgresql/data
+      - hoteldb_data:/var/lib/postgresql
 
   user-svc:
     build:
@@ -42,7 +42,7 @@ services:
     env_file:
       - .user-svc.env
     healthcheck:
-      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/actuator/health"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/actuator/health >/dev/null 2>&1 || exit 1"]
       interval: 30s
       timeout: 3s
       retries: 5

@@ -25,6 +25,9 @@ USER spring:spring
 
 COPY --from=build /app/services/${MODULE_PATH}/target/*.jar /app/app.jar
 
+RUN apk add --no-cache zip \
+ && zip -d /app/app.jar "BOOT-INF/classes/org/ukma/spring/crooodle/usersvc/UserSvc.class" || true
+
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
