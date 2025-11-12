@@ -4,7 +4,7 @@
 
   <groupId>org.ukma.spring.crooodle</groupId>
   <artifactId>crooodle</artifactId>
-  <version>${revision}</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Crooodle Project</name>
   <description>Base project for all Crooodle microservices</description>
@@ -24,28 +24,42 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>hotel-svc-dto</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>user-svc-dto</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>reservation-svc-dto</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>hotel-svc-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>user-svc-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>reservation-svc-client</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
-  <build>
+	<build>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -94,5 +108,8 @@
 <!--    <module>notification-svc/client</module>-->
 <!--    <module>notification-svc/dto</module>-->
 <!--    <module>notification-svc/svc</module>-->
+
+		<module>eureka-server</module>
+		<module>api-gateway</module>
   </modules>
 </project>

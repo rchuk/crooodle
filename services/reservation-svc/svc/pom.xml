@@ -6,20 +6,33 @@
   <parent>
     <groupId>org.ukma.spring.crooodle</groupId>
     <artifactId>svc-parent</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../../parents/svc-parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>reservation-svc</artifactId>
-  <version>${revision}</version>
   <name>Reservation Service</name>
   <packaging>jar</packaging>
+
+	<properties>
+		<svc.mainClass>org.ukma.spring.crooodle.reservationsvc.ReservationService</svc.mainClass>
+	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.ukma.spring.crooodle</groupId>
 			<artifactId>reservation-svc-dto</artifactId>
-			<version>${revision}</version>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>hotel-svc-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>user-svc-client</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -30,18 +43,5 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.ukma.spring.crooodle</groupId>
-			<artifactId>hotel-svc-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ukma.spring.crooodle</groupId>
-			<artifactId>user-svc-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
-	<properties>
-		<svc.mainClass>org.ukma.spring.crooodle.reservationsvc.ReservationService</svc.mainClass>
-	</properties>
 </project>

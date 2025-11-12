@@ -1,30 +1,25 @@
-# syntax=docker/dockerfile-upstream:master-labs
-
 FROM maven:3.9.11-amazoncorretto-24-debian AS build
-
 ARG MODULE_PATH
-
 WORKDIR /app
-
-COPY --parents pom.xml **/pom.xml ./
-# --mount=type=cache,dst=/root/.m2 \
-RUN mvn -q -ntp -B -pl ${MODULE_PATH} -am dependency:go-offline -f services/pom.xml
 
 COPY services ./services
-# --mount=type=cache,dst=/root/.m2 \
-RUN mvn -B -DskipTests package -pl ${MODULE_PATH} -am -f services/pom.xml
+
+RUN mvn -q -ntp -B -U -f services/parents/client-parent/pom.xml install -DskipTests
+RUN mvn -q -ntp -B -U -f services/parents/dto-parent/pom.xml    install -DskipTests
+RUN mvn -q -ntp -B -U -f services/parents/svc-parent/pom.xml    install -DskipTests
+
+RUN mvn -q -ntp -B -U -pl ${MODULE_PATH} -am -f services/pom.xml dependency:go-offline
+RUN mvn -q -ntp -B    -DskipTests package -pl ${MODULE_PATH} -am -f services/pom.xml
+
+RUN ls -lah services/${MODULE_PATH}/target
+
 
 FROM amazoncorretto:24.0.2-alpine AS run
-
 ARG MODULE_PATH
-
 WORKDIR /app
-
+RUN apk add --no-cache curl
 RUN addgroup --system spring && adduser --system --ingroup spring spring
 USER spring:spring
-
-COPY --from=build /app/services/${MODULE_PATH}/target/*.jar /app/app.jar
-
-EXPOSE 8080
-
+COPY --from=build /app/services/${MODULE_PATH}/target/${MODULE_PATH}.jar /app/app.jar
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+

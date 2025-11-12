@@ -6,31 +6,39 @@
   <parent>
     <groupId>org.ukma.spring.crooodle</groupId>
     <artifactId>svc-parent</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../../parents/svc-parent/pom.xml</relativePath>
   </parent>
+
+	<artifactId>hotel-svc</artifactId>
+	<name>Hotel Service</name>
+	<packaging>jar</packaging>
+
+	<properties>
+		<svc.mainClass>org.ukma.spring.crooodle.hotelsvc.HotelService</svc.mainClass>
+	</properties>
 
   <dependencies>
 		<dependency>
 			<groupId>org.ukma.spring.crooodle</groupId>
 			<artifactId>hotel-svc-dto</artifactId>
-			<version>${revision}</version>
+			<version>${project.version}</version>
 		</dependency>
     <dependency>
       <groupId>org.ukma.spring.crooodle</groupId>
       <artifactId>user-svc-client</artifactId>
-      <version>${revision}</version>
+			<version>${project.version}</version>
     </dependency>
 		<dependency>
 			<groupId>org.ukma.spring.crooodle</groupId>
 			<artifactId>user-svc-dto</artifactId>
-			<version>${revision}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
-      </dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.retry</groupId>
 			<artifactId>spring-retry</artifactId>
@@ -42,12 +50,4 @@
 			<version>6.2.10</version>
 		</dependency>
 	</dependencies>
-
-  <artifactId>hotel-svc</artifactId>
-  <version>${revision}</version>
-  <name>Hotel Service</name>
-  <packaging>jar</packaging>
-	<properties>
-		<svc.mainClass>org.ukma.spring.crooodle.hotelsvc.HotelService</svc.mainClass>
-	</properties>
 </project>

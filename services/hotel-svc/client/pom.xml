@@ -6,18 +6,18 @@
   <parent>
     <groupId>org.ukma.spring.crooodle</groupId>
     <artifactId>client-parent</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../../parents/client-parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>hotel-svc-client</artifactId>
-  <version>${revision}</version>
   <name>Hotel Service Client</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.ukma.spring.crooodle</groupId>
 			<artifactId>hotel-svc-dto</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
