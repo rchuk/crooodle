@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package org.ukma.spring.crooodle.svc.proto;
+
+option java_multiple_files = true;
+option java_package = "org.ukma.spring.crooodle.svc.proto";
+option java_outer_classname = "ReservationResponseProto";
+
+import "user_response.proto";
+import "room_response.proto";
+import "google/protobuf/timestamp.proto";
+
+message ReservationResponse {
+  string id = 1;
+  RoomResponse room = 2;
+  google.protobuf.Timestamp checkInDate = 3;
+  google.protobuf.Timestamp checkOutDate = 4;
+  uint32 price = 5;
+  ReservationState state = 6;
+
+//  UserResponse user = 3;
+//  uint32 price = 4;
+//  google.protobuf.Timestamp checkInDate = 5;
+//  google.protobuf.Timestamp checkOutDate = 6;
+//  ReservationState state = 7;
+}
+
+enum ReservationState {
+  PENDING = 0;
+  CONFIRMED = 1;
+  SETTLED = 2;
+  CANCELLED_BY_USER = 3;
+  CANCELLED_BY_HOTEL_OWNER = 4;
+}

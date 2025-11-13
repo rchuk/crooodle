@@ -16,7 +16,11 @@ public record ReservationResponseDto(
     @NotNull
     Date checkInDate,
     @NotNull
-    Date checkOutDate
+    Date checkOutDate,
+		@NotNull
+		int price,
+		@NotNull
+		ReservationState state
 ) {
 
 }

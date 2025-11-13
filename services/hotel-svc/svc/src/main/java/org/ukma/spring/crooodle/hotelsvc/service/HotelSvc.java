@@ -3,7 +3,6 @@ package org.ukma.spring.crooodle.hotelsvc.service;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -11,11 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.entity.HotelEntity;
-import org.ukma.spring.crooodle.svc.messaging.HotelMessage;
 import org.ukma.spring.crooodle.hotelsvc.messaging.pubsub.HotelPublisher;
 import org.ukma.spring.crooodle.hotelsvc.repository.HotelRepo;
 import org.ukma.spring.crooodle.hotelsvc.repository.RoomRepo;
-import org.ukma.spring.crooodle.usersvc.dto.Role;
+import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.hotelsvc.exception.EntityNotFoundException;
 import org.ukma.spring.crooodle.hotelsvc.exception.ForbiddenException;
 
@@ -157,7 +155,7 @@ public class HotelSvc {
 	public void update(@NotNull UUID id, @NotNull HotelUpsertDto upsertDto) {
 		var entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(id, "Hotel"));
 		if (!canUpdate(entity, upsertDto))
-			throw new ForbiddenException("Cannot update hotel");
+			throw new ForbiddenException("Cannot delete hotel");
 
 		entity.setName(upsertDto.name());
 		entity.setAddress(upsertDto.address());
@@ -196,11 +194,11 @@ public class HotelSvc {
 	}
 
 	private boolean canCreate(HotelUpsertDto ignored_upsertDto) {
-		return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
+		return userSvc.getCurrentUserRole().equals(UserRole.ROLE_HOTEL_OWNER);
 	}
 
 	private boolean canUpdate(HotelEntity hotel, HotelUpsertDto ignored_upsertDto) {
-		if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
+		if (!userSvc.getCurrentUserRole().equals(UserRole.ROLE_HOTEL_OWNER))
 			return false;
 
 		return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());
@@ -212,7 +210,7 @@ public class HotelSvc {
 
 	@Retryable(backoff = @Backoff(delay = 2000))
 	private boolean canDelete(HotelEntity hotel) {
-		if (!userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER))
+		if (!userSvc.getCurrentUserRole().equals(UserRole.ROLE_HOTEL_OWNER))
 			return false;
 
 		return hotel.getOwnerId().equals(userSvc.getCurrentUser().id());

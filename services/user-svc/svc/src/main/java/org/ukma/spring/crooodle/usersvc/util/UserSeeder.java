@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import org.ukma.spring.crooodle.usersvc.dto.Role;
+import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.usersvc.entity.RoleEntity;
 import org.ukma.spring.crooodle.usersvc.entity.UserEntity;
 import org.ukma.spring.crooodle.usersvc.repository.RoleRepo;
@@ -38,7 +38,7 @@ public class UserSeeder implements ApplicationRunner {
 
     private void seedAdmin() {
         if (userRepo.findByEmail(adminUsername).isEmpty()) {
-            var role = roleRepo.findByRole(Role.ROLE_ADMIN).orElseThrow();
+            var role = roleRepo.findByUserRole(UserRole.ROLE_ADMIN).orElseThrow();
 
             var user = UserEntity.builder()
                 .email(adminUsername)
@@ -51,12 +51,12 @@ public class UserSeeder implements ApplicationRunner {
     }
 
     private void seedRoles() {
-        Consumer<Role> seedRole = role -> {
-            if (roleRepo.findByRole(role).isEmpty())
-                roleRepo.save(RoleEntity.builder().role(role).build());
+        Consumer<UserRole> seedRole = role -> {
+            if (roleRepo.findByUserRole(role).isEmpty())
+                roleRepo.save(RoleEntity.builder().userRole(role).build());
         };
 
-        List.of(Role.values()).forEach(seedRole);
+        List.of(UserRole.values()).forEach(seedRole);
         roleRepo.flush();
     }
 }

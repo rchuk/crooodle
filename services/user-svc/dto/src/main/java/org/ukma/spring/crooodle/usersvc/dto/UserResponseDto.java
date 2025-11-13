@@ -14,7 +14,7 @@ public record UserResponseDto(
     @NotNull
     String email,
     @NotNull
-    Role role
+    UserRole userRole
 ) {
 
 }

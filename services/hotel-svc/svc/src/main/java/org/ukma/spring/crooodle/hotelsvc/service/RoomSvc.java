@@ -9,10 +9,11 @@ import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.entity.RoomEntity;
 import org.ukma.spring.crooodle.hotelsvc.repository.RoomRepo;
-import org.ukma.spring.crooodle.usersvc.dto.Role;
+import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.usersvc.client.UserSvcClient;
 import org.ukma.spring.crooodle.hotelsvc.exception.EntityNotFoundException;
 import org.ukma.spring.crooodle.hotelsvc.exception.ForbiddenException;
+
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
@@ -209,7 +210,7 @@ public class RoomSvc {
     }
 
     private boolean canCreate(UUID hotelId) {
-        return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
+        return userSvc.getCurrentUserRole().equals(UserRole.ROLE_HOTEL_OWNER);
     }
 
     private boolean canUpdate(RoomEntity room) {

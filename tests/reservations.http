@@ -1,11 +1,34 @@
-@checkIn = "2025-16-10T00:00:00Z"
-@checkOut = "2025-17-10T00:00:00Z"
+@checkIn = "2025-10-13T00:00:00Z"
+@checkOut = "2025-10-14T00:00:00Z"
 @roomId = a7648c18-4cfa-47f9-946d-5ecfe48c583b
-@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6ImR1bWFvcHVzQGdtYWlsLmNvbSIsImlhdCI6MTc2MjQ2MTgyOSwiZXhwIjoxNzYyNDY1NDI5LCJyb2xlIjoiUk9MRV9UUkFWRUxFUiIsInVpZCI6Ijc2OTA1NGY4LWFhMzgtNGVhMS1iZTFjLTM0YmYwZmQ3YTM1NSJ9.lQxhgxHd3a4S8kxVjIC1ubv_0qVDd11V2Qr9zz46Wzl1cRWEC9CfAU9kFUDwcJ9s6kJpdQFvbBWNAUMMCRpBgQ
+@clientToken = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6ImR1bWFvcHVzQGdtYWlsLmNvbSIsImlhdCI6MTc2Mjk4Mjc5NCwiZXhwIjoxNzYyOTg2Mzk0LCJ1c2VyUm9sZSI6IlJPTEVfVFJBVkVMRVIiLCJ1aWQiOiI3NjkwNTRmOC1hYTM4LTRlYTEtYmUxYy0zNGJmMGZkN2EzNTUifQ.I6J98se-F3UO5EOVrnRDu6y5hT5oCztx3aOokLjYw9oQFXs5hnjxiyEDEkB83sIPLyfxHcraJ8xi5mAg0In46Q
+@clientId = 769054f8-aa38-4ea1-be1c-34bf0fd7a355
+@ownerId = 4d504972-04ad-42b2-8545-f2da120c66f7
+@resId = 8757102f-4e25-4c91-a301-30d004f67669
+@ownerToken = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjMwMjMxOTEsImV4cCI6MTc2MzAyNjc5MSwidXNlclJvbGUiOiJST0xFX0hPVEVMX09XTkVSIiwidWlkIjoiNGQ1MDQ5NzItMDRhZC00MmIyLTg1NDUtZjJkYTEyMGM2NmY3In0.dyT-bB-J5pjAmP5U5p-Vs0zwGi_iBsfrMFDJi_1jRjTXjXRDaU75zf7siXKcKCwK2nHqY8DInoJXF__M6Aqr4g
+
+### CREATE
 
 POST http://localhost/room/{{roomId}}/reservation
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "checkInDate" : {{checkIn}},
+  "checkOutDate" : {{checkOut}}
+}
+
+### READ
+
+GET http://localhost/reservation/{{resId}}
+Content-Type: application/json
+Authorization: Bearer {{ownerToken}}
+
+### CONFIRMATION
+
+POST http://localhost/reservation/{{resId}}/confirm
+Content-Type: application/json
+Authorization: Bearer {{ownerToken}}
 
 {
   "checkInDate" : {{checkIn}},

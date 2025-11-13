@@ -8,7 +8,7 @@ Content-Type: application/json
   "name": "Duma Opus",
   "email": "dumaopus@gmail.com",
   "password": "leb1Gayyy",
-  "role": "TRAVELER"
+  "userRole": "TRAVELER"
 }
 
 ### REGISTER
@@ -20,7 +20,7 @@ Content-Type: application/json
   "name": "Hlomozdat Dmytro",
   "email": "hlomosoma@gmail.com",
   "password": "dKf42ijsdf",
-  "role": "HOTEL_OWNER"
+  "userRole": "HOTEL_OWNER"
 }
 
 ### LOGIN

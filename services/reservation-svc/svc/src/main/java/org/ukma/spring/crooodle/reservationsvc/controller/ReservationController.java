@@ -30,13 +30,18 @@ public class ReservationController {
         return resSvc.read(id);
     }
 
-    /* TODO
+    // TODO
     @PreAuthorize("hasRole('HOTEL_OWNER')")
     @GetMapping("/hotel/{hotelId}/reservation")
-    public List<ReservationResponseDto> readAllByHotel(@PathVariable UUID hotelId, @RequestBody ReservationCriteriaDto requestDto) {
-        return resSvc.readAllByHotel(hotelId, requestDto);
+    public List<ReservationResponseDto> readAllByHotel(@PathVariable UUID hotelId/*, @RequestBody ReservationCriteriaDto requestDto*/) {
+        return resSvc.readAllByHotel(hotelId/*, requestDto*/);
     }
-    */
+
+	@PreAuthorize("hasRole('TRAVELER')")
+	@GetMapping("user/{userId}/reservation")
+	public List<ReservationResponseDto> readAllByUser(@PathVariable UUID userId/*, @RequestBody ReservationCriteriaDto requestDto*/) {
+		return resSvc.readAllByUser(userId/*, requestDto*/);
+	}
 
     @GetMapping("/room/{roomId}/reservation")
     public List<ReservationResponseDto> readAllByRoom(@PathVariable UUID roomId, @RequestBody(required = false) ReservationCriteriaDto requestDto) {

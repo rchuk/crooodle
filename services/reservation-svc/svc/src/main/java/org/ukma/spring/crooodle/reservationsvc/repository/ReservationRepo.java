@@ -23,4 +23,6 @@ public interface ReservationRepo extends JpaRepository<ReservationEntity, UUID> 
         @Param("newCheckInDate") Date newCheckIn,
         @Param("newCheckOutDate") Date newCheckOut
     );
+
+	List<ReservationEntity> findAllByUserId(UUID userId);
 }

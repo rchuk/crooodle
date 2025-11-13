@@ -6,7 +6,7 @@ import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.usersvc.client.UserSvcClient;
-import org.ukma.spring.crooodle.usersvc.dto.Role;
+import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
 
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class UserClientSvc {
 	}
 
 	@Retryable(backoff = @Backoff(delay = 2000))
-	public Role getCurrentUserRole() {
+	public UserRole getCurrentUserRole() {
 		return userSvc.getCurrentUserRole();
 	}
 
@@ -37,6 +37,6 @@ public class UserClientSvc {
 
 	@Recover
 	public UserResponseDto recover(RuntimeException ex, UUID id) {
-		return new UserResponseDto(id, "Unknown User", "[Missing]", Role.ROLE_HOTEL_OWNER);
+		return new UserResponseDto(id, "Unknown User", "[Missing]", UserRole.ROLE_HOTEL_OWNER);
 	}
 }

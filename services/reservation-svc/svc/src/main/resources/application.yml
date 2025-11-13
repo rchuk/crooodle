@@ -5,3 +5,8 @@ spring:
     password: admin
     packages:
       trusted: org.ukma.spring.crooodle
+grpc:
+  client:
+    user-service:
+      address: static://localhost:9090
+      negotiation-type: plaintext

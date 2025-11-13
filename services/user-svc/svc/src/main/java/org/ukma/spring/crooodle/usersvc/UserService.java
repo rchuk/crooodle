@@ -7,7 +7,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients
 @EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+	net.devh.boot.grpc.server.autoconfigure.GrpcServerSecurityAutoConfiguration.class
+})
 public class UserService {
     public static void main(String[] args) {
         SpringApplication.run(UserService.class, args);

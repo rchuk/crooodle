@@ -36,6 +36,7 @@ public class HotelPublisher {
 	public void sendHotelDeletedEvent(UUID hotelId) {
 		sendEvent(hotelId, HotelMessageType.REMOVED);
 	}
+
 	private void sendEvent(UUID hotelId, HotelMessageType type) {
 		var event = HotelMessage.builder()
 			.hotelId(hotelId)

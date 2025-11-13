@@ -33,7 +33,7 @@ public class AuthController {
 	public LoginResponseDto login(@RequestBody LoginRequestDto req) {
 		var result = auth.authenticate(new UsernamePasswordAuthenticationToken(req.email(), req.password()));
 		var principal = (UserEntity)result.getPrincipal();
-		var token = jwt.issue(principal.getEmail(), principal.getRole().getRole().name(), Map.of("uid", principal.getId().toString()));
+		var token = jwt.issue(principal.getEmail(), principal.getRole().getUserRole().name(), Map.of("uid", principal.getId().toString()));
 //		userProducer.sendLoggedInEvent(req.email());
 		return LoginResponseDto.builder().token(token).build();
 	}
@@ -50,7 +50,7 @@ public class AuthController {
     }
 
     @GetMapping("/me/role")
-    public Role getCurrentUserRole() {
+    public UserRole getCurrentUserRole() {
         return userSvc.getCurrentUserRole();
     }
 }

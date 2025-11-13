@@ -35,7 +35,7 @@ public class JwtService {
 			.expiration(Date.from(now.plusSeconds(accessMinutes * 60)));
 
 		b = b.claims()
-			.add("role", role)
+			.add("userRole", role)
 			.add(extra == null ? java.util.Map.of() : extra)
 			.and();
 

@@ -12,12 +12,15 @@ import org.ukma.spring.crooodle.reservationsvc.entity.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.messaging.p2p.ResProducer;
 import org.ukma.spring.crooodle.reservationsvc.repository.ReservationRepo;
 import org.ukma.spring.crooodle.svc.messaging.ReservationMessageType;
-import org.ukma.spring.crooodle.usersvc.dto.Role;
+import org.ukma.spring.crooodle.svc.proto.Role;
+import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.usersvc.client.UserSvcClient;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.ukma.spring.crooodle.reservationsvc.exception.EntityNotFoundException;
 import org.ukma.spring.crooodle.reservationsvc.exception.ForbiddenException;
 import org.ukma.spring.crooodle.reservationsvc.exception.InvalidRequestException;
+
+/*import org.ukma.spring.crooodle.reservationsvc.clientRPC.ReservationUsersClient;*/
 
 import java.util.List;
 import java.util.UUID;
@@ -25,14 +28,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class ReservationSvc {
-    // TODO: Replace event mechanism
+
     private final ReservationRepo resRepo;
     private final RoomSvcClient roomSvc;
-//	  private final HotelSvcClient hotelSvc;
 		private final ResProducer resProducer;
     private final UserSvcClient userSvc;
+	/*private final ReservationUsersClient reservationUsersGrpcClient;*/
 		private final JavaMailSender jms;
-//		private final ApplicationEventPublisher eventPub;
 
     public void onRoomDeletedEvent(RoomDeletedEvent event) {
         var reservation = get(event.roomId());
@@ -42,10 +44,12 @@ public class ReservationSvc {
 
     @Transactional
     public UUID create(UUID roomId, @NotNull ReservationCreateDto requestDto) {
-        if (!canCreate())
+
+			var user = userSvc.getCurrentUser();
+
+			if (!canCreate())
             throw new ForbiddenException("Cannot create reservation");
 
-        var user = userSvc.getCurrentUser();
         var roomDto = roomSvc.read(roomId);
         if (resRepo.existsOverlappingReservation(roomId, requestDto.checkInDate(), requestDto.checkOutDate()))
             throw new InvalidRequestException("The room is already reserved for the specified period");
@@ -78,12 +82,6 @@ public class ReservationSvc {
 			String clientEmail = user.email();
 			sendCreationEmail(clientEmail, resInfo);
 
-//        eventPub.publishEvent(ReservationCreatedEvent.builder()
-//            .userId(reservation.getUserId())
-//            .roomId(reservation.getRoomId())
-//            .build()
-//        );
-
         return reservation.getId();
     }
 
@@ -105,6 +103,8 @@ public class ReservationSvc {
             .room(roomSvc.read(reservation.getRoomId()))
             .checkInDate(reservation.getCheckInDate())
             .checkOutDate(reservation.getCheckOutDate())
+						.price(reservation.getPrice())
+						.state(reservation.getState())
             .build();
     }
 
@@ -115,9 +115,28 @@ public class ReservationSvc {
             .user(userSvc.getUser(reservation.getUserId()))
             .checkInDate(reservation.getCheckInDate())
             .checkOutDate(reservation.getCheckOutDate())
+						.price(reservation.getPrice())
             .state(reservation.getState())
             .build();
     }
+
+	public List<ReservationResponseDto> readAllByUser(@NotNull UUID userId/*, @NotNull ReservationCriteriaDto criteriaDto*/) {
+		// TODO: Use criteria
+		// TODO: Add pagination
+
+		return resRepo.findAllByUserId(userId).stream()
+			.map(this::reservationEntityToDto)
+			.toList();
+	}
+
+	public List<ReservationResponseDto> readAllByHotel(@NotNull UUID userId/*, @NotNull ReservationCriteriaDto criteriaDto*/) {
+		// TODO: Use criteria
+		// TODO: Add pagination
+
+		return resRepo.findAllByUserId(userId).stream()
+			.map(this::reservationEntityToDto)
+			.toList();
+	}
 
     public List<ReservationResponseDto> readAllByRoom(@NotNull UUID roomId, @NotNull ReservationCriteriaDto criteriaDto) {
         // TODO: Use criteria
@@ -140,12 +159,6 @@ public class ReservationSvc {
 
 				reservation.setState(ReservationState.CONFIRMED);
 				resProducer.sendConfirmedEvent(reservation.getId());
-
-//        eventPub.publishEvent(ReservationConfirmedEvent.builder()
-//            .userId(reservation.getUserId())
-//            .roomId(reservation.getRoomId())
-//            .build()
-//        );
     }
 
 	@Transactional
@@ -186,12 +199,16 @@ public class ReservationSvc {
     }
 
     private boolean canCreate() {
-        return userSvc.getCurrentUserRole().equals(Role.ROLE_TRAVELER);
+        return userSvc.getCurrentUserRole().equals(UserRole.ROLE_TRAVELER);
     }
+
+		/*private boolean canCreateGrpc(String userId) {
+			return reservationUsersGrpcClient.getCurrentUserRole(userId).equals(Role.ROLE_TRAVELER);
+		}*/
 
     private boolean canReadDetailed(ReservationEntity reservation) {
         var user = userSvc.getCurrentUser();
-        return switch (user.role()) {
+        return switch (user.userRole()) {
             case ROLE_TRAVELER -> userSvc.getCurrentUser().id().equals(reservation.getUserId());
             case ROLE_HOTEL_OWNER -> {
                 var room = roomSvc.read(reservation.getRoomId());

@@ -8,10 +8,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.ukma.spring.crooodle.usersvc.dto.Role;
+import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.usersvc.dto.UserRegisterDto;
 import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
-//import org.ukma.spring.crooodle.usersvc.messaging.p2p.UserProducer;
 import org.ukma.spring.crooodle.usersvc.repository.RoleRepo;
 import org.ukma.spring.crooodle.usersvc.entity.UserEntity;
 import org.ukma.spring.crooodle.usersvc.repository.UserRepo;
@@ -42,11 +41,11 @@ public class UserSvc implements UserDetailsService {
             throw new InvalidRequestException("User with the following email already exists");
 
         var role = switch (dto.role()) {
-            case TRAVELER -> Role.ROLE_TRAVELER;
-            case HOTEL_OWNER -> Role.ROLE_HOTEL_OWNER;
+            case TRAVELER -> UserRole.ROLE_TRAVELER;
+            case HOTEL_OWNER -> UserRole.ROLE_HOTEL_OWNER;
         };
 
-        var defaultRole = roleRepo.findByRole(role).orElseThrow();
+        var defaultRole = roleRepo.findByUserRole(role).orElseThrow();
         var entity = UserEntity.builder()
             .name(dto.name())
             .email(dto.email())
@@ -55,15 +54,14 @@ public class UserSvc implements UserDetailsService {
             .build();
         entity = repo.saveAndFlush(entity);
 
-//				userProducer.sendRegisteredEvent(entity.getEmail());
         return userEntityToDto(entity);
     }
 
-    public Role getCurrentUserRole() {
+    public UserRole getCurrentUserRole() {
         try {
-            return getCurrentUser().role();
+            return getCurrentUser().userRole();
         } catch (Exception e) {
-            return Role.ROLE_ANONYMOUS;
+            return UserRole.ROLE_ANONYMOUS;
         }
     }
 
@@ -96,13 +94,13 @@ public class UserSvc implements UserDetailsService {
 			.append("th,td{border:1px solid #ccc;padding:8px;text-align:left}")
 			.append("th{background:#f2f2f2}")
 			.append("</style>\n</head>\n<body>\n<h2>User List</h2>\n<table>\n<tr>")
-			.append("<th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr>\n");
+			.append("<th>ID</th><th>Name</th><th>Email</th><th>UserRole</th></tr>\n");
 		for (var u : users) {
 			html.append("<tr>")
 				.append("<td>").append(escapeHTML(u.id().toString())).append("</td>")
 				.append("<td>").append(escapeHTML(u.name())).append("</td>")
 				.append("<td>").append(escapeHTML(u.email())).append("</td>")
-				.append("<td>").append(escapeHTML(u.role().toString())).append("</td>")
+				.append("<td>").append(escapeHTML(u.userRole().toString())).append("</td>")
 				.append("</tr>\n");
 		}
 		html.append("</table>\n</body>\n</html>");
@@ -112,12 +110,12 @@ public class UserSvc implements UserDetailsService {
 	public byte[] getAllToCSV() {
 		var users = getAllUsers();
 		StringBuilder csv = new StringBuilder();
-		csv.append("id,name,email,role\n");
+		csv.append("id,name,email,userRole\n");
 		for (var u : users) {
 			csv.append(u.id()).append(',')
 				.append(escapeCSV(u.name())).append(',')
 				.append(escapeCSV(u.email())).append(',')
-				.append(escapeCSV(u.role().toString())).append('\n');
+				.append(escapeCSV(u.userRole().toString())).append('\n');
 		}
 		return csv.toString().getBytes(StandardCharsets.UTF_8);
 	}
@@ -160,8 +158,8 @@ public class UserSvc implements UserDetailsService {
                 escapeHTML(dto.name()) + "</div>\n" +
                 "    <div class=\"row\"><span class=\"label\">Email:</span>" +
                 escapeHTML(dto.email()) + "</div>\n" +
-                "    <div class=\"row\"><span class=\"label\">Role:</span>" +
-                escapeHTML(dto.role().toString()) + "</div>\n" +
+                "    <div class=\"row\"><span class=\"label\">UserRole:</span>" +
+                escapeHTML(dto.userRole().toString()) + "</div>\n" +
                 "  </div>\n" +
                 "</body>\n" +
                 "</html>";
@@ -180,11 +178,11 @@ public class UserSvc implements UserDetailsService {
 	public byte[] getUserByIdAsCSV(UUID id) {
 		var dto = getUserById(id);
 
-        String csv = "id,name,email,role\n" +
+        String csv = "id,name,email,userRole\n" +
                 dto.id() + ',' +
                 escapeCSV(dto.name()) + ',' +
                 escapeCSV(dto.email()) + ',' +
-                escapeCSV(dto.role().toString()) + '\n';
+                escapeCSV(dto.userRole().toString()) + '\n';
 
 		return csv.getBytes(StandardCharsets.UTF_8);
 	}
@@ -202,7 +200,7 @@ public class UserSvc implements UserDetailsService {
             .id(entity.getId())
             .name(entity.getName())
             .email(entity.getEmail())
-            .role(entity.getRole().getRole())
+            .userRole(entity.getRole().getUserRole())
             .build();
 	}
 }

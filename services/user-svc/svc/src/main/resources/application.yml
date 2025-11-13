@@ -5,3 +5,13 @@ spring:
     password: admin
     packages:
       trusted: org.ukma.spring.crooodle
+grpc:
+  server:
+    port: 9090
+    security:
+      enabled: false
+  client:
+    user-svc:
+      address: static://user-svc:9090
+      negotiationType: plaintext
+

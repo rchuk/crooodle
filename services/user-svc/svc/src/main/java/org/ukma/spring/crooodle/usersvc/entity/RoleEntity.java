@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.ukma.spring.crooodle.usersvc.dto.Role;
+import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 
 @Entity
 @Getter
@@ -18,10 +18,10 @@ public class RoleEntity {
     private int id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true, length = 100)
-    private Role role;
+		@Column(name = "role", nullable = false, unique = true, length = 100)
+    private UserRole userRole;
 
     public GrantedAuthority getAuthority() {
-        return new SimpleGrantedAuthority(role.name());
+        return new SimpleGrantedAuthority(userRole.name());
     }
 }

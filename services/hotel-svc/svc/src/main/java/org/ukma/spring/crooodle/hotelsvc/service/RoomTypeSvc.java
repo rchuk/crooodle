@@ -4,12 +4,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.ukma.spring.crooodle.hotelsvc.service.HotelSvc;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeResponseDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeUpsertDto;
 import org.ukma.spring.crooodle.hotelsvc.entity.RoomTypeEntity;
 import org.ukma.spring.crooodle.hotelsvc.repository.RoomTypeRepo;
-import org.ukma.spring.crooodle.usersvc.dto.Role;
+import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.usersvc.client.UserSvcClient;
 import org.ukma.spring.crooodle.hotelsvc.exception.EntityNotFoundException;
 import org.ukma.spring.crooodle.hotelsvc.exception.ForbiddenException;
@@ -85,7 +84,7 @@ public class RoomTypeSvc {
     }
 
     private boolean canCreate(UUID hotelId) {
-        return userSvc.getCurrentUserRole().equals(Role.ROLE_HOTEL_OWNER);
+        return userSvc.getCurrentUserRole().equals(UserRole.ROLE_HOTEL_OWNER);
     }
 
     private boolean canUpdate(RoomTypeEntity roomType) {
