@@ -1,5 +1,6 @@
 @userId = a9c3a015-cf4c-4081-a615-46e48b8087f9
-@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjMxMjU1MDIsImV4cCI6MTc2MzEyOTEwMiwidXNlclJvbGUiOiJST0xFX0hPVEVMX09XTkVSIiwidWlkIjoiZjcwN2RmN2ItNWU4MC00MDk5LTg1N2EtMDQ3Mzk4MzkyOTA4In0.hDEKvZR8xIY452M7HLsYFMPhWrrLQIPGI3OMpQkFlt5qLOdNtppSwiJJ_PJKWsWTyl5E-MzmL4rqNcPv9NaJ_Q
+@ownerToken = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjMxNDE5NjYsImV4cCI6MTc2MzE0NTU2NiwidXNlclJvbGUiOiJST0xFX0hPVEVMX09XTkVSIiwidWlkIjoiZjcwN2RmN2ItNWU4MC00MDk5LTg1N2EtMDQ3Mzk4MzkyOTA4In0.yP_8bONB9e_E-cLmVC4_wN7SGGUFJYNzVnsskJVVCdAaMx-El8l0XBYBvVpR7ToLXKSa7hv7jwjJDXTkFX_t1A
+@userToken = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6ImR1bWFvcHVzQGdtYWlsLmNvbSIsImlhdCI6MTc2MzEzNjg3MiwiZXhwIjoxNzYzMTQwNDcyLCJ1c2VyUm9sZSI6IlJPTEVfVFJBVkVMRVIiLCJ1aWQiOiJhOWMzYTAxNS1jZjRjLTQwODEtYTYxNS00NmU0OGI4MDg3ZjkifQ.yBmHlmpdE2__v_nUXayJJLc0TZI4HDv0l-rD6kuqloDvcnYb--RJDfmJOmfPdIegmsJPbAdX7k_f0o4eSc_DRg
 @hotelId = 8799d1b4-a921-4d1d-bb6b-f44d0621e4d8
 
 ### REGISTER
@@ -45,15 +46,15 @@ Content-Type: application/json
 
 ### GET ME
 GET http://localhost/me
-Authorization: Bearer {{token}}
+Authorization: Bearer {{ownerToken}}
 
 ### GET RESERVATIONS (GRPC)
 GET http://localhost/user/me/reservations
-Authorization: Bearer {{token}}
+Authorization: Bearer {{userToken}}
 
 ### STREAM
 http://localhost/user/rooms/{{hotelId}}
-Authorization: Bearer {{token}}
+Authorization: Bearer {{ownerToken}}
 ## grpcurl -import-path ./proto -proto rooms_svc.proto -d '{"hotelId":"8799d1b4-a921-4d1d-bb6b-f44d0621e4d8"}' localhost:9090 RoomService/GetRoomsByHotel
 
 

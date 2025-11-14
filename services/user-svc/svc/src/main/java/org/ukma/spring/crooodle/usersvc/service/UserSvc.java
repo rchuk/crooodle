@@ -189,9 +189,14 @@ public class UserSvc implements UserDetailsService {
 	}
 
 	public Flux<RoomResponseDto> streamRoomsByHotel(UUID hotelId) {
+
+		if (hotelId == null)
+			return Flux.error(new IllegalArgumentException("hotelId cannot be null"));
+
 		return roomGrpcClient.runRoomStream(hotelId)
 			.map(this::roomProtoToDto);
 	}
+
 
 	// -------------- HELPERS --------------
 	private String escapeHTML(String s) {

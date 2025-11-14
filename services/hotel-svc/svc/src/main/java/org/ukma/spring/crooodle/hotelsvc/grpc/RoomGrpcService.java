@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.hotelsvc.grpc;
 
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -16,16 +17,24 @@ public class RoomGrpcService extends RoomServiceGrpc.RoomServiceImplBase {
 
 	@Override
 	public void getRoomsByHotel(RoomListByHotelRequest req,
-															 StreamObserver<RoomResponse> resObserver){
+															StreamObserver<RoomResponse> resObserver) {
+		try {
+			UUID hotelId = UUID.fromString(req.getHotelId());
 
-		UUID hotelId = UUID.fromString(req.getHotelId());
+			roomSvc.readAllByHotel(hotelId).stream()
+				.map(this::toProto)
+				.forEach(resObserver::onNext);
 
-		roomSvc.readAllByHotel(hotelId).stream()
-			.map(this::toProto)
-			.forEach(resObserver::onNext); // stream each room
+			resObserver.onCompleted();
 
-		resObserver.onCompleted(); // finish streaming
+		}
+		catch (Exception e) {
+			resObserver.onError(Status.INTERNAL
+				.withDescription("Internal server error")
+				.asRuntimeException());
+		}
 	}
+
 
 	private RoomResponse toProto(org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto dto) {
 
