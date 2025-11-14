@@ -5,3 +5,6 @@ spring:
     password: admin
     packages:
       trusted: org.ukma.spring.crooodle
+grpc:
+  server:
+    port: 9091

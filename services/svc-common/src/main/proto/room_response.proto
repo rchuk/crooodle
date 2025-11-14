@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package org.ukma.spring.crooodle.svc.proto;
+
+option java_multiple_files = true;
+option java_package = "org.ukma.spring.crooodle.svc.proto";
+option java_outer_classname = "RoomResponseProto";
+
+import "room_type_response.proto";
+
+message RoomResponse{
+  string id = 1;
+  RoomTypeResponse roomType = 2;
+  string name = 3;
+}
+
+

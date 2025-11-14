@@ -3,10 +3,14 @@ package org.ukma.spring.crooodle.usersvc.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
+import org.ukma.spring.crooodle.reservationsvc.dto.ReservationResponseDto;
+import org.ukma.spring.crooodle.svc.proto.RoomResponse;
 import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
 import org.ukma.spring.crooodle.usersvc.service.UserSvc;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +21,7 @@ import java.util.UUID;
 public class UserController {
 
 	private final UserSvc userSvc;
+
 
 	// ----- READ ALL -----
 	@GetMapping
@@ -65,11 +70,24 @@ public class UserController {
 			.body(csvBytes);
 	}
 
-	@GetMapping("email/{email}")
+	@GetMapping("/email/{email}")
 	public UserResponseDto getUserByEmail(@PathVariable String email){
 		return userSvc.getUserByEmail(email);
 	}
 
 
+	// ----- GRPC LOGIC (GET RESERVATIONS FOR SPECIFIED USER) -----
+
+	//	@PreAuthorize("hasRole('TRAVELER')")
+	@GetMapping("/me/reservations")
+	public List<ReservationResponseDto> getReservationsByUser(){
+		UUID currentUserId = userSvc.getCurrentUser().id();
+		return userSvc.getReservationsByUserId(currentUserId);
+	}
+
+	@GetMapping(value = "/rooms/{hotelId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public Flux<RoomResponseDto> getRoomStreamByHotel(@PathVariable UUID hotelId) {
+		return userSvc.streamRoomsByHotel(hotelId);
+	}
 
 }

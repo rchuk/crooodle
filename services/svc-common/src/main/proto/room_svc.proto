@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package org.ukma.spring.crooodle.svc.proto;
+
+import "room_response.proto";
+
+option java_multiple_files = true;
+option java_package = "org.ukma.spring.crooodle.svc.proto";
+option java_outer_classname = "RoomServiceProto";
+
+message RoomListByHotelRequest {
+  string hotelId = 1;
+}
+
+service RoomService {
+  rpc GetRoomsByHotel(RoomListByHotelRequest) returns (stream RoomResponse);
+}

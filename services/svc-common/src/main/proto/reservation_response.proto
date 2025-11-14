@@ -17,12 +17,6 @@ message ReservationResponse {
   google.protobuf.Timestamp checkOutDate = 4;
   uint32 price = 5;
   ReservationState state = 6;
-
-//  UserResponse user = 3;
-//  uint32 price = 4;
-//  google.protobuf.Timestamp checkInDate = 5;
-//  google.protobuf.Timestamp checkOutDate = 6;
-//  ReservationState state = 7;
 }
 
 enum ReservationState {

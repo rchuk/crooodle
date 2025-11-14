@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package org.ukma.spring.crooodle.svc.proto;
+
+option java_multiple_files = true;
+option java_package = "org.ukma.spring.crooodle.svc.proto";
+option java_outer_classname = "UserServiceProto";
+import "user_response.proto";
+
+
+
+service UserService {
+  rpc GetCurrentUser(UserRequest) returns (UserResponse);
+  rpc GetCurrentUserRole(UserRequest) returns (UserRoleResponse);
+}
+
+message UserRequest {
+  string authenticated_user_id = 1;
+}
+
+message UserRoleResponse {
+  .org.ukma.spring.crooodle.svc.proto.Role role = 1;
+}

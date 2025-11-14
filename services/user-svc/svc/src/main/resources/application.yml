@@ -6,12 +6,10 @@ spring:
     packages:
       trusted: org.ukma.spring.crooodle
 grpc:
-  server:
-    port: 9090
-    security:
-      enabled: false
   client:
-    user-svc:
-      address: static://user-svc:9090
-      negotiationType: plaintext
-
+    reservationService:
+      address: static://reservation-svc:9090
+      negotiation-type: plaintext
+    roomService:
+      address: static://hotel-svc:9091
+      negotiation-type: plaintext

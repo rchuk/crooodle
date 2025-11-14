@@ -92,7 +92,7 @@ public class RoomSvc {
         // TODO: Add pagination
         var hotel = hotelSvc.get(hotelId);
 
-        return roomRepo.findAllByType_Hotel(hotel)
+        return roomRepo.findAllByHotelIdFetchAll(hotelId)
             .stream()
             .map(this::roomEntityToDto)
             .toList();
@@ -151,7 +151,7 @@ public class RoomSvc {
 		var type = roomTypeSvc.get(typeId);
 		var hotel = hotelSvc.get(hotelId);
 
-		return roomRepo.findAllByType_HotelIdAndType(hotel.getId(), type)
+		return roomRepo.findAllByHotelAndTypeFetchAll(hotel.getId(), typeId)
 			.stream()
 			.map(this::roomEntityToDto)
 			.toList();

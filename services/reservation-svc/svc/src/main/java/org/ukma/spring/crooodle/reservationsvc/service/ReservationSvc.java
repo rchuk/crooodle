@@ -12,7 +12,7 @@ import org.ukma.spring.crooodle.reservationsvc.entity.ReservationEntity;
 import org.ukma.spring.crooodle.reservationsvc.messaging.p2p.ResProducer;
 import org.ukma.spring.crooodle.reservationsvc.repository.ReservationRepo;
 import org.ukma.spring.crooodle.svc.messaging.ReservationMessageType;
-import org.ukma.spring.crooodle.svc.proto.Role;
+//import org.ukma.spring.crooodle.svc.proto.Role;
 import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.usersvc.client.UserSvcClient;
 import org.springframework.mail.javamail.JavaMailSender;

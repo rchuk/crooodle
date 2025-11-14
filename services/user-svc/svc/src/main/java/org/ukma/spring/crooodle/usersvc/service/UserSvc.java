@@ -1,5 +1,6 @@
 package org.ukma.spring.crooodle.usersvc.service;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,18 +9,30 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.ukma.spring.crooodle.hotelsvc.dto.HotelResponseDto;
+import org.ukma.spring.crooodle.hotelsvc.dto.RoomResponseDto;
+import org.ukma.spring.crooodle.hotelsvc.dto.RoomTypeResponseDto;
+import org.ukma.spring.crooodle.reservationsvc.dto.ReservationResponseDto;
+import org.ukma.spring.crooodle.reservationsvc.dto.ReservationState;
+import org.ukma.spring.crooodle.svc.proto.ReservationResponse;
+import org.ukma.spring.crooodle.svc.proto.RoomResponse;
 import org.ukma.spring.crooodle.usersvc.dto.UserRole;
 import org.ukma.spring.crooodle.usersvc.dto.UserRegisterDto;
 import org.ukma.spring.crooodle.usersvc.dto.UserResponseDto;
+import org.ukma.spring.crooodle.usersvc.grpc.ReservationGrpcClient;
+import org.ukma.spring.crooodle.usersvc.grpc.RoomGrpcClient;
 import org.ukma.spring.crooodle.usersvc.repository.RoleRepo;
 import org.ukma.spring.crooodle.usersvc.entity.UserEntity;
 import org.ukma.spring.crooodle.usersvc.repository.UserRepo;
 import org.ukma.spring.crooodle.usersvc.exception.EntityNotFoundException;
 import org.ukma.spring.crooodle.usersvc.exception.InvalidRequestException;
+import reactor.core.publisher.Flux;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -27,6 +40,8 @@ public class UserSvc implements UserDetailsService {
     private final UserRepo repo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
+		private final ReservationGrpcClient grpcClient;
+		private final RoomGrpcClient roomGrpcClient;
 //		private final UserProducer userProducer;
 
 	// -------------- AUTHENTICATION --------------
@@ -75,6 +90,7 @@ public class UserSvc implements UserDetailsService {
 
         return null;
     }
+
 
 	// -------------- GET ALL --------------
 	public List<UserResponseDto> getAllUsers() {
@@ -165,8 +181,21 @@ public class UserSvc implements UserDetailsService {
                 "</html>";
 	}
 
+	// -------------- GRPC LOGIC --------------
+	public List<ReservationResponseDto> getReservationsByUserId(UUID userId){
+			return grpcClient.getReservationsByUser(userId).stream()
+				.map(this::resProtoToDto)
+				.collect(Collectors.toList());
+	}
+
+	public Flux<RoomResponseDto> streamRoomsByHotel(UUID hotelId) {
+		return roomGrpcClient.runRoomStream(hotelId)
+			.map(this::roomProtoToDto);
+	}
+
 	// -------------- HELPERS --------------
 	private String escapeHTML(String s) {
+
 		if (s == null) return "";
 		return s.replace("&", "&amp;")
 			.replace("<", "&lt;")
@@ -196,11 +225,71 @@ public class UserSvc implements UserDetailsService {
 	}
 
 	public UserResponseDto userEntityToDto(UserEntity entity) {
-        return UserResponseDto.builder()
-            .id(entity.getId())
-            .name(entity.getName())
-            .email(entity.getEmail())
-            .userRole(entity.getRole().getUserRole())
-            .build();
+			return UserResponseDto.builder()
+				.id(entity.getId())
+				.name(entity.getName())
+				.email(entity.getEmail())
+				.userRole(entity.getRole().getUserRole())
+				.build();
 	}
+
+	private ReservationResponseDto resProtoToDto(ReservationResponse reservationProto) {
+		HotelResponseDto hotelDto = new HotelResponseDto(
+			UUID.fromString(reservationProto.getRoom().getRoomType().getHotel().getId()),
+			UUID.fromString(reservationProto.getRoom().getRoomType().getHotel().getOwnerId()),
+			reservationProto.getRoom().getRoomType().getHotel().getOwnerName(),
+			reservationProto.getRoom().getRoomType().getHotel().getName(),
+			reservationProto.getRoom().getRoomType().getHotel().getAddress(),
+			reservationProto.getRoom().getRoomType().getHotel().getRoomCount()
+		);
+
+		RoomTypeResponseDto roomTypeDto = new RoomTypeResponseDto(
+			reservationProto.getRoom().getRoomType().getId().isEmpty() ? null : UUID.fromString(reservationProto.getRoom().getRoomType().getId()),
+			hotelDto,
+			reservationProto.getRoom().getRoomType().getName(),
+			reservationProto.getRoom().getRoomType().getPrice()
+		);
+
+		RoomResponseDto roomResponseDto = new RoomResponseDto(
+			UUID.fromString(reservationProto.getRoom().getId()),
+			roomTypeDto,
+			reservationProto.getRoom().getName()
+		);
+
+		return new ReservationResponseDto(
+			UUID.fromString(reservationProto.getId()),
+			roomResponseDto,
+			new Date(reservationProto.getCheckInDate().getSeconds() * 1000L
+				+ reservationProto.getCheckInDate().getNanos() / 1_000_000),
+			new Date(reservationProto.getCheckOutDate().getSeconds() * 1000L
+				+ reservationProto.getCheckOutDate().getNanos() / 1_000_000),
+			reservationProto.getPrice(),
+			ReservationState.valueOf(reservationProto.getState().name())
+		);
+	}
+
+	private RoomResponseDto roomProtoToDto(RoomResponse roomProto){
+		HotelResponseDto hotelDto = new HotelResponseDto(
+			UUID.fromString(roomProto.getRoomType().getHotel().getId()),
+			UUID.fromString(roomProto.getRoomType().getHotel().getOwnerId()),
+			roomProto.getRoomType().getHotel().getOwnerName(),
+			roomProto.getRoomType().getHotel().getName(),
+			roomProto.getRoomType().getHotel().getAddress(),
+			roomProto.getRoomType().getHotel().getRoomCount()
+		);
+
+		RoomTypeResponseDto roomTypeDto = new RoomTypeResponseDto(
+			roomProto.getRoomType().getId().isEmpty() ? null : UUID.fromString(roomProto.getRoomType().getId()),
+			hotelDto,
+			roomProto.getRoomType().getName(),
+			roomProto.getRoomType().getPrice()
+		);
+
+		return new RoomResponseDto(
+			UUID.fromString(roomProto.getId()),
+			roomTypeDto,
+			roomProto.getName()
+		);
+	}
+
 }

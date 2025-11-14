@@ -32,6 +32,11 @@
 				<scope>runtime</scope>
 				</dependency>
 			<dependency>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>reservation-svc-client</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.springframework.retry</groupId>
 				<artifactId>spring-retry</artifactId>
 				<version>2.0.5</version>
@@ -53,6 +58,11 @@
 				<groupId>org.ukma.spring.crooodle</groupId>
 				<artifactId>svc-common</artifactId>
 				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.devh</groupId>
+				<artifactId>grpc-spring-boot-starter</artifactId>
+				<version>2.15.0.RELEASE</version>
 			</dependency>
 		</dependencies>
 

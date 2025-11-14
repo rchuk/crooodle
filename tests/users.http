@@ -1,4 +1,6 @@
-@userId = 4d504972-04ad-42b2-8545-f2da120c66f7
+@userId = a9c3a015-cf4c-4081-a615-46e48b8087f9
+@token = eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjcm9vb2RsZSIsInN1YiI6Imhsb21vc29tYUBnbWFpbC5jb20iLCJpYXQiOjE3NjMxMjU1MDIsImV4cCI6MTc2MzEyOTEwMiwidXNlclJvbGUiOiJST0xFX0hPVEVMX09XTkVSIiwidWlkIjoiZjcwN2RmN2ItNWU4MC00MDk5LTg1N2EtMDQ3Mzk4MzkyOTA4In0.hDEKvZR8xIY452M7HLsYFMPhWrrLQIPGI3OMpQkFlt5qLOdNtppSwiJJ_PJKWsWTyl5E-MzmL4rqNcPv9NaJ_Q
+@hotelId = 8799d1b4-a921-4d1d-bb6b-f44d0621e4d8
 
 ### REGISTER
 POST http://localhost/register
@@ -8,11 +10,10 @@ Content-Type: application/json
   "name": "Duma Opus",
   "email": "dumaopus@gmail.com",
   "password": "leb1Gayyy",
-  "userRole": "TRAVELER"
+  "role": "TRAVELER"
 }
 
 ### REGISTER
-
 POST http://localhost/register
 Content-Type: application/json
 
@@ -20,7 +21,7 @@ Content-Type: application/json
   "name": "Hlomozdat Dmytro",
   "email": "hlomosoma@gmail.com",
   "password": "dKf42ijsdf",
-  "userRole": "HOTEL_OWNER"
+  "role": "HOTEL_OWNER"
 }
 
 ### LOGIN
@@ -34,7 +35,6 @@ Content-Type: application/json
 }
 
 ### LOGIN
-
 POST http://localhost/login
 Content-Type: application/json
 
@@ -43,8 +43,21 @@ Content-Type: application/json
   "password": "dKf42ijsdf"
 }
 
-### LOGIN (USER NOT FOUND)
+### GET ME
+GET http://localhost/me
+Authorization: Bearer {{token}}
 
+### GET RESERVATIONS (GRPC)
+GET http://localhost/user/me/reservations
+Authorization: Bearer {{token}}
+
+### STREAM
+http://localhost/user/rooms/{{hotelId}}
+Authorization: Bearer {{token}}
+## grpcurl -import-path ./proto -proto rooms_svc.proto -d '{"hotelId":"8799d1b4-a921-4d1d-bb6b-f44d0621e4d8"}' localhost:9090 RoomService/GetRoomsByHotel
+
+
+### LOGIN (USER NOT FOUND)
 POST http://localhost/login
 Content-Type: application/json
 
@@ -54,7 +67,6 @@ Content-Type: application/json
 }
 
 ### LOGIN (WRONG PASSWORD)
-
 POST http://localhost/login
 Content-Type: application/json
 
@@ -64,36 +76,29 @@ Content-Type: application/json
 }
 
 ### READ BY ID
-
 GET http://localhost/user/{{userId}}
 Accept: application/json
 
 ###
-
 GET http://localhost/user/{{userId}}/html
 Accept: text/html
 
 ###
-
 GET http://localhost/user/{{userId}}/csv
 Accept: text/csv
 
 ### READ BY EMAIL
-
 GET http://localhost/user/email/hlomosoma@gmail.com
 Accept: application/json
 
 ### READ ALL
-
 GET http://localhost/user
 Accept: application/json
 
 ###
-
 GET http://localhost/user/html
 Accept: text/html
 
 ###
-
 GET http://localhost/user/csv
 Accept: text/csv
