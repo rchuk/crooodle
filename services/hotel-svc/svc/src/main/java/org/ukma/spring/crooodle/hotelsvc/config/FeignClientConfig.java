@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -18,6 +19,7 @@ public class FeignClientConfig {
 			String url = template.url();
 			if (url.startsWith("/internal/")) {
 				template.header("X-API-Key", apiKey);
+				template.header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 			} else {
 				var attrs = RequestContextHolder.getRequestAttributes();
 				if (attrs instanceof ServletRequestAttributes sra) {
