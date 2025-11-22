@@ -3,13 +3,16 @@ global:
 
 scrape_configs:
   - job_name: 'config-svc'
+    metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['config-svc:8888']
 
   - job_name: 'discovery-svc'
+    metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['discovery-svc:8761']
 
   - job_name: 'gateway-svc'
+    metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['gateway-svc:8080']

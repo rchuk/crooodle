@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: ''
+    type: file
+    options:
+      path: /etc/grafana/dashboards
+
+dashboardHome:
+  uid: spring_boot_21

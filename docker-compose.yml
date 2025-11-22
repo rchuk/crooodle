@@ -25,7 +25,7 @@ services:
     depends_on:
       - discovery-svc
     volumes:
-      - ./config-repo:/config-repo
+      - ./configs:/configs
     healthcheck:
       test: [ "CMD", "wget", "-qO-", "http://localhost:8888/actuator/health" ]
       interval: 10s
@@ -42,6 +42,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - config-svc
       - discovery-svc
     healthcheck:
       test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
@@ -63,3 +64,11 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/dashboards/19004_rev1.json
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/etc/grafana/dashboards

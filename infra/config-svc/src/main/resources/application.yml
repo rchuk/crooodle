@@ -10,6 +10,7 @@ spring:
 
   cloud:
     config:
+      enabled: false
       server:
         native:
           search-locations: "file:/configs"
