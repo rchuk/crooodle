@@ -9,19 +9,17 @@
 		<groupId>org.ukma.spring.crooodle</groupId>
 		<artifactId>crooodle</artifactId>
 		<version>${revision}</version>
-		<relativePath>../..</relativePath>
+		<relativePath>..</relativePath>
 	</parent>
 
-	<artifactId>dto-parent</artifactId>
+	<artifactId>parents</artifactId>
 	<packaging>pom</packaging>
-	<name>Crooodle DTO Parent</name>
-	<description>Parent POM for DTO modules (internal service communication)</description>
+	<name>Crooodle Parents</name>
+	<description>Common parent POMs for Crooodle services</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
+	<modules>
+		<module>dto-parent</module>
+		<module>api-parent</module>
+		<module>svc-parent</module>
+	</modules>
 </project>

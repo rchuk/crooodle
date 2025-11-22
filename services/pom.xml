@@ -24,15 +24,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -45,54 +36,34 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.14.0</version>
-          <configuration>
-            <release>${java.version}</release>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.4</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.5.4</version>
-        </plugin>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<release>${java.version}</release>
+					</configuration>
+				</plugin>
       </plugins>
     </pluginManagement>
   </build>
 
   <modules>
-    <module>parents/client-parent</module>
-    <module>parents/dto-parent</module>
-    <module>parents/svc-parent</module>
-
-    <module>hotel-svc/client</module>
-    <module>hotel-svc/dto</module>
-    <module>hotel-svc/svc</module>
-
-    <module>user-svc/client</module>
-    <module>user-svc/dto</module>
-    <module>user-svc/svc</module>
-
-<!--    <module>reservation-svc/client</module>-->
-<!--    <module>reservation-svc/dto</module>-->
-<!--    <module>reservation-svc/svc</module>-->
-
-<!--    <module>notification-svc/client</module>-->
-<!--    <module>notification-svc/dto</module>-->
-<!--    <module>notification-svc/svc</module>-->
+		<module>parents</module>
   </modules>
 </project>
