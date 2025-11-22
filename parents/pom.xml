@@ -9,7 +9,7 @@
 		<groupId>org.ukma.spring.crooodle</groupId>
 		<artifactId>crooodle</artifactId>
 		<version>${revision}</version>
-		<relativePath>..</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>parents</artifactId>

@@ -6,13 +6,12 @@ ARG MODULE_PATH
 
 WORKDIR /app
 
-COPY --parents pom.xml **/pom.xml ./
-RUN --mount=type=cache,dst=/root/.m2 \
-    mvn -q -ntp -B -pl ${MODULE_PATH} -am dependency:go-offline -f services/pom.xml
+COPY pom.xml ./pom.xml
+COPY parents ./parents
+COPY infra ./infra
 
-COPY services ./services
 RUN --mount=type=cache,dst=/root/.m2 \
-    mvn -B -DskipTests package -pl ${MODULE_PATH} -am -f services/pom.xml
+    mvn -B -DskipTests package -f ${MODULE_PATH}/pom.xml
 
 FROM amazoncorretto:24.0.2-alpine AS run
 
@@ -23,7 +22,7 @@ WORKDIR /app
 RUN addgroup --system spring && adduser --system --ingroup spring spring
 USER spring:spring
 
-COPY --from=build /app/services/${MODULE_PATH}/target/*.jar /app/app.jar
+COPY --from=build /app/${MODULE_PATH}/target/*.jar /app/app.jar
 
 EXPOSE 8080
 

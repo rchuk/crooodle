@@ -11,12 +11,23 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>services</artifactId>
+	<artifactId>infra</artifactId>
 	<packaging>pom</packaging>
-	<name>Crooodle Business Services</name>
-	<description>Aggregator for all business microservices (auth, user, ...)</description>
+	<name>Crooodle Infrastructure</name>
+	<description>Crooodle Infrastructure</description>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
 	<modules>
-
+		<module>config-svc</module>
+		<module>discovery-svc</module>
+		<module>gateway-svc</module>
 	</modules>
 </project>

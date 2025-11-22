@@ -1,4 +1,1 @@
 *.Dockerfile
-.idea/
-.git/
-k8s/
