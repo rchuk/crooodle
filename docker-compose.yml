@@ -1,15 +1,4 @@
 services:
-  config-svc:
-    build:
-      context: .
-      dockerfile: infra.Dockerfile
-      args:
-        MODULE_PATH: infra/config-svc
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./config-repo:/config-repo
-
   discovery-svc:
     build:
       context: .
@@ -18,8 +7,31 @@ services:
         MODULE_PATH: infra/discovery-svc
     ports:
       - "8761:8761"
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  config-svc:
+    build:
+      context: .
+      dockerfile: infra.Dockerfile
+      args:
+        MODULE_PATH: infra/config-svc
+    ports:
+      - "8888:8888"
     depends_on:
-      - config-svc
+      - discovery-svc
+    volumes:
+      - ./config-repo:/config-repo
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8888/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   gateway-svc:
     build:
@@ -30,8 +42,13 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - config-svc
       - discovery-svc
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   prometheus:
     image: prom/prometheus:v3.8.0-rc.0

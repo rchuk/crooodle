@@ -2,14 +2,14 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'gateway'
+  - job_name: 'config-svc'
     static_configs:
-      - targets: ['gateway-svc:8080']
-        labels:
-          group: 'infra'
+      - targets: ['config-svc:8888']
 
-  - job_name: 'discovery'
+  - job_name: 'discovery-svc'
     static_configs:
       - targets: ['discovery-svc:8761']
-        labels:
-          group: 'infra'
+
+  - job_name: 'gateway-svc'
+    static_configs:
+      - targets: ['gateway-svc:8080']

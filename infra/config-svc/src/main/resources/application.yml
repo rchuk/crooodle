@@ -13,3 +13,14 @@ spring:
       server:
         native:
           search-locations: "file:/configs"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-svc:8761/eureka/

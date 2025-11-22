@@ -3,9 +3,12 @@ management:
     web:
       exposure:
         include: health,info,prometheus
-  endpoint:
-    prometheus:
-      enabled: true
+
   metrics:
     tags:
       application: ${spring.application.name}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-svc:8761/eureka/
