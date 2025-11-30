@@ -1,0 +1,77 @@
+	<project xmlns="http://maven.apache.org/POM/4.0.0"
+					 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		<modelVersion>4.0.0</modelVersion>
+
+		<parent>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>svc-parent</artifactId>
+			<version>${revision}</version>
+			<relativePath>../../../parents/svc-parent/pom.xml</relativePath>
+		</parent>
+
+		<dependencies>
+<!--			<dependency>-->
+<!--				<groupId>org.ukma.spring.crooodle</groupId>-->
+<!--				<artifactId>hotel-svc-dto</artifactId>-->
+<!--				<version>${revision}</version>-->
+<!--			</dependency>-->
+			<dependency>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>user-svc-client</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ukma.spring.crooodle</groupId>
+				<artifactId>user-svc-dto</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<scope>runtime</scope>
+				</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.ukma.spring.crooodle</groupId>-->
+<!--				<artifactId>reservation-svc-client</artifactId>-->
+<!--				<version>${revision}</version>-->
+<!--			</dependency>-->
+			<dependency>
+				<groupId>org.springframework.retry</groupId>
+				<artifactId>spring-retry</artifactId>
+				<version>2.0.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aspects</artifactId>
+				<version>6.2.10</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-activemq</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.activemq</groupId>
+				<artifactId>activemq-broker</artifactId>
+			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.ukma.spring.crooodle</groupId>-->
+<!--				<artifactId>svc-common</artifactId>-->
+<!--				<version>${revision}</version>-->
+<!--			</dependency>-->
+			<dependency>
+				<groupId>net.devh</groupId>
+				<artifactId>grpc-spring-boot-starter</artifactId>
+				<version>2.15.0.RELEASE</version>
+			</dependency>
+		</dependencies>
+
+
+		<artifactId>hotel-svc</artifactId>
+		<version>${revision}</version>
+		<name>Hotel Service</name>
+		<packaging>jar</packaging>
+		<properties>
+			<svc.mainClass>org.ukma.spring.crooodle.hotelsvc.HotelService</svc.mainClass>
+		</properties>
+	</project>
