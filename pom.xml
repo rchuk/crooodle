@@ -64,6 +64,7 @@
   </build>
 
   <modules>
+		<module>libs</module>
 		<module>parents</module>
 		<module>infra</module>
 		<module>services</module>

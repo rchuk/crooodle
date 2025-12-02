@@ -12,15 +12,12 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>parents</artifactId>
+	<artifactId>libs</artifactId>
 	<packaging>pom</packaging>
-	<name>Crooodle Parents</name>
-	<description>Common parent POMs for Crooodle services</description>
+	<name>Crooodle Libraries</name>
+	<description>Common libraries for Crooodle services</description>
 
 	<modules>
-		<module>api-parent</module>
-		<module>rest-parent</module>
-		<module>grpc-parent</module>
-		<module>svc-parent</module>
+		<module>crooodle-errors</module>
 	</modules>
 </project>

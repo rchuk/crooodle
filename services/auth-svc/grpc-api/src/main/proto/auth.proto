@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package org.ukma.spring.crooodle.authsvc;
+
+option java_multiple_files = true;
+option java_package = "org.ukma.spring.crooodle.authsvc.grpc";
+
+service AuthService {
+  rpc GetUser (AccessToken) returns (User);
+}
+
+message AccessToken {
+  string token = 1;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  UserRole role = 3;
+}
+
+enum UserRole {
+  TRAVELER = 0;
+  HOTEL_OWNER = 1;
+  ADMIN = 2;
+}

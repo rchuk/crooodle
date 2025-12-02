@@ -17,16 +17,7 @@
 	<description>Aggregator for all business microservices (auth, user, ...)</description>
 
 	<modules>
-		<module>user-svc/client</module>
-		<module>user-svc/dto</module>
-		<module>user-svc/svc</module>
-
-		<module>hotel-svc/client</module>
-		<module>hotel-svc/dto</module>
-		<module>hotel-svc/svc</module>
-
-<!--		<module>reservation-svc/client</module>-->
-		<module>reservation-svc/dto</module>
-		<module>reservation-svc/svc</module>
+		<module>auth-svc/grpc-api</module>
+		<module>auth-svc/svc</module>
 	</modules>
 </project>
