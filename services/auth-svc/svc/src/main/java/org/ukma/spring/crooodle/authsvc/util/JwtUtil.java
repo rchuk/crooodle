@@ -40,7 +40,7 @@ public class JwtUtil {
 				.getPayload()
 				.getSubject();
 		} catch (JwtException e) {
-			log.warn("Invalid JWT Token: {}", token);
+			log.warn("Invalid JWT Token: {}. Error: {}", token, e.getMessage());
 			return null;
 		}
 	}
