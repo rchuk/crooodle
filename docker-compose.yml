@@ -1,10 +1,14 @@
 services:
   auth-svc:
     depends_on:
-      - config-svc
-      - discovery-svc
-      - gateway-svc
-      - auth-svc-db
+      discovery-svc:
+        condition: service_healthy
+      gateway-svc:
+        condition: service_healthy
+      auth-svc-db:
+        condition: service_healthy
+      config-svc:
+          condition: service_healthy
     build:
       context: .
       dockerfile: svc.Dockerfile
@@ -33,7 +37,127 @@ services:
       timeout: 3s
       retries: 30
     volumes:
-      - auth_svc_db_data:/var/lib/postgresql/data
+      - auth_svc_db_data:/var/lib/postgresql
+
+  user-svc:
+    depends_on:
+      discovery-svc:
+        condition: service_healthy
+      gateway-svc:
+        condition: service_healthy
+      auth-svc-db:
+        condition: service_healthy
+      config-svc:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: svc.Dockerfile
+      args:
+        MODULE_PATH: services/user-svc/svc
+    env_file:
+      - user-svc-db.env
+    ports:
+      - "55002:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  user-svc-db:
+    image: postgres:18
+    env_file:
+      - user-svc-db.env
+    ports:
+      - "55003:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - user_svc_db_data:/var/lib/postgresql
+
+  hotel-svc:
+    depends_on:
+      discovery-svc:
+        condition: service_healthy
+      gateway-svc:
+        condition: service_healthy
+      auth-svc-db:
+        condition: service_healthy
+      config-svc:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: svc.Dockerfile
+      args:
+        MODULE_PATH: services/hotel-svc/svc
+    env_file:
+      - hotel-svc-db.env
+    ports:
+      - "55004:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  hotel-svc-db:
+    image: postgres:18
+    env_file:
+      - hotel-svc-db.env
+    ports:
+      - "55005:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - hotel_svc_db_data:/var/lib/postgresql
+
+  reservation-svc:
+    depends_on:
+      discovery-svc:
+        condition: service_healthy
+      gateway-svc:
+        condition: service_healthy
+      auth-svc-db:
+        condition: service_healthy
+      config-svc:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: svc.Dockerfile
+      args:
+        MODULE_PATH: services/reservation-svc/svc
+    env_file:
+      - reservation-svc-db.env
+    ports:
+      - "55006:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  reservation-svc-db:
+    image: postgres:18
+    env_file:
+      - reservation-svc-db.env
+    ports:
+      - "55007:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - reservation_svc_db_data:/var/lib/postgresql
 
   discovery-svc:
     build:
@@ -59,7 +183,8 @@ services:
     ports:
       - "8888:8888"
     depends_on:
-      - discovery-svc
+      discovery-svc:
+        condition: service_healthy
     volumes:
       - ./configs:/configs
     healthcheck:
@@ -78,8 +203,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - config-svc
-      - discovery-svc
+      config-svc:
+        condition: service_healthy
+      discovery-svc:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
       interval: 10s
@@ -93,13 +220,20 @@ services:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    healthcheck:
+      test: [ "CMD", "wget", "http://localhost:9090" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   grafana:
     image: grafana/grafana:12.3
     ports:
       - "3000:3000"
     depends_on:
-      - prometheus
+      prometheus:
+        condition: service_healthy
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -111,4 +245,7 @@ services:
 
 volumes:
   auth_svc_db_data:
+  user_svc_db_data:
+  hotel_svc_db_data:
+  reservation_svc_db_data:
 

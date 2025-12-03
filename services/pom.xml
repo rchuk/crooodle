@@ -19,5 +19,11 @@
 	<modules>
 		<module>auth-svc/grpc-api</module>
 		<module>auth-svc/svc</module>
+		<module>user-svc/grpc-api</module>
+		<module>user-svc/svc</module>
+		<module>hotel-svc/grpc-api</module>
+		<module>hotel-svc/svc</module>
+		<module>reservation-svc/grpc-api</module>
+		<module>reservation-svc/svc</module>
 	</modules>
 </project>
