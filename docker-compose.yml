@@ -19,7 +19,7 @@ services:
     ports:
       - "55000:8080"
     healthcheck:
-      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -59,7 +59,7 @@ services:
     ports:
       - "55002:8080"
     healthcheck:
-      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -99,7 +99,7 @@ services:
     ports:
       - "55004:8080"
     healthcheck:
-      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -139,7 +139,7 @@ services:
     ports:
       - "55006:8080"
     healthcheck:
-      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
