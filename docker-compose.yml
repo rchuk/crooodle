@@ -221,7 +221,7 @@ services:
     ports:
       - "9090:9090"
     healthcheck:
-      test: [ "CMD", "wget", "http://localhost:9090" ]
+      test: [ "CMD", "wget", "-qO-", "http://localhost:9090" ]
       interval: 10s
       timeout: 5s
       retries: 5

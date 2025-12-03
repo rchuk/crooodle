@@ -28,6 +28,11 @@
 			<version>${revision}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>crooodle-dtos</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
