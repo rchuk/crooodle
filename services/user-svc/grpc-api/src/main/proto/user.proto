@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package org.ukma.spring.crooodle.usersvc;
+
+option java_multiple_files = true;
+option java_package = "org.ukma.spring.crooodle.usersvc.grpc";
+
+service ProfileService {
+  rpc CreateProfile (ProfileUpsert) returns (Empty);
+  rpc ReadProfile (UUID) returns (Profile);
+  rpc DeleteProfile (UUID) returns (Empty);
+}
+
+message Empty {}
+
+message UUID {
+  string id = 1;
+}
+
+message Profile {
+  string id = 1;
+  string name = 2;
+  string surname = 3;
+  string email = 4;
+}
+
+message ProfileUpsert {
+  string name = 1;
+  string surname = 2;
+  string email = 3;
+}
