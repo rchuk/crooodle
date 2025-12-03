@@ -1,4 +1,4 @@
-package org.ukma.spring.crooodle.usersvc;
+package org.ukma.spring.crooodle.hotelsvc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
