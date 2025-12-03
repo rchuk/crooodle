@@ -8,7 +8,6 @@ import lombok.Builder;
 @Builder
 public record LoginRequestDto(
 	@NotBlank
-	@Email
 	String username,
 	@NotBlank
 	@Size(min = 8, max = 200)
