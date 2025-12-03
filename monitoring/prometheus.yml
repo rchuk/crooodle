@@ -16,3 +16,23 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['gateway-svc:8080']
+
+  - job_name: 'auth-svc'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'auth-svc:8080' ]
+
+  - job_name: 'user-svc'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'user-svc:8080' ]
+
+  - job_name: 'hotel-svc'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'hotel-svc:8080' ]
+
+  - job_name: 'reservation-svc'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'reservation-svc:8080' ]

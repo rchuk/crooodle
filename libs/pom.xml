@@ -19,5 +19,6 @@
 
 	<modules>
 		<module>crooodle-errors</module>
+		<module>crooodle-dtos</module>
 	</modules>
 </project>
