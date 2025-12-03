@@ -1,2 +1,23 @@
-server:
-  port: 8080
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-svc
+          uri: lb://auth-svc
+          predicates:
+            - Path=/login, /register
+
+        - id: user-svc
+          uri: lb://user-svc
+          predicates:
+            - Path=/user/**, /profile/**
+
+        - id: hotel-svc
+          uri: lb://hotel-svc
+          predicates:
+            - Path=/hotel/**, /room/**
+
+        - id: reservation-svc
+          uri: lb://reservation-svc
+          predicates:
+            - Path=/reservations/**
