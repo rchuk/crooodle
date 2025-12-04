@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.ukma.spring.crooodle.auth.SecurityUtils;
 import org.ukma.spring.crooodle.errors.SvcError;
 import org.ukma.spring.crooodle.errors.SvcException;
 import org.ukma.spring.crooodle.hotelsvc.grpc.RoomServiceGrpc;
@@ -31,7 +30,7 @@ public class ReservationService {
 
 	private final ReservationRepository reservationRepository;
 	private final ReservationMapper reservationMapper;
-	private final SecurityUtils securityUtils;
+	//private final SecurityUtils securityUtils;
 
 	public UUID create(UUID roomId, ReservationCreateDto dto) {
 		if (dto.checkInDate().isAfter(dto.checkOutDate()))
@@ -47,7 +46,7 @@ public class ReservationService {
 
 		ReservationEntity entity = reservationMapper.toEntity(dto);
 		entity.setRoomId(roomId);
-		entity.setProfileId(securityUtils.getCurrentUserId());
+		//entity.setProfileId(securityUtils.getCurrentUserId());
 
 		return reservationRepository.save(entity).getId();
 	}
@@ -59,11 +58,11 @@ public class ReservationService {
 	}
 
 	public Page<ReservationDto> getMyReservations(ReservationCriteria criteria, Pageable pageable) {
-		var currentUserId = securityUtils.getCurrentUserId();
+		//var currentUserId = securityUtils.getCurrentUserId();
 
 		Specification<ReservationEntity> spec = ReservationSpecification.builder()
 			.withCriteria(criteria)
-			.withUserId(currentUserId)
+			//.withUserId(currentUserId)
 			.build();
 
 		return reservationRepository.findAllBy(spec, pageable)

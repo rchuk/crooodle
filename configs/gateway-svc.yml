@@ -20,7 +20,7 @@ spring:
         - id: reservation-svc
           uri: lb://reservation-svc
           predicates:
-            - Path=/reservations/**
+            - Path=/reservation/**
 
         # Docs
         - id: hotel-svc-docs
