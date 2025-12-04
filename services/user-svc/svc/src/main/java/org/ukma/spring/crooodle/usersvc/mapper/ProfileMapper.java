@@ -9,7 +9,6 @@ import org.ukma.spring.crooodle.usersvc.entity.ProfileEntity;
     componentModel = "spring"
 )
 public interface ProfileMapper {
-    ProfileEntity profileDtoToProfileEntity(ProfileDto profileDto);
     ProfileDto profileEntityToProfileDto(ProfileEntity profileEntity);
     ProfileEntity profileUpsertDtoToProfileEntity(ProfileUpsertDto profileUpsertDto);
 }

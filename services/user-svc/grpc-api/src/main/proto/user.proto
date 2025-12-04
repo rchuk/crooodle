@@ -22,10 +22,12 @@ message Profile {
   string name = 2;
   string surname = 3;
   string email = 4;
+  string userId = 5;
 }
 
 message ProfileUpsert {
   string name = 1;
   string surname = 2;
   string email = 3;
+  string userId = 4;
 }

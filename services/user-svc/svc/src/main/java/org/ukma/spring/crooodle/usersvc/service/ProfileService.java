@@ -47,4 +47,9 @@ public class ProfileService {
         }
         profileRepository.deleteById(id);
     }
+
+    // TODO: Implement retrieval of profile by token
+    public ProfileDto me() {
+        throw new SvcException(SvcError.INTERNAL_ERROR, "Method not implemented");
+    }
 }
