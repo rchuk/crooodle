@@ -7,3 +7,12 @@ spring:
     url: jdbc:postgresql://reservation-svc-db:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+
+grpc:
+  client:
+    profileService:
+      address: "static://user-svc:9090"
+      negotiationType: plaintext
+    roomService:
+      address: "static://hotel-svc:9090"
+      negotiation-type: plaintext

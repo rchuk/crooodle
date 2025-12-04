@@ -20,5 +20,15 @@
 			<artifactId>reservation-svc-grpc-api</artifactId>
 			<version>${revision}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>user-svc-grpc-api</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ukma.spring.crooodle</groupId>
+			<artifactId>hotel-svc-grpc-api</artifactId>
+			<version>${revision}</version>
+		</dependency>
 	</dependencies>
 </project>
