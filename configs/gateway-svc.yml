@@ -21,3 +21,48 @@ spring:
           uri: lb://reservation-svc
           predicates:
             - Path=/reservations/**
+
+        # Docs
+        - id: hotel-svc-docs
+          uri: lb://hotel-svc
+          predicates:
+            - Path=/v3/api-docs/hotel-svc
+          filters:
+            - RewritePath=/v3/api-docs/hotel-svc, /v3/api-docs
+
+        - id: auth-svc-docs
+          uri: lb://auth-svc
+          predicates:
+            - Path=/v3/api-docs/auth-svc
+          filters:
+            - RewritePath=/v3/api-docs/auth-svc, /v3/api-docs
+
+        - id: user-svc-docs
+          uri: lb://user-svc
+          predicates:
+            - Path=/v3/api-docs/user-svc
+          filters:
+            - RewritePath=/v3/api-docs/user-svc, /v3/api-docs
+
+        - id: reservation-svc-docs
+          uri: lb://reservation-svc
+          predicates:
+            - Path=/v3/api-docs/reservation-svc
+          filters:
+            - RewritePath=/v3/api-docs/reservation-svc, /v3/api-docs
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: Auth Service
+        url: /v3/api-docs/auth-svc
+      - name: User Service
+        url: /v3/api-docs/user-svc
+      - name: Hotel Service
+        url: /v3/api-docs/hotel-svc
+      - name: Reservation Service
+        url: /v3/api-docs/reservation-svc
