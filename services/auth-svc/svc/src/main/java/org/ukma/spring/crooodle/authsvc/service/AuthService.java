@@ -1,6 +1,7 @@
 package org.ukma.spring.crooodle.authsvc.service;
 
 import lombok.RequiredArgsConstructor;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.ukma.spring.crooodle.authsvc.dto.LoginRequestDto;
@@ -12,6 +13,8 @@ import org.ukma.spring.crooodle.authsvc.repository.UserRepository;
 import org.ukma.spring.crooodle.authsvc.util.JwtUtil;
 import org.ukma.spring.crooodle.errors.SvcError;
 import org.ukma.spring.crooodle.errors.SvcException;
+import org.ukma.spring.crooodle.usersvc.grpc.ProfileServiceGrpc;
+import org.ukma.spring.crooodle.usersvc.grpc.ProfileUpsert;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +23,9 @@ public class AuthService {
 	private final JwtUtil jwtUtil;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+
+	@GrpcClient("profileService")
+	private ProfileServiceGrpc.ProfileServiceBlockingStub profileService;
 
 	public LoginResponseDto login(LoginRequestDto request) {
 		var user = userRepository.findByUsername(request.username()).orElseThrow(() -> new SvcException(SvcError.NOT_FOUND));
@@ -41,6 +47,8 @@ public class AuthService {
 			.role(userMapper.registerRoleDtoToUserRole(request.role()))
 			.build();
 		userRepository.save(user);
+
+		profileService.createProfile(ProfileUpsert.getDefaultInstance());
 	}
 
 	public UserEntity getUserEntity(String token) {
