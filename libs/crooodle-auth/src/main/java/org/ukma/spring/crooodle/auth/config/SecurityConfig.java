@@ -31,12 +31,10 @@ public class SecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable)
-			.exceptionHandling(ex -> ex
-				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-			)
+
 			.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/actuator/**", "/static/favicon.ico").permitAll()
+				.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/**", "/favicon.ico", "/static/**").permitAll()
 				.anyRequest().permitAll()
 			)
 			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
