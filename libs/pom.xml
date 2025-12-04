@@ -20,5 +20,6 @@
 	<modules>
 		<module>crooodle-errors</module>
 		<module>crooodle-dtos</module>
+		<module>crooodle-auth</module>
 	</modules>
 </project>

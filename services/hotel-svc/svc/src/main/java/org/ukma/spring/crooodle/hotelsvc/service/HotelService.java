@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.ukma.spring.crooodle.auth.SecurityUtils;
 import org.ukma.spring.crooodle.errors.SvcError;
 import org.ukma.spring.crooodle.errors.SvcException;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelDto;
@@ -19,11 +20,12 @@ import java.util.UUID;
 public class HotelService {
 	private final HotelMapper hotelMapper;
 	private final HotelRepository hotelRepository;
+	private final SecurityUtils securityUtils;
 
 	public UUID create(HotelUpsertDto upsertDto) {
 		var hotel = new HotelEntity();
 		hotelMapper.merge(hotel, upsertDto);
-		hotel.setOwnerId(UUID.randomUUID()); // TODO
+		hotel.setOwnerId(securityUtils.getCurrentUserId());
 
 		return hotelRepository.save(hotel).getId();
 	}

@@ -1,9 +1,9 @@
 package org.ukma.spring.crooodle.hotelsvc.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukma.spring.crooodle.dtos.PageDto;
 import org.ukma.spring.crooodle.hotelsvc.dto.HotelDto;
@@ -17,6 +17,7 @@ import java.util.UUID;
 public class HotelController {
 	private final HotelService hotelService;
 
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/hotel")
 	public UUID create(@RequestBody HotelUpsertDto requestDto) {
 		return hotelService.create(requestDto);
