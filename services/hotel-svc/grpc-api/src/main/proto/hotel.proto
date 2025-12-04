@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package org.ukma.spring.crooodle.hotelsvc;
+
+option java_multiple_files = true;
+option java_package = "org.ukma.spring.crooodle.hotelsvc.grpc";
+
+service RoomService {
+  rpc ReadRoom (UUID) returns (Room);
+  rpc ListHotelRooms (UUID) returns (ListRoom);
+}
+
+message UUID {
+  string id = 1;
+}
+
+message Room {
+  string id = 1;
+  string name = 2;
+  int32 price = 3;
+}
+
+message ListRoom {
+  repeated Room rooms = 1;
+}

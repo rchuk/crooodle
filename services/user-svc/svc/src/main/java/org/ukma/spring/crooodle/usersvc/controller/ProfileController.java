@@ -14,6 +14,11 @@ import java.util.UUID;
 public class ProfileController {
     private final ProfileService profileService;
 
+    @GetMapping("/me")
+    public ProfileDto me() {
+        return profileService.me();
+    }
+
     @GetMapping("/{id}")
     public ProfileDto read(@PathVariable UUID id) {
         return profileService.read(id);

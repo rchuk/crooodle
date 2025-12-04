@@ -2,6 +2,7 @@ package org.ukma.spring.crooodle.usersvc.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.UUID;
@@ -23,4 +24,7 @@ public class ProfileEntity {
 
     @Email
     private String email;
+
+    @NotNull
+    private UUID userId;
 }

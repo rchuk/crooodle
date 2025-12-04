@@ -46,9 +46,10 @@ public class AuthService {
 			.password(passwordEncoder.encode(request.password()))
 			.role(userMapper.registerRoleDtoToUserRole(request.role()))
 			.build();
-		userRepository.save(user);
+		user = userRepository.save(user);
 
-		profileService.createProfile(ProfileUpsert.getDefaultInstance());
+		var profile = ProfileUpsert.newBuilder().setUserId(user.getId().toString()).build();
+		profileService.createProfile(profile);
 	}
 
 	public UserEntity getUserEntity(String token) {
