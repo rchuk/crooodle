@@ -8,10 +8,9 @@ import org.ukma.spring.crooodle.auth.GrpcAuthenticationFilter;
 import org.ukma.spring.crooodle.auth.SecurityUtils;
 
 @AutoConfiguration
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, OpenApiConfig.class})
 public class AuthAutoConfiguration {
 	@Bean
-	@ConditionalOnMissingBean
 	public GrpcAuthenticationFilter grpcAuthenticationFilter() {
 		return new GrpcAuthenticationFilter();
 	}

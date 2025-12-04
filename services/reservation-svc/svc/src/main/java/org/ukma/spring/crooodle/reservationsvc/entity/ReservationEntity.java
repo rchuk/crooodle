@@ -1,13 +1,19 @@
 package org.ukma.spring.crooodle.reservationsvc.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.util.Date;
 import java.util.UUID;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
+@Entity
+@Table(name = "reservations")
 public class ReservationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,6 +21,8 @@ public class ReservationEntity {
 
     @NotNull
     private UUID roomId;
+		@NotNull
+		private UUID hotelId;
     @NotNull
     private UUID profileId;
 

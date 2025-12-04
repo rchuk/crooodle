@@ -1,13 +1,15 @@
 package org.ukma.spring.crooodle.reservationsvc.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import org.ukma.spring.crooodle.dtos.PageDto;
+import org.ukma.spring.crooodle.reservationsvc.dto.ReservationCreateDto;
 import org.ukma.spring.crooodle.reservationsvc.dto.ReservationCriteria;
 import org.ukma.spring.crooodle.reservationsvc.dto.ReservationDto;
-import org.ukma.spring.crooodle.reservationsvc.dto.ReservationUpsertDto;
 import org.ukma.spring.crooodle.reservationsvc.service.ReservationService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -16,27 +18,27 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/room/{roomId}/reserve")
-    public UUID create(@PathVariable UUID roomId, @RequestBody ReservationUpsertDto reservationUpsertDto) {
-        return reservationService.create(roomId, reservationUpsertDto);
+    public UUID create(@PathVariable UUID roomId, @RequestBody ReservationCreateDto reservationCreateDto) {
+        return reservationService.create(roomId, reservationCreateDto);
     }
 
     @GetMapping("/reservation/{id}")
     public ReservationDto read(@PathVariable UUID id) {
-        return reservationService.read(id);
+        return reservationService.get(id);
     }
 
+		@GetMapping("/reservations")
+		public PageDto<ReservationDto> getMyReservations(@RequestParam(required = false) ReservationCriteria criteria, @PageableDefault(sort = "checkInDate") Pageable pageable) {
+			return PageDto.of(reservationService.getMyReservations(criteria, pageable));
+		}
+
     @GetMapping("/hotel/{hotelId}/reservations")
-    public List<ReservationDto> readAllByHotel(@PathVariable UUID hotelId, @RequestBody(required = false)ReservationCriteria criteria) {
-        return reservationService.readAllByHotel(roomId, criteria);
+    public PageDto<ReservationDto> readAllByHotel(@PathVariable UUID hotelId, @RequestParam(required = false) ReservationCriteria criteria, @PageableDefault(sort = "checkInDate") Pageable pageable) {
+        return PageDto.of(reservationService.getHotelReservations(hotelId, criteria, pageable));
     }
 
     @GetMapping("/room/{roomId}/reservations")
-    public List<ReservationDto> readAllByRoom(@PathVariable UUID roomId, @RequestBody(required = false)ReservationCriteria criteria) {
-        return reservationService.readAllByRoom(roomId, criteria);
-    }
-
-    @DeleteMapping("/reservation/{id}")
-    public void delete(@PathVariable UUID id) {
-        return reservationService.delete(id);
+    public PageDto<ReservationDto> readAllByRoom(@PathVariable UUID roomId, @RequestParam(required = false) ReservationCriteria criteria, @PageableDefault(sort = "checkInDate") Pageable pageable) {
+        return PageDto.of(reservationService.getRoomReservations(roomId, criteria, pageable));
     }
 }

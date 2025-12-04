@@ -1,8 +1,8 @@
 package org.ukma.spring.crooodle.reservationsvc.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public record ReservationCriteria (
-    Date checkInDate,
-    Date checkOutDate
+	LocalDate checkInDate,
+	LocalDate checkOutDate
 ) {}

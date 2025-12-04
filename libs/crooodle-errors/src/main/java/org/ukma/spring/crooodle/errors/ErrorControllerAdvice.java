@@ -3,6 +3,7 @@ package org.ukma.spring.crooodle.errors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,6 +21,15 @@ public class ErrorControllerAdvice {
 		var response = new ErrorResponseDto(e.getMessage());
 
 		return new ResponseEntity<>(response, serviceError.getHttpStatus());
+	}
+
+	@ExceptionHandler(AuthorizationDeniedException.class)
+	public ResponseEntity<ErrorResponseDto> handleAccessDeniedException(AuthorizationDeniedException e) {
+		log.debug("Error: {}", e.getMessage());
+
+		var response = new ErrorResponseDto("Access denied");
+
+		return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

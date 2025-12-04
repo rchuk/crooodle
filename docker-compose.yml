@@ -3,8 +3,6 @@ services:
     depends_on:
       discovery-svc:
         condition: service_healthy
-      gateway-svc:
-        condition: service_healthy
       auth-svc-db:
         condition: service_healthy
       config-svc:
@@ -42,8 +40,6 @@ services:
   user-svc:
     depends_on:
       discovery-svc:
-        condition: service_healthy
-      gateway-svc:
         condition: service_healthy
       auth-svc-db:
         condition: service_healthy
@@ -83,8 +79,6 @@ services:
     depends_on:
       discovery-svc:
         condition: service_healthy
-      gateway-svc:
-        condition: service_healthy
       auth-svc-db:
         condition: service_healthy
       config-svc:
@@ -122,8 +116,6 @@ services:
   reservation-svc:
     depends_on:
       discovery-svc:
-        condition: service_healthy
-      gateway-svc:
         condition: service_healthy
       auth-svc-db:
         condition: service_healthy

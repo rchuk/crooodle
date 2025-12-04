@@ -5,13 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record ReservationDto (
-    @NotNull
-    UUID id,
+public record ReservationCreateDto (
     @NotNull
     UUID roomId,
-    @NotNull
-    UUID profileId,
     @NotNull
 		LocalDate checkInDate,
     @NotNull
